@@ -3382,6 +3382,40 @@
     .head-wa { font-size: 12.5px !important; padding: 8px 10px !important; min-height: 44px !important; letter-spacing: -.03em !important; }
     .head-wa svg { width: 18px !important; height: 18px !important; }
   </style>
+  <style>
+    /* ⛈️ Sección "La lluvia no nos detiene" */
+    .tormenta{position:relative;overflow:hidden;isolation:isolate;color:#fff;padding:74px 0 80px;
+      background:#08171b url(/imagenes/tormenta-bg.webp) center/cover no-repeat}
+    .tormenta-veil{position:absolute;inset:0;z-index:1;pointer-events:none;
+      background:linear-gradient(180deg,rgba(4,14,18,.68),rgba(3,22,28,.9))}
+    .tormenta .rain{position:absolute;inset:-70% -25%;z-index:2;pointer-events:none;will-change:transform}
+    .tormenta .r1{background-image:repeating-linear-gradient(103deg,transparent 0 6px,rgba(255,255,255,.16) 6px 7px);
+      opacity:.55;animation:rainfall .5s linear infinite}
+    .tormenta .r2{background-image:repeating-linear-gradient(100deg,transparent 0 10px,rgba(255,255,255,.10) 10px 11px);
+      opacity:.4;animation:rainfall .85s linear infinite}
+    @keyframes rainfall{from{transform:translate3d(-7%,-24%,0)}to{transform:translate3d(7%,24%,0)}}
+    .tormenta .flash{position:absolute;inset:0;z-index:3;background:#dff0ff;mix-blend-mode:screen;opacity:0;
+      pointer-events:none;animation:stormflash 9s linear infinite}
+    @keyframes stormflash{0%,4%,10%,100%{opacity:0}1%{opacity:.26}2.4%{opacity:.05}8%{opacity:.5}9%{opacity:.08}}
+    .tormenta-in{position:relative;z-index:4;text-align:center}
+    .tormenta-kicker{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:800;
+      letter-spacing:.09em;text-transform:uppercase;color:#bff0e8;margin-bottom:14px}
+    .tormenta-ttl{font-family:inherit;font-weight:900;letter-spacing:-.03em;line-height:.96;
+      font-size:clamp(34px,11vw,50px);text-shadow:0 6px 34px rgba(0,0,0,.55)}
+    .tormenta-ttl span{color:#2dd9c8;text-shadow:0 0 24px rgba(45,217,200,.45)}
+    .tormenta-sub{max-width:31ch;margin:16px auto 26px;font-size:15.5px;line-height:1.5;color:#e0efeb}
+    .tormenta-btns{display:flex;flex-direction:column;gap:12px;max-width:340px;margin-inline:auto}
+    .tormenta-cta,.tormenta-wa{display:inline-flex;align-items:center;justify-content:center;gap:11px;
+      min-height:60px;border-radius:17px;font-weight:800;font-size:20px}
+    .tormenta-cta{color:#2a0f00;background:linear-gradient(180deg,#ff9a4d,#f15a1b);
+      box-shadow:0 16px 36px rgba(241,90,27,.42),inset 0 1px 0 rgba(255,255,255,.4)}
+    .tormenta-wa{color:#fff;background:linear-gradient(180deg,#25d366,#1ebe5b);
+      box-shadow:0 14px 30px rgba(37,211,102,.4)}
+    .tormenta-cta:active,.tormenta-wa:active{transform:scale(.985)}
+    .tormenta-cta svg,.tormenta-wa svg{width:23px;height:23px;flex:none}
+    @media (prefers-reduced-motion:reduce){
+      .tormenta .rain{animation:none;transform:none;opacity:.28}.tormenta .flash{animation:none;opacity:0}}
+  </style>
 </head>
 
 <body>
@@ -3589,6 +3623,23 @@
 
     
   </main>
+
+    <!-- ⛈️ La lluvia no nos detiene -->
+    <section class="tormenta" aria-label="Atendemos con lluvia y temporal">
+      <div class="tormenta-veil"></div>
+      <div class="rain r1" aria-hidden="true"></div>
+      <div class="rain r2" aria-hidden="true"></div>
+      <div class="flash" aria-hidden="true"></div>
+      <div class="wrap tormenta-in">
+        <span class="tormenta-kicker">⛈️ Temporal en Santiago</span>
+        <h2 class="tormenta-ttl">La lluvia<br><span>no nos detiene</span></h2>
+        <p class="tormenta-sub">¿Auto en pana, choque o varado con este temporal? Salimos igual y tu auto viaja seguro sobre la plataforma.</p>
+        <div class="tormenta-btns">
+          <a class="tormenta-cta" href="tel:+56988227797" data-cta="call_click" data-location="tormenta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3h4l2 5-2.5 1.5a12 12 0 0 0 6 6L16 13l5 2v4a2 2 0 0 1-2 2A17 17 0 0 1 3 5a2 2 0 0 1 2-2z"/></svg> Llamar ahora</a>
+          <a class="tormenta-wa" href="https://wa.me/56988227797?text=Hola%2C%20necesito%20una%20gr%C3%BAa%20urgente%20con%20este%20temporal.%20%C2%BFMe%20ayudan%3F" target="_blank" rel="noopener" data-cta="whatsapp_click" data-location="tormenta"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51l-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg> WhatsApp</a>
+        </div>
+      </div>
+    </section>
 
   <!-- ¿QUÉ TE GUSTARÍA VER ANTES DE COTIZAR? · cada botón abre un modal de info -->
   <section class="antes" aria-label="Información antes de cotizar">
