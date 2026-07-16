@@ -22,9 +22,9 @@ const ORIGINS = ["https://www.asvrgruas.cl", "https://asvrgruas.cl", "https://as
 let ORIGIN = ORIGINS[0];   // se ajusta por request al inicio de fetch()
 
 const GADS_CUSTOMER_ID = "8655524315";   // cuenta de Ads del cliente (sin guiones)
-const GADS_CONVERSION_ACTION_ID = "0";          // "Cliente cerrado (offline)"
-const GADS_CAMPAIGN_ID = "0";                  // [Search] Destapes Santiago - Mobile
-const GADS_BUDGET_ID = "0";                    // presupuesto de esa campaña
+const GADS_CONVERSION_ACTION_ID = "7687673956"; // "Cliente cerrado (offline)", creada 17-jul-2026
+const GADS_CAMPAIGN_ID = "0";                  // ⚠️ PENDIENTE: completar al crear la campaña
+const GADS_BUDGET_ID = "0";                    // ⚠️ PENDIENTE: presupuesto de esa campaña
 const DM_ENDPOINT = "https://datamanager.googleapis.com/v1/events:ingest";
 const CRON_NOCTURNO = "59 3 * * *";                      // subida de cierres (≈23:59 Santiago)
 
