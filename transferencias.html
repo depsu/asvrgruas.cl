@@ -1,0 +1,141 @@
+<!-- Panel del cliente ASRV Grúas — instanciado de panel-cliente/ (maestro DIXDY) 2026-07-16 -->
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Transferencias · ASRV Grúas</title>
+<script>try{ if(localStorage.getItem('panel_pass')) document.documentElement.classList.add('logged'); }catch(e){}</script>
+<style>
+  html.logged #loginCard{ display:none; }
+  html.logged #panel{ display:block; }
+  :root{ --navy:#0f2742; --azul:#1f6feb; --ok:#0c8a4a; --bad:#c0392b; --amb:#b8791b; --bg:#f4f7fb; --line:#e3eaf2; --soft:#5b6b7c; }
+  *{ box-sizing:border-box; }
+  body{ margin:0; background:var(--bg); color:var(--navy); font:16px/1.5 -apple-system,Segoe UI,Roboto,sans-serif; }
+  .wrap{ max-width:520px; margin:0 auto; padding:22px 16px 60px; }
+  h1{ font-size:21px; margin:0 0 2px; }
+  .sub{ color:var(--soft); font-size:14px; margin:0 0 18px; }
+  .card{ background:#fff; border:1px solid var(--line); border-radius:14px; padding:18px; margin-bottom:16px; box-shadow:0 1px 3px rgba(0,0,0,.05); }
+  label{ display:block; font-weight:700; font-size:14px; margin:12px 0 5px; }
+  input{ width:100%; padding:13px 14px; border:1.5px solid var(--line); border-radius:10px; font-size:16px; }
+  .btn{ width:100%; padding:14px; border:0; border-radius:10px; background:var(--azul); color:#fff; font-size:15.5px; font-weight:700; cursor:pointer; margin-top:14px; }
+  .msg{ margin-top:10px; font-weight:600; font-size:14px; text-align:center; min-height:20px; }
+  .msg.bad{ color:var(--bad); }
+  .hide{ display:none; }
+  .showpass{ display:flex; align-items:center; gap:7px; font-size:13.5px; color:var(--soft); font-weight:500; margin-top:9px; cursor:pointer; }
+  .showpass input{ width:auto; margin:0; }
+  .passhint{ color:var(--soft); font-size:13px; margin-top:8px; }
+  .passhint b{ letter-spacing:1.5px; color:var(--navy); }
+
+  .tot{ display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:16px; }
+  .tot .t{ background:#fff; border:1px solid var(--line); border-radius:12px; padding:12px; text-align:center; }
+  .tot .n{ font-size:20px; font-weight:900; }
+  .tot .l{ font-size:11.5px; color:var(--soft); margin-top:2px; }
+
+  .tr-card{ background:#fff; border:1px solid var(--line); border-radius:14px; margin-bottom:14px; overflow:hidden; box-shadow:0 1px 3px rgba(0,0,0,.05); }
+  .tr-head{ display:flex; justify-content:space-between; align-items:baseline; padding:13px 16px 4px; }
+  .tr-monto{ font-size:19px; font-weight:900; }
+  .tr-fecha{ font-size:13px; color:var(--soft); font-weight:600; }
+  .tr-tipo{ padding:0 16px 4px; font-size:13.5px; font-weight:700; }
+  .tr-tipo.ads{ color:var(--azul); } .tr-tipo.mes{ color:var(--ok); }
+  .tr-nota{ padding:0 16px 12px; font-size:12.5px; color:var(--soft); line-height:1.45; }
+  .tr-foto{ display:block; width:100%; border-top:1px solid var(--line); background:#fafcff; }
+  .tr-foto img{ display:block; width:100%; height:auto; }
+  .tr-sinfoto{ border-top:1px dashed var(--line); padding:14px 16px; font-size:13px; color:#a5b2c2; text-align:center; }
+  .hint{ color:var(--soft); font-size:13px; text-align:center; margin:14px 0; }
+</style>
+</head>
+<body>
+<script src="/panel-ui.js"></script>
+<div class="wrap">
+  <h1 style="margin-top:10px">🧾 Transferencias</h1>
+  <p class="sub">ASRV Grúas — todos los comprobantes de pago, en un solo lugar</p>
+
+  <!-- Clave -->
+  <div class="card" id="loginCard">
+    <label for="pass">Clave de acceso</label>
+    <input id="pass" type="password" placeholder="Escribe la clave" autocomplete="current-password">
+    <label class="showpass"><input type="checkbox" onchange="document.getElementById('pass').type = this.checked ? 'text' : 'password'"> 👁 Mostrar clave</label>
+    <div class="passhint">¿La olvidaste? Pista: <b>g******3</b></div>
+    <button class="btn" onclick="entrar()">Entrar</button>
+    <div class="msg bad" id="loginMsg"></div>
+  </div>
+
+  <div id="panel" class="hide">
+    <div class="tot">
+      <div class="t"><div class="n" id="totMonto">—</div><div class="l">total transferido</div></div>
+      <div class="t"><div class="n" id="totN">—</div><div class="l">pagos registrados</div></div>
+    </div>
+    <div id="lista"><div class="hint">Cargando…</div></div>
+  </div>
+</div>
+
+<script>
+  var API = "https://asvrgruas-ref-api.rivera-ale98.workers.dev";
+  var MESES_N = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"];
+
+  function pass() { return localStorage.getItem("panel_pass") || ""; }
+  function clp(n) { return "$" + Number(n || 0).toLocaleString("es-CL"); }
+  function fechaCL(iso) { var p = (iso || "").split("-"); return p.length === 3 ? p[2] + "/" + p[1] + "/" + p[0] : iso; }
+  function mesNombre(m) { var p = (m || "").split("-"); return p.length === 2 ? MESES_N[Number(p[1]) - 1] + " " + p[0] : m; }
+
+  function entrar() {
+    var p = document.getElementById("pass").value.trim();
+    if (!p) return;
+    localStorage.setItem("panel_pass", p);
+    document.documentElement.classList.add("logged");
+    cargar(true);
+  }
+
+  function cargar(esLogin) {
+    fetch(API + "/pagos?pass=" + encodeURIComponent(pass()))
+      .then(function (r) { return r.json().then(function (d) { return { ok: r.ok, status: r.status, d: d }; }); })
+      .then(function (res) {
+        if (res.status === 401) {
+          localStorage.removeItem("panel_pass");
+          document.documentElement.classList.remove("logged");
+          document.getElementById("loginCard").classList.remove("hide");
+          document.getElementById("panel").classList.add("hide");
+          if (esLogin) document.getElementById("loginMsg").textContent = "Clave incorrecta";
+          return;
+        }
+        if (!res.ok) return;
+        document.getElementById("loginCard").classList.add("hide");
+        document.getElementById("panel").classList.remove("hide");
+        pintar(res.d);
+      }).catch(function () {});
+  }
+
+  function pintar(d) {
+    var items = [];
+    (d.ads || []).forEach(function (p) { items.push({ tipo: "ads", label: "💵 Bloque de publicidad N° " + p.bloque, p: p }); });
+    (d.publicista || []).forEach(function (p) { items.push({ tipo: "mes", label: "💼 Mensualidad de " + mesNombre(p.mes), p: p }); });
+    items.sort(function (a, b) { return (b.p.fecha || "").localeCompare(a.p.fecha || ""); });
+
+    var total = items.reduce(function (s, it) { return s + (Number(it.p.monto) || 0); }, 0);
+    document.getElementById("totMonto").textContent = clp(total);
+    document.getElementById("totN").textContent = items.length;
+
+    document.getElementById("lista").innerHTML = items.map(function (it) {
+      var p = it.p;
+      var foto = p.tieneFoto
+        ? '<a class="tr-foto" target="_blank" href="' + API + "/pago-foto?id=" + p.id + "&pass=" + encodeURIComponent(pass()) + '">' +
+          '<img loading="lazy" decoding="async" alt="Comprobante ' + fechaCL(p.fecha) + '" src="' + API + "/pago-foto?id=" + p.id + "&pass=" + encodeURIComponent(pass()) + '"></a>'
+        : '<div class="tr-sinfoto">Sin pantallazo — registro histórico del chat</div>';
+      return '<div class="tr-card">' +
+        '<div class="tr-head"><span class="tr-monto">' + clp(p.monto) + '</span><span class="tr-fecha">' + fechaCL(p.fecha) + '</span></div>' +
+        '<div class="tr-tipo ' + it.tipo + '">' + it.label + '</div>' +
+        (p.nota ? '<div class="tr-nota">' + p.nota + '</div>' : '') +
+        foto + '</div>';
+    }).join("") || '<div class="hint">Aún no hay pagos registrados.</div>';
+
+    if (window.PanelUI) PanelUI.guia("transferencias", [
+      { el: null, titulo: "🧾 Tus transferencias", texto: "Cada pago que has hecho, con su pantallazo del comprobante. Toca una foto para verla en grande." }
+    ]);
+  }
+
+  if (pass()) cargar(true);
+</script>
+</body>
+</html>

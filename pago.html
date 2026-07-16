@@ -1,0 +1,325 @@
+<!-- Panel del cliente ASRV Grúas — instanciado de panel-cliente/ (maestro DIXDY) 2026-07-16 -->
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Pagos · ASRV Grúas</title>
+<script>try{ if(localStorage.getItem('panel_pass')) document.documentElement.classList.add('logged'); }catch(e){}</script>
+<style>
+  html.logged #loginCard{ display:none; }
+  html.logged #panel{ display:block; }
+  :root{ --navy:#0f2742; --azul:#1f6feb; --ok:#0c8a4a; --bad:#c0392b; --amb:#b8791b; --bg:#f4f7fb; --line:#e3eaf2; --soft:#5b6b7c; }
+  *{ box-sizing:border-box; }
+  body{ margin:0; background:var(--bg); color:var(--navy); font:16px/1.5 -apple-system,Segoe UI,Roboto,sans-serif; }
+  .wrap{ max-width:520px; margin:0 auto; padding:22px 16px 60px; }
+  h1{ font-size:21px; margin:0 0 2px; }
+  h2{ font-size:16px; margin:0 0 4px; }
+  .sub{ color:var(--soft); font-size:14px; margin:0 0 18px; }
+  .card{ background:#fff; border:1px solid var(--line); border-radius:14px; padding:18px; margin-bottom:16px; box-shadow:0 1px 3px rgba(0,0,0,.05); }
+  .hint{ color:var(--soft); font-size:13px; margin:2px 0 12px; line-height:1.45; }
+  label{ display:block; font-weight:700; font-size:14px; margin:12px 0 5px; }
+  input{ width:100%; padding:13px 14px; border:1.5px solid var(--line); border-radius:10px; font-size:16px; }
+  .btn{ width:100%; padding:14px; border:0; border-radius:10px; background:var(--azul); color:#fff; font-size:15.5px; font-weight:700; cursor:pointer; margin-top:14px; }
+  .btn:active{ transform:translateY(1px); }
+  .btn:disabled{ opacity:.45; cursor:default; }
+  .msg{ margin-top:10px; font-weight:600; font-size:14px; text-align:center; min-height:20px; }
+  .msg.ok{ color:var(--ok); } .msg.bad{ color:var(--bad); }
+  .hide{ display:none; }
+  .showpass{ display:flex; align-items:center; gap:7px; font-size:13.5px; color:var(--soft); font-weight:500; margin-top:9px; cursor:pointer; }
+  .showpass input{ width:auto; margin:0; }
+  .passhint{ color:var(--soft); font-size:13px; margin-top:8px; }
+  .passhint b{ letter-spacing:1.5px; color:var(--navy); }
+
+  .saldo-big{ text-align:center; font-size:36px; font-weight:900; letter-spacing:-1px; margin:8px 0 0; }
+  .saldo-lbl{ text-align:center; font-size:12.5px; color:var(--soft); margin-bottom:10px; }
+  .sbar{ background:#eef3f9; border-radius:99px; height:14px; overflow:hidden; margin:0 4px; }
+  .sbar span{ display:block; height:100%; width:0; border-radius:99px; transition:width .3s; }
+  .sbar-txt{ display:flex; justify-content:space-between; font-size:11.5px; color:#90a0b3; margin:5px 6px 0; font-weight:600; }
+  .alerta{ background:#fdecea; border:1px solid #f4c9c2; color:var(--bad); border-radius:11px; padding:11px 13px; font-size:13.5px; font-weight:700; text-align:center; margin-top:12px; line-height:1.45; }
+
+  .estado-mes{ border-radius:11px; padding:12px 14px; font-size:14px; font-weight:700; text-align:center; margin:10px 0 4px; }
+  .estado-mes.ok{ background:#e3f6ec; color:var(--ok); }
+  .estado-mes.pend{ background:#fff3da; color:var(--amb); }
+  .estado-mes.tarde{ background:#fdecea; color:var(--bad); }
+
+  .datos{ background:#f7faff; border:1px solid var(--line); border-radius:11px; padding:12px 14px; font-size:14px; line-height:1.7; margin-top:8px; white-space:pre-line; }
+  .copiar{ width:100%; margin-top:8px; padding:10px; border:1px solid var(--line); background:#fff; color:var(--azul); font-weight:700; font-size:13px; border-radius:10px; cursor:pointer; }
+
+  table{ width:100%; border-collapse:collapse; font-size:13.5px; margin-top:6px; }
+  th,td{ padding:8px 5px; text-align:left; border-bottom:1px solid var(--line); }
+  th{ font-size:11.5px; color:var(--soft); }
+  td:last-child, th:last-child{ text-align:right; }
+  .verfoto{ color:var(--azul); font-weight:700; text-decoration:none; font-size:12.5px; }
+  .sinfoto{ color:#a5b2c2; font-size:12px; }
+</style>
+</head>
+<body>
+<script src="/panel-ui.js"></script>
+<div class="wrap">
+  <h1 style="margin-top:10px">💳 Pagos</h1>
+  <p class="sub">ASRV Grúas — tu saldo de publicidad y tus pagos, claros</p>
+
+  <!-- Clave -->
+  <div class="card" id="loginCard">
+    <label for="pass">Clave de acceso</label>
+    <input id="pass" type="password" placeholder="Escribe la clave" autocomplete="current-password">
+    <label class="showpass"><input type="checkbox" onchange="document.getElementById('pass').type = this.checked ? 'text' : 'password'"> 👁 Mostrar clave</label>
+    <div class="passhint">¿La olvidaste? Pista: <b>g******3</b></div>
+    <button class="btn" onclick="entrar()">Entrar</button>
+    <div class="msg bad" id="loginMsg"></div>
+  </div>
+
+  <div id="panel" class="hide">
+
+    <!-- Saldo de Google Ads -->
+    <div class="card" id="cardSaldo">
+      <h2>💵 Tu saldo de publicidad (Google Ads)</h2>
+      <div class="hint">Normalmente cada pago es un bloque de <b>$100.000</b>. Lo que Google va gastando se descuenta de aquí, en vivo.</div>
+      <div class="saldo-big" id="saldoBig">—</div>
+      <div class="saldo-lbl" id="saldoLbl">saldo disponible</div>
+      <div class="sbar"><span id="saldoBar"></span></div>
+      <div class="sbar-txt"><span>$0</span><span id="saldoDet">—</span><span>$100.000</span></div>
+      <div class="alerta hide" id="saldoAlerta"></div>
+      <label for="adsMonto">¿Cuánto transferiste?</label>
+      <input id="adsMonto" inputmode="numeric" value="100.000" oninput="fmtMonto()">
+      <div class="hint" style="margin:5px 0 0">Se sugiere <b>$100.000</b> (el bloque normal). Si pagaste otra cantidad, cámbiala aquí.</div>
+      <button class="btn" id="btnPagoAds" onclick="subirFoto('ads')">📷 Subir comprobante con foto</button>
+      <div class="msg" id="adsMsg"></div>
+      <table><thead><tr><th>Bloque</th><th>Fecha</th><th>Comprobante</th></tr></thead><tbody id="histAds"><tr><td colspan="3" class="hint">Cargando…</td></tr></tbody></table>
+    </div>
+
+    <!-- Pago mensual publicista -->
+    <div class="card" id="cardMensual">
+      <h2>💼 Pago mensual del servicio</h2>
+      <div class="hint">Publicidad + panel + optimización continua: <b>$300.000</b>, se paga los días <b>5</b> de cada mes.</div>
+      <div class="estado-mes" id="estadoMes">Cargando…</div>
+
+      <label style="margin-top:14px">Datos para transferir</label>
+      <div class="datos" id="datosPago">Cargando…</div>
+      <button class="copiar" id="btnCopiar" onclick="copiarDatos()">📋 Copiar datos</button>
+
+      <button class="btn" id="btnPagoMes" onclick="subirFoto('publicista')">📷 Subir comprobante del mes</button>
+      <div class="msg" id="mesMsg"></div>
+      <table><thead><tr><th>Mes</th><th>Fecha de pago</th><th>Comprobante</th></tr></thead><tbody id="histMes"><tr><td colspan="3" class="hint">Cargando…</td></tr></tbody></table>
+    </div>
+  </div>
+</div>
+
+<input type="file" id="fileInput" accept="image/*" class="hide">
+
+<script>
+  var API = "https://asvrgruas-ref-api.rivera-ale98.workers.dev";
+  var PAGOS = null, REGLAS = { mensual: 300000, diaPago: 5, bloque: 100000, alertaSaldo: 20000 };
+  var DASH = null, tipoSubiendo = null;
+  var MESES_N = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"];
+
+  function pass() { return localStorage.getItem("panel_pass") || ""; }
+  function clp(n) { return "$" + Number(n || 0).toLocaleString("es-CL"); }
+  function mesNombre(m) { var p = (m || "").split("-"); return p.length === 2 ? MESES_N[Number(p[1]) - 1] + " " + p[0] : m; }
+  function fechaCL(iso) { var p = (iso || "").split("-"); return p.length === 3 ? p[2] + "/" + p[1] + "/" + p[0] : iso; }
+
+  function entrar() {
+    var p = document.getElementById("pass").value.trim();
+    if (!p) return;
+    localStorage.setItem("panel_pass", p);
+    document.documentElement.classList.add("logged");
+    cargar(true);
+  }
+
+  function cargar(esLogin) {
+    var cachedP = window.PanelUI && PanelUI.cacheGet("pagos");
+    var cachedD = window.PanelUI && PanelUI.cacheGet("dash");
+    if (cachedP && pass()) { PAGOS = cachedP; DASH = cachedD; pintar(); }
+    fetch(API + "/pagos?pass=" + encodeURIComponent(pass()), { cache: "no-store" })
+      .then(function (r) { return r.json().then(function (d) { return { ok: r.ok, status: r.status, d: d }; }); })
+      .then(function (res) {
+        if (res.status === 401) {
+          localStorage.removeItem("panel_pass");
+          if (window.PanelUI) PanelUI.cacheClear();
+          document.documentElement.classList.remove("logged");
+          document.getElementById("loginCard").classList.remove("hide");
+          document.getElementById("panel").classList.add("hide");
+          if (esLogin) document.getElementById("loginMsg").textContent = "Clave incorrecta";
+          return;
+        }
+        if (!res.ok) return;
+        PAGOS = res.d;
+        if (PAGOS.reglas) REGLAS = PAGOS.reglas;
+        if (window.PanelUI) PanelUI.cacheSet("pagos", PAGOS);
+        document.getElementById("loginCard").classList.add("hide");
+        document.getElementById("panel").classList.remove("hide");
+        pintar();
+      }).catch(function () {});
+    // el saldo vivo viene del dashboard
+    fetch(API + "/dashboard?pass=" + encodeURIComponent(pass()), { cache: "no-store" })
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (d) { if (d) { DASH = d; if (window.PanelUI) PanelUI.cacheSet("dash", d); pintarSaldo(); } })
+      .catch(function () {});
+  }
+
+  function pintar() {
+    if (!PAGOS) return;
+    document.getElementById("loginCard").classList.add("hide");
+    document.getElementById("panel").classList.remove("hide");
+    pintarSaldo(); pintarMensual(); pintarHistoriales();
+    PanelUI.guia("pagos", [
+      { el: null, titulo: "💳 Tus pagos, claros", texto: "Aquí ves tu saldo de publicidad en vivo y registras tus pagos con una foto del comprobante." },
+      { el: "#cardSaldo", titulo: "Saldo de Google Ads", texto: "Cada bloque que pagas son $100.000 de publicidad. Lo gastado se descuenta en vivo. Cuando quede poco, te avisamos aquí y en el Resumen." },
+      { el: "#cardMensual", titulo: "Pago mensual", texto: "El servicio se paga los días 5. Los datos de transferencia están aquí mismo — pagas, le sacas foto al comprobante y la subes. Queda todo en tu historial." },
+      { el: null, titulo: "¡Eso es todo! 🎉", texto: "Sin papeles ni WhatsApp perdidos: todo tu historial de pagos queda aquí." }
+    ]);
+  }
+
+  function pintarSaldo() {
+    if (!PAGOS) return;
+    var saldo = DASH && DASH.saldoAds != null ? DASH.saldoAds : null;
+    var alerta = (DASH && DASH.alertaSaldo) || REGLAS.alertaSaldo;
+    var big = document.getElementById("saldoBig");
+    if (saldo == null) { big.textContent = "…"; return; }
+    var color = saldo <= alerta ? "#c0392b" : (saldo <= 50000 ? "#b8791b" : "#0c8a4a");
+    big.textContent = clp(saldo);
+    big.style.color = color;
+    var bar = document.getElementById("saldoBar");
+    bar.style.width = Math.max(0, Math.min(100, Math.round(saldo / REGLAS.bloque * 100))) + "%";
+    bar.style.background = color;
+    var nAds = (PAGOS.ads || []).length;
+    document.getElementById("saldoDet").textContent = nAds + " bloques pagados (" + clp(nAds * REGLAS.bloque) + ") · invertido " + clp(DASH.invertido);
+    var al = document.getElementById("saldoAlerta");
+    if (saldo <= alerta) {
+      al.classList.remove("hide");
+      al.innerHTML = saldo <= 0
+        ? "🔴 Tu saldo se agotó — sube el pago del siguiente bloque para que tus anuncios sigan corriendo."
+        : "🔴 Te quedan " + clp(saldo) + " de saldo — es momento de pagar el siguiente bloque.";
+    } else al.classList.add("hide");
+  }
+
+  function mesAPagar() {
+    var hoy = (PAGOS && PAGOS.hoy) || new Date().toISOString().slice(0, 10);
+    var mes = hoy.slice(0, 7);
+    var pagados = (PAGOS.publicista || []).map(function (p) { return p.mes; });
+    if (pagados.indexOf(mes) < 0) return mes;
+    var y = Number(mes.slice(0, 4)), m = Number(mes.slice(5, 7)) + 1;
+    if (m > 12) { m = 1; y++; }
+    return y + "-" + String(m).padStart(2, "0");
+  }
+
+  function pintarMensual() {
+    var hoy = PAGOS.hoy || new Date().toISOString().slice(0, 10);
+    var mes = hoy.slice(0, 7);
+    var pagado = (PAGOS.publicista || []).some(function (p) { return p.mes === mes; });
+    var est = document.getElementById("estadoMes");
+    var dia = Number(hoy.slice(8, 10));
+    if (pagado) {
+      est.className = "estado-mes ok";
+      est.textContent = "✓ " + mesNombre(mes).charAt(0).toUpperCase() + mesNombre(mes).slice(1) + " está pagado — ¡gracias!";
+    } else if (dia <= REGLAS.diaPago) {
+      var faltan = REGLAS.diaPago - dia;
+      est.className = "estado-mes pend";
+      est.textContent = "⏳ " + mesNombre(mes) + ": " + clp(REGLAS.mensual) + " — " + (faltan === 0 ? "se paga HOY (día 5)" : "vence en " + faltan + (faltan === 1 ? " día" : " días") + " (día 5)");
+    } else {
+      est.className = "estado-mes tarde";
+      est.textContent = "🔴 " + mesNombre(mes) + ": " + clp(REGLAS.mensual) + " — venció el día 5, sube el comprobante cuando pagues";
+    }
+    document.getElementById("btnPagoMes").textContent = "📷 Subir comprobante de " + mesNombre(mesAPagar());
+    document.getElementById("datosPago").textContent = PAGOS.datos || "Los datos de transferencia aún no están configurados — pídeselos a tu publicista.";
+    document.getElementById("btnCopiar").style.display = PAGOS.datos ? "" : "none";
+  }
+
+  function pintarHistoriales() {
+    var foto = function (p) {
+      return p.tieneFoto
+        ? '<a class="verfoto" target="_blank" href="' + API + "/pago-foto?id=" + p.id + "&pass=" + encodeURIComponent(pass()) + '">📷 ver</a>'
+        : '<span class="sinfoto">registro histórico</span>';
+    };
+    var ha = document.getElementById("histAds");
+    ha.innerHTML = (PAGOS.ads || []).length
+      ? PAGOS.ads.map(function (p) { return "<tr><td><b>N° " + p.bloque + "</b> · " + clp(p.monto) + "</td><td>" + fechaCL(p.fecha) + "</td><td>" + foto(p) + "</td></tr>"; }).join("")
+      : '<tr><td colspan="3" class="hint">Aún no hay pagos registrados.</td></tr>';
+    var hm = document.getElementById("histMes");
+    hm.innerHTML = (PAGOS.publicista || []).length
+      ? PAGOS.publicista.map(function (p) { return "<tr><td><b>" + mesNombre(p.mes) + "</b> · " + clp(p.monto) + "</td><td>" + fechaCL(p.fecha) + "</td><td>" + foto(p) + "</td></tr>"; }).join("")
+      : '<tr><td colspan="3" class="hint">Aún no hay meses registrados.</td></tr>';
+  }
+
+  function copiarDatos() {
+    var t = document.getElementById("datosPago").textContent;
+    (navigator.clipboard ? navigator.clipboard.writeText(t) : Promise.reject()).then(function () {
+      document.getElementById("btnCopiar").textContent = "✓ Copiado";
+      setTimeout(function () { document.getElementById("btnCopiar").textContent = "📋 Copiar datos"; }, 2000);
+    }).catch(function () {});
+  }
+
+  // --- monto del bloque de Ads: editable, con formato $1.234 mientras se escribe ---
+  function fmtMonto() {
+    var el = document.getElementById("adsMonto");
+    var n = (el.value || "").replace(/\D/g, "");
+    el.value = n ? Number(n).toLocaleString("es-CL") : "";
+  }
+  function montoAds() {
+    var n = parseInt((document.getElementById("adsMonto").value || "").replace(/\D/g, ""), 10);
+    return isFinite(n) ? n : 0;
+  }
+
+  // --- subir comprobante: foto → comprimir en el teléfono → POST ---
+  function subirFoto(tipo) {
+    tipoSubiendo = tipo;
+    document.getElementById("fileInput").click();
+  }
+  document.getElementById("fileInput").addEventListener("change", function () {
+    var f = this.files && this.files[0];
+    this.value = "";
+    if (!f || !tipoSubiendo) return;
+    var msg = document.getElementById(tipoSubiendo === "ads" ? "adsMsg" : "mesMsg");
+    var montoBloque = 0;
+    if (tipoSubiendo === "ads") {
+      montoBloque = montoAds();
+      if (montoBloque < 1000 || montoBloque > 1000000) {
+        msg.className = "msg bad"; msg.textContent = "Escribe un monto válido (entre $1.000 y $1.000.000)"; return;
+      }
+    }
+    msg.className = "msg"; msg.textContent = "Procesando foto…";
+    comprimir(f, function (dataUrl) {
+      if (!dataUrl) { msg.className = "msg bad"; msg.textContent = "No pude leer esa foto"; return; }
+      msg.textContent = "Subiendo…";
+      var body = { pass: pass(), tipo: tipoSubiendo, foto: dataUrl };
+      if (tipoSubiendo === "publicista") body.mes = mesAPagar();
+      if (tipoSubiendo === "ads") body.monto = montoBloque;
+      fetch(API + "/pago", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) })
+        .then(function (r) { return r.json().then(function (d) { return { ok: r.ok, d: d }; }); })
+        .then(function (res) {
+          if (!res.ok) { msg.className = "msg bad"; msg.textContent = res.d.error || "Error"; return; }
+          msg.className = "msg ok";
+          msg.textContent = tipoSubiendo === "ads"
+            ? "✓ Bloque N° " + res.d.item.bloque + " registrado — +" + clp(res.d.item.monto) + " de saldo 🎉"
+            : "✓ " + mesNombre(res.d.item.mes) + " registrado como pagado 🎉";
+          cargar(false);
+          setTimeout(function () { msg.textContent = ""; }, 5000);
+        }).catch(function () { msg.className = "msg bad"; msg.textContent = "Sin conexión"; });
+    });
+  });
+  function comprimir(file, cb) {
+    var fr = new FileReader();
+    fr.onload = function (e) {
+      var img = new Image();
+      img.onload = function () {
+        var max = 1400, w = img.width, h = img.height;
+        if (Math.max(w, h) > max) { var k = max / Math.max(w, h); w = Math.round(w * k); h = Math.round(h * k); }
+        var c = document.createElement("canvas");
+        c.width = w; c.height = h;
+        c.getContext("2d").drawImage(img, 0, 0, w, h);
+        cb(c.toDataURL("image/jpeg", 0.82));
+      };
+      img.onerror = function () { cb(null); };
+      img.src = e.target.result;
+    };
+    fr.onerror = function () { cb(null); };
+    fr.readAsDataURL(file);
+  }
+
+  if (pass()) cargar(true);
+  PanelUI.autoRefresh(function () { if (pass()) cargar(false); }, 60000);
+</script>
+</body>
+</html>

@@ -1,0 +1,35 @@
+# Worker del panel ASVR Grúas: atribución (código↔gclid), cierres, /dashboard,
+# /config ("Mi negocio") y pagos. Instanciado de panel-cliente/ (maestro DIXDY).
+# Deploy: cd ref-worker && npx wrangler deploy
+name = "asvrgruas-ref-api"
+main = "src/index.js"
+compatibility_date = "2026-06-01"
+
+# KV: el id se completa tras crear el namespace:
+#   npx wrangler kv namespace create REF
+[[kv_namespaces]]
+binding = "REF"
+id = "5abce2e0915a475cb1649831b235b105"
+
+# Crons — ⚠️ DESACTIVADOS 2026-07-16: la cuenta Cloudflare está en el LÍMITE de 5 cron
+# triggers del plan gratis (agente-correos 1, destapando-ref-api 2, fullfosas-ref-api 1,
+# ga4-worker 1). Mientras la campaña de Ads no exista no hacen falta. Al lanzarla, elegir:
+#   a) motores locales que YA existen: /loop 1h /aplicar-config (skill ya instalado en el
+#      clon) + subida nocturna vía GET /run?key=LOOKUP_SECRET desde una ronda launchd, o
+#   b) Workers Paid ($5/mes) → decisión de plata de Alejandro.
+# Cuando haya cupo, descomentar y redesplegar:
+#  - "59 3 * * *" UTC ≈ 23:59 Santiago: sube los cierres a Google Ads (Data Manager).
+#  - "5 * * * *" (cada hora): días programados de "Mi negocio" + reintento de pendientes.
+# [triggers]
+# crons = ["59 3 * * *", "5 * * * *"]
+
+# SECRETOS (se setean con `wrangler secret put`, NO van aquí en texto plano):
+#   PANEL_PASS              — clave que usa el DUEÑO en el panel
+#   LOOKUP_SECRET           — secreto del negocio (/lookup, /run, /pago-manual, /config-*)
+#   GADS_CLIENT_ID          — app OAuth (la misma del maestro)
+#   GADS_CLIENT_SECRET
+#   GADS_REFRESH_TOKEN      — refresh token VIVO (app OAuth ya en producción — docs/13)
+#   GADS_DEVELOPER_TOKEN
+#   GADS_LOGIN_CUSTOMER_ID  — MCC 6445509301 (enganche de la cuenta 8655524315 pendiente)
+#   DATOS_PAGO              — datos de transferencia (texto libre) — ⚠️ PENDIENTE: los carga
+#                             Alejandro; mientras, la vista Pagos dice "pídelos a tu publicista"

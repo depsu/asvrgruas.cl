@@ -3925,7 +3925,19 @@
           if (gid) localStorage.setItem("ad_ref", gid); else gid = localStorage.getItem("ad_ref") || "";
         } catch (_e) {}
         var gf = document.getElementById("gclidField"); if (gf) gf.value = gid;
-        // stub: la LP ya no anexa código de descuento a los WhatsApp
+        // Atribución "buen cliente": registra el clic en el worker (gclid → código corto).
+        // El código queda guardado (ad_code) pero NO se muestra: decisión de diseño de la LP
+        // (sin descuentos). Si Alejandro decide mostrarlo en los WhatsApp, ya está listo.
+        if (gid) {
+          var yaTiene = ""; try { yaTiene = localStorage.getItem("ad_code") || ""; } catch (_e) {}
+          if (!yaTiene) {
+            fetch("https://asvrgruas-ref-api.rivera-ale98.workers.dev/new", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ gclid: gid }) })
+              .then(function (r) { return r.json(); })
+              .then(function (d) { if (d && d.code) { try { localStorage.setItem("ad_code", d.code); } catch (_e) {} } })
+              .catch(function () {});
+          }
+        }
+        // stub: la LP no anexa código de descuento a los WhatsApp
         window.adRefSuffix = function () { return ""; };
       })();
       if (!("IntersectionObserver" in window)) { barra.classList.add("visible", "expanded"); return; }

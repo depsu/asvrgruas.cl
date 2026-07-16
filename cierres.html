@@ -1,0 +1,310 @@
+<!-- Panel del cliente ASRV Grúas — instanciado de panel-cliente/ (maestro DIXDY) 2026-07-16 -->
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Cierres del día · ASRV Grúas</title>
+<script>try{ if(localStorage.getItem('panel_pass')) document.documentElement.classList.add('logged'); }catch(e){}</script>
+<style>
+  html.logged #loginCard{ display:none; }
+  html.logged #panel{ display:block; }
+  :root{ --navy:#0f2742; --azul:#1f6feb; --ok:#0c8a4a; --bad:#c0392b; --bg:#f4f7fb; --line:#e3eaf2; }
+  *{ box-sizing:border-box; }
+  body{ margin:0; background:var(--bg); color:var(--navy); font:16px/1.5 -apple-system,Segoe UI,Roboto,sans-serif; }
+  .wrap{ max-width:520px; margin:0 auto; padding:22px 16px 60px; }
+  h1{ font-size:21px; margin:0 0 2px; }
+  .sub{ color:#5b6b7c; font-size:14px; margin:0 0 18px; }
+  .card{ background:#fff; border:1px solid var(--line); border-radius:14px; padding:18px; margin-bottom:16px; box-shadow:0 1px 3px rgba(0,0,0,.05); }
+  label{ display:block; font-weight:700; font-size:14px; margin:12px 0 5px; }
+  input,select{ width:100%; padding:13px 14px; border:1.5px solid var(--line); border-radius:10px; font-size:16px; background:#fff; color:var(--navy); }
+  input:focus,select:focus{ outline:none; border-color:var(--azul); }
+  button{ width:100%; padding:14px; border:0; border-radius:10px; background:var(--azul); color:#fff; font-size:16px; font-weight:700; cursor:pointer; margin-top:16px; }
+  button:active{ transform:translateY(1px); }
+  .msg{ margin-top:12px; font-weight:600; font-size:14px; text-align:center; min-height:20px; }
+  .msg.ok{ color:var(--ok); } .msg.bad{ color:var(--bad); }
+  .hint{ color:#5b6b7c; font-size:13px; margin-top:4px; }
+  table{ width:100%; border-collapse:collapse; font-size:14px; }
+  th,td{ padding:8px 6px; text-align:left; border-bottom:1px solid var(--line); }
+  th{ font-size:12px; color:#5b6b7c; }
+  .codigo-row{ display:flex; gap:8px; }
+  .codigo-row input{ flex:1; min-width:0; }
+  .sc-btn{ width:auto; flex:none; margin:0; padding:0 15px; background:#fff; color:var(--azul); border:1.5px solid var(--azul); border-radius:10px; font-weight:700; font-size:14px; cursor:pointer; }
+  .sc-btn.on{ background:var(--azul); color:#fff; }
+  .editlink{ font-size:11.5px; color:var(--azul); font-weight:700; text-decoration:none; }
+  .pill{ font-size:11px; font-weight:700; padding:2px 8px; border-radius:99px; }
+  .p-ok{ background:#e3f6ec; color:var(--ok); } .p-wait{ background:#fff3da; color:#b8791b; }
+  .p-man{ background:#e7e9ff; color:#4338ca; }
+  .tel-card{ border-color:#cdd4ff; background:#f7f8ff; }
+  .del{ background:none; color:var(--bad); border:0; font-size:18px; cursor:pointer; width:auto; padding:2px 8px; margin:0; }
+  .top-note{ background:#fdf6e3; border:1px solid #f0e2b8; border-radius:10px; padding:10px 12px; font-size:13.5px; color:#7a5c00; margin-bottom:16px; }
+  .estado{ border-radius:10px; padding:11px 12px; font-size:14px; font-weight:700; text-align:center; margin-bottom:16px; background:#eef3f9; color:#5b6b7c; }
+  .estado.ok{ background:#e3f6ec; color:var(--ok); }
+  .estado.wait{ background:#fff3da; color:#b8791b; }
+  .hide{ display:none; }
+  /* Barra de progreso hacia la meta (activar el optimizador) */
+  .meta{ background:linear-gradient(135deg,#0f2742,#1f6feb); color:#fff; border-radius:14px; padding:16px 18px; margin-bottom:16px; box-shadow:0 2px 8px rgba(15,39,66,.18); }
+  .meta .mtitle{ font-weight:800; font-size:15.5px; }
+  .meta .mnum{ font-size:13px; opacity:.92; margin:3px 0 11px; }
+  .meta .mnum b{ font-size:15px; }
+  .bar{ background:rgba(255,255,255,.22); border-radius:99px; height:15px; overflow:hidden; }
+  .bar > span{ display:block; height:100%; width:0; background:linear-gradient(90deg,#1ed760,#3ff58a); border-radius:99px; transition:width .25s ease-out; }
+  .barwrap{ position:relative; }
+  .rider{ position:absolute; top:50%; transform:translate(-50%,-50%); font-size:15px; font-style:normal; line-height:1; pointer-events:none; transition:left .25s ease-out; filter:drop-shadow(0 1px 1.5px rgba(0,0,0,.4)); }
+  .meta .mfoot{ font-size:12.5px; opacity:.94; margin-top:11px; line-height:1.45; }
+  .meta.done{ background:linear-gradient(135deg,#0c8a4a,#1ed760); }
+  .navlink{ display:block; text-align:center; background:#fff; border:1px solid var(--line); border-radius:12px; padding:13px; margin-bottom:14px; color:var(--azul); font-weight:700; text-decoration:none; box-shadow:0 1px 3px rgba(0,0,0,.05); }
+  .navlink:active{ transform:translateY(1px); }
+  .showpass{ display:flex; align-items:center; gap:7px; font-size:13.5px; color:#5b6b7c; font-weight:500; margin-top:9px; cursor:pointer; }
+  .showpass input{ width:auto; margin:0; }
+  .passhint{ color:#5b6b7c; font-size:13px; margin-top:8px; }
+  .passhint b{ letter-spacing:1.5px; color:var(--navy); }
+</style>
+</head>
+<body>
+<script src="/panel-ui.js"></script>
+<div class="wrap">
+  <h1 style="margin-top:10px">📋 Cierres del día</h1>
+  <p class="sub">ASRV Grúas — registra los trabajos que cerraste</p>
+
+  <!-- Clave -->
+  <div class="card" id="loginCard">
+    <label for="pass">Clave de acceso</label>
+    <input id="pass" type="password" placeholder="Escribe la clave" autocomplete="current-password">
+    <label class="showpass"><input type="checkbox" onchange="document.getElementById('pass').type = this.checked ? 'text' : 'password'"> 👁 Mostrar clave</label>
+    <div class="passhint">¿La olvidaste? Pista: <b>g******3</b></div>
+    <button onclick="entrar()">Entrar</button>
+    <div class="msg bad" id="loginMsg"></div>
+  </div>
+
+  <!-- Panel -->
+  <div id="panel" class="hide">
+    <!-- Meta: barra hacia los 30 cierres (activar optimizador) -->
+    <div class="meta" id="meta">
+      <div class="mtitle">🚀 Camino al modo inteligente</div>
+      <div class="mnum" id="metaNum">—</div>
+      <div class="barwrap"><div class="bar"><span id="metaBar"></span></div><i class="rider" id="metaRider">🚀</i></div>
+      <div class="mfoot" id="metaFoot">Cada cliente que cargas acerca la meta. Al llegar a <b>30</b>, Google empieza a buscar gente que <b>paga</b>, no solo clics.</div>
+    </div>
+    <div class="estado" id="estado">Cargando…</div>
+    <div class="top-note">⚠️ Anota <b>solo clientes que pagaron</b> (buenos). Si fue un mal-fit, no lo pongas.</div>
+
+    <div class="card" id="formCierre">
+      <label for="codigo">Código del cliente</label>
+      <div class="codigo-row">
+        <input id="codigo" placeholder="ej: 2JRRNQ" autocapitalize="characters">
+        <button type="button" class="sc-btn" id="scBtn" onclick="toggleSinCodigo()">Sin código</button>
+      </div>
+      <div class="hint" id="codigoHint">El código que te mandó el cliente por WhatsApp. ¿No lo tiene o lo borró? Toca «Sin código».</div>
+
+      <div id="diaBox" class="hide">
+        <label for="diaContacto">¿Qué día te contactó por primera vez?</label>
+        <input id="diaContacto" type="date">
+      </div>
+
+      <label for="horaContacto">¿A qué hora te contactó? <span id="horaOpt" style="font-weight:500;color:#5b6b7c">(opcional)</span></label>
+      <input id="horaContacto" type="time">
+      <div class="hint" id="horaHint">Si no la pones, la sacamos del código (el momento en que hizo clic).</div>
+
+      <label for="servicio">Servicio realizado</label>
+      <select id="servicio"></select>
+
+      <label for="comuna">Comuna</label>
+      <select id="comuna"></select>
+
+      <label for="precio">Precio cobrado ($)</label>
+      <input id="precio" inputmode="numeric" placeholder="ej: 55000">
+
+      <label for="nota">Nota (opcional)</label>
+      <input id="nota" placeholder="ej: cliente frecuente">
+
+      <button onclick="guardar()">Guardar cierre</button>
+      <div class="msg" id="saveMsg"></div>
+    </div>
+
+    <div class="card" id="cardLista">
+      <h1 style="font-size:16px;margin:0 0 10px">Cargados</h1>
+      <table>
+        <thead><tr><th>Código</th><th>Precio</th><th>Estado</th><th></th></tr></thead>
+        <tbody id="lista"><tr><td colspan="4" class="hint">Cargando…</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script>
+  var API = "https://asvrgruas-ref-api.rivera-ale98.workers.dev";
+  var COMUNAS = ["", "Santiago", "Cerrillos", "Cerro Navia", "Conchalí", "El Bosque", "Estación Central", "Huechuraba",
+    "Independencia", "La Cisterna", "La Florida", "La Granja", "La Pintana", "La Reina", "Las Condes", "Lo Barnechea",
+    "Lo Espejo", "Lo Prado", "Macul", "Maipú", "Ñuñoa", "Pedro Aguirre Cerda", "Peñalolén", "Providencia", "Pudahuel",
+    "Puente Alto", "Quilicura", "Quinta Normal", "Recoleta", "Renca", "San Bernardo", "San Joaquín", "San Miguel",
+    "San Ramón", "Vitacura", "Buin", "Calera de Tango", "Colina", "Lampa", "Padre Hurtado", "Peñaflor", "Pirque",
+    "Talagante", "Otra"];
+  var SERVICIOS = ["", "Destape de alcantarillado", "Destape de WC", "Destape de cañerías", "Destape de lavaplatos",
+    "Limpieza de fosa séptica", "Video inspección", "Otro"];
+  document.getElementById("comuna").innerHTML = COMUNAS.map(function (c) { return '<option value="' + c + '">' + (c || "— Elige la comuna —") + "</option>"; }).join("");
+  document.getElementById("servicio").innerHTML = SERVICIOS.map(function (s) { return '<option value="' + s + '">' + (s || "— Elige el servicio —") + "</option>"; }).join("");
+  function pass() { return localStorage.getItem("panel_pass") || ""; }
+  function hoyLocal() {
+    var d = new Date();
+    return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+  }
+
+  var sinCodigo = false;
+  function toggleSinCodigo() {
+    sinCodigo = !sinCodigo;
+    var btn = document.getElementById("scBtn"), cod = document.getElementById("codigo");
+    btn.classList.toggle("on", sinCodigo);
+    btn.textContent = sinCodigo ? "✓ Sin código" : "Sin código";
+    cod.disabled = sinCodigo;
+    if (sinCodigo) cod.value = "";
+    cod.placeholder = sinCodigo ? "— sin código —" : "ej: 2JRRNQ";
+    document.getElementById("diaBox").classList.toggle("hide", !sinCodigo);
+    document.getElementById("horaOpt").textContent = sinCodigo ? "" : "(opcional)";
+    document.getElementById("horaHint").textContent = sinCodigo
+      ? "La hora en que te llamó o escribió por primera vez (aproximada está bien)."
+      : "Si no la pones, la sacamos del código (el momento en que hizo clic).";
+    document.getElementById("codigoHint").textContent = sinCodigo
+      ? "Se guarda sin código: cuenta para tu % de cierre (no se sube a Google)."
+      : "El código que te mandó el cliente por WhatsApp. ¿No lo tiene o lo borró? Toca «Sin código».";
+    if (sinCodigo && !document.getElementById("diaContacto").value) document.getElementById("diaContacto").value = hoyLocal();
+  }
+
+  function entrar() {
+    var p = document.getElementById("pass").value.trim();
+    if (!p) return;
+    localStorage.setItem("panel_pass", p);
+    document.documentElement.classList.add("logged");
+    cargarLista(true);
+  }
+  function mostrarPanel() {
+    document.getElementById("loginCard").classList.add("hide");
+    document.getElementById("panel").classList.remove("hide");
+    PanelUI.guia("cierres", [
+      { el: null, titulo: "📋 Tus cierres", texto: "Aquí registras los clientes que PAGARON. Con eso Google aprende a traerte más gente como ellos." },
+      { el: "#meta", titulo: "Camino al modo inteligente 🚀", texto: "Al llegar a 30 cierres, Google deja de buscar solo clics y empieza a buscar clientes que pagan." },
+      { el: "#formCierre", titulo: "Registrar un cierre", texto: "Pon el código que le llegó al cliente por WhatsApp. ¿No lo tiene o lo borró? Toca «Sin código» — igual suma a tu % de cierre." },
+      { el: "#cardLista", titulo: "Los cargados", texto: "Los con código se suben a Google cada noche. Si un código quedó mal escrito, tócale ✏️ editar código." },
+      { el: null, titulo: "¡Listo! 🎉", texto: "Registra solo clientes buenos que pagaron. Repite esta guía desde el menú ☰ → 🎓." }
+    ]);
+  }
+  function guardar() {
+    var codigo = document.getElementById("codigo").value.trim();
+    var precio = document.getElementById("precio").value.trim();
+    var comuna = document.getElementById("comuna").value;
+    var servicio = document.getElementById("servicio").value;
+    var hora = document.getElementById("horaContacto").value.trim();
+    var dia = document.getElementById("diaContacto").value.trim();
+    var nota = document.getElementById("nota").value.trim();
+    var msg = document.getElementById("saveMsg");
+    if (!sinCodigo && (!codigo || !precio)) { msg.className = "msg bad"; msg.textContent = "Faltan código o precio (¿no tiene código? toca «Sin código»)"; return; }
+    if (sinCodigo && (!hora || !precio)) { msg.className = "msg bad"; msg.textContent = "Falta la hora del contacto o el precio"; return; }
+    msg.className = "msg"; msg.textContent = "Guardando…";
+    fetch(API + "/cierre", { method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ pass: pass(), manual: sinCodigo, codigo: sinCodigo ? "" : codigo, precio: precio,
+        comuna: comuna, servicio: servicio, hora: hora, dia: sinCodigo ? dia : "", nota: nota }) })
+      .then(function (r) { return r.json().then(function (d) { return { ok: r.ok, d: d }; }); })
+      .then(function (res) {
+        if (!res.ok) { msg.className = "msg bad"; msg.textContent = res.d.error || "Error"; return; }
+        msg.className = "msg ok"; msg.textContent = sinCodigo ? "✓ Guardado — cuenta para tu % de cierre" : "✓ Guardado";
+        ["codigo", "precio", "comuna", "servicio", "horaContacto", "diaContacto", "nota"].forEach(function (id) { document.getElementById(id).value = ""; });
+        if (sinCodigo) toggleSinCodigo();
+        cargarLista();
+        setTimeout(function () { msg.textContent = ""; }, 2500);
+      }).catch(function () { msg.className = "msg bad"; msg.textContent = "Sin conexión"; });
+  }
+  function editarCodigo(codigo) {
+    var nuevo = prompt("Escribe el código correcto (el que le llegó al cliente por WhatsApp, ej: 2JRRNQ):");
+    if (!nuevo || !nuevo.trim()) return;
+    fetch(API + "/cierre-codigo", { method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ pass: pass(), codigo: codigo, nuevo: nuevo.trim() }) })
+      .then(function (r) { return r.json().then(function (d) { return { ok: r.ok, d: d }; }); })
+      .then(function (res) {
+        if (!res.ok) { alert(res.d.error || "No se pudo corregir"); return; }
+        alert("✓ Código corregido a " + res.d.codigo + " — se sube a Google esta noche 🎉");
+        cargarLista();
+      }).catch(function () { alert("Sin conexión"); });
+  }
+  function borrar(codigo) {
+    if (!confirm("¿Borrar " + codigo + "?")) return;
+    fetch(API + "/cierre-delete", { method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ pass: pass(), codigo: codigo }) }).then(function () { cargarLista(); });
+  }
+  var pintadoDeCache = false;
+  function cargarLista(esLogin) {
+    // 1) caché local: la lista aparece AL INSTANTE con lo último conocido
+    if (!pintadoDeCache && pass() && window.PanelUI) {
+      var cached = PanelUI.cacheGet("cierres");
+      if (cached) { pintadoDeCache = true; mostrarPanel(); pintarLista(cached); }
+    }
+    // 2) datos frescos por detrás
+    fetch(API + "/cierres?pass=" + encodeURIComponent(pass()), { cache: "no-store" })
+      .then(function (r) { return r.json().then(function (d) { return { ok: r.ok, status: r.status, d: d }; }); })
+      .then(function (res) {
+        if (res.status === 401) {        // clave REALMENTE incorrecta → pedirla de nuevo
+          localStorage.removeItem("panel_pass");
+          if (window.PanelUI) PanelUI.cacheClear();
+          document.documentElement.classList.remove("logged");
+          document.getElementById("loginCard").classList.remove("hide");
+          document.getElementById("panel").classList.add("hide");
+          if (esLogin) document.getElementById("loginMsg").textContent = "Clave incorrecta";
+          return;
+        }
+        if (!res.ok) return;             // error transitorio (red/servidor) → NO cerrar la sesión
+        mostrarPanel();
+        if (window.PanelUI) PanelUI.cacheSet("cierres", res.d.items || []);
+        pintarLista(res.d.items || []);
+      }).catch(function () {});
+  }
+  function pintarLista(items) {
+        var tb = document.getElementById("lista");
+        var est = document.getElementById("estado");
+        // En cola = SOLO lo que de verdad se sube a Google esta noche: cierres con código
+        // aún no subidos (nuevos, o sin-código que fueron corregidos con ✏️).
+        // Los "sin código" NO van a Google: son data del % de cierre, no cuentan aquí.
+        var pend = items.filter(function (it) { return !it.subido && !it.manual; }).length;
+        // --- Meta: barra hacia los 30 cierres ---
+        var GOAL = 30;
+        var total = items.filter(function (it) { return !it.manual; }).length;  // los manuales (teléfono) no cuentan hasta validarse
+        var fact = items.reduce(function (s, it) { return s + (Number(it.precio) || 0); }, 0);
+        var pct = Math.min(total / GOAL, 1) * 100;
+        var meta = document.getElementById("meta");
+        document.getElementById("metaBar").style.width = pct.toFixed(0) + "%";
+        document.getElementById("metaRider").style.left = Math.min(pct, 100).toFixed(0) + "%";
+        document.getElementById("metaNum").innerHTML = "<b>" + total + "</b> de " + GOAL + " cierres · $" + fact.toLocaleString("es-CL") + " facturado";
+        if (total >= GOAL) {
+          meta.className = "meta done";
+          document.getElementById("metaFoot").innerHTML = "🎉 <b>¡Meta lista!</b> Ya hay datos suficientes para activar el optimizador hacia clientes que pagan.";
+        } else {
+          meta.className = "meta";
+          document.getElementById("metaFoot").innerHTML = "Faltan <b>" + (GOAL - total) + "</b> · al llegar a 30, Google empieza a buscar gente que <b>paga</b>, no solo clics.";
+        }
+        if (!items.length) { est.className = "estado"; est.textContent = "Aún no hay cierres cargados."; tb.innerHTML = '<tr><td colspan="4" class="hint">Aún no hay cierres hoy.</td></tr>'; return; }
+        if (pend === 0) { est.className = "estado ok"; est.textContent = "✓ Todo al día — nada pendiente de subir a Google"; }
+        else { est.className = "estado wait"; est.textContent = "🕒 " + pend + (pend === 1 ? " en cola · se sube" : " en cola · se suben") + " automáticamente esta noche"; }
+        tb.innerHTML = items.map(function (it) {
+          var estado = it.subido ? '<span class="pill p-ok">subido</span>'
+            : (it.manual ? '<span class="pill p-man">sin código</span>' : '<span class="pill p-wait">en cola</span>');
+          var precio = "$" + Number(it.precio).toLocaleString("es-CL");
+          var diaC = (it.diaContacto || "").length === 10 ? (it.diaContacto.slice(8, 10) + "/" + it.diaContacto.slice(5, 7) + " ") : "";
+          var horaTxt = (diaC + (it.hora || "")).trim();
+          // sin hora conocida (ej: código mal escrito convertido) → mostrar el código original
+          var label = it.manual ? ("📞 " + (horaTxt || it.codigo)) : it.codigo;
+          var detalle = [it.servicio, it.comuna, it.nota].filter(Boolean).join(" · ");
+          if (it.notaSistema) detalle = (detalle ? detalle + " · " : "") + "⚠️ el código no existía (¿mal escrito?)";
+          var borrable = !it.subido && !it.noBorrar;   // tras el cron nocturno son data definitiva
+          // ✏️ solo para los que pasaron por la cola con código MALO (los de teléfono no tienen código que corregir)
+          var editar = (it.manual && !it.subido && it.notaSistema)
+            ? "<br><a href='#' class='editlink' onclick=\"editarCodigo('" + it.codigo + "');return false\">✏️ editar código</a>"
+            : "";
+          return "<tr><td><b>" + label + "</b><br><span class='hint'>" + detalle + "</span>" + editar + "</td><td>" + precio +
+            "</td><td>" + estado + "</td><td>" + (borrable ? "<button class='del' onclick=\"borrar('" + it.codigo + "')\">✕</button>" : "") + "</td></tr>";
+        }).join("");
+  }
+  // auto-entrar si ya hay clave guardada
+  if (pass()) cargarLista(true);
+  PanelUI.autoRefresh(function () { if (pass()) cargarLista(); }, 60000);
+</script>
+</body>
+</html>

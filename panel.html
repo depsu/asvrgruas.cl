@@ -1,0 +1,375 @@
+<!-- Panel del cliente ASRV Grúas — instanciado de panel-cliente/ (maestro DIXDY) 2026-07-16 -->
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Panel · ASRV Grúas</title>
+<script>try{ if(localStorage.getItem('panel_pass')) document.documentElement.classList.add('logged'); }catch(e){}</script>
+<style>
+  html.logged #loginCard{ display:none; }
+  html.logged #home{ display:block; }
+  :root{ --navy:#0f2742; --azul:#1f6feb; --ok:#0c8a4a; --bad:#c0392b; --bg:#f4f7fb; --line:#e3eaf2; --soft:#5b6b7c; }
+  *{ box-sizing:border-box; }
+  body{ margin:0; background:var(--bg); color:var(--navy); font:16px/1.5 -apple-system,Segoe UI,Roboto,sans-serif; }
+  .wrap{ max-width:560px; margin:0 auto; padding:20px 16px 60px; }
+  .hide{ display:none; }
+  .card{ background:#fff; border:1px solid var(--line); border-radius:16px; padding:18px; margin-bottom:14px; box-shadow:0 1px 3px rgba(15,39,66,.05); }
+  label{ display:block; font-weight:700; font-size:14px; margin:0 0 6px; }
+  input{ width:100%; padding:13px 14px; border:1.5px solid var(--line); border-radius:11px; font-size:16px; }
+  input:focus{ outline:none; border-color:var(--azul); }
+  .btn{ width:100%; padding:14px; border:0; border-radius:11px; background:var(--azul); color:#fff; font-size:16px; font-weight:700; cursor:pointer; margin-top:14px; }
+  .msg{ margin-top:10px; font-weight:600; font-size:14px; text-align:center; color:var(--bad); min-height:18px; }
+  .showpass{ display:flex; align-items:center; gap:7px; font-size:13.5px; color:var(--soft); font-weight:500; margin-top:9px; cursor:pointer; }
+  .showpass input{ width:auto; margin:0; }
+  .passhint{ color:var(--soft); font-size:13px; margin-top:8px; }
+  .passhint b{ letter-spacing:1.5px; color:var(--navy); }
+
+  .saludo{ margin:8px 2px 16px; }
+  .saludo h1{ font-size:24px; margin:0; letter-spacing:-.3px; }
+  .saludo p{ margin:3px 0 0; color:var(--soft); font-size:14px; }
+
+  .kpis{ display:grid; grid-template-columns:repeat(2,1fr); gap:10px; margin-bottom:16px; }
+  .kpi{ position:relative; background:#fff; border:1px solid var(--line); border-radius:14px; padding:13px 8px; text-align:center; box-shadow:0 1px 3px rgba(15,39,66,.05); }
+  .kbar{ display:block; height:4px; border-radius:99px; background:#eef3f9; margin:6px 12px 0; overflow:hidden; }
+  .kbar i{ display:block; height:100%; border-radius:99px; width:0; }
+  .kpi .n{ font-size:19px; font-weight:900; letter-spacing:-.3px; }
+  .kpi .l{ font-size:11px; color:var(--soft); margin-top:2px; font-weight:600; }
+  .kpi.azul .n{ color:var(--azul); } .kpi.verde .n{ color:var(--ok); }
+
+  /* Proyección de ganancia mensual + simulador de tasa de cierre */
+  .card{ background:#fff; border:1px solid var(--line); border-radius:16px; padding:18px; margin-bottom:14px; box-shadow:0 1px 3px rgba(15,39,66,.05); }
+  .card h2{ font-size:15.5px; margin:0 0 4px; }
+  .proy-big{ text-align:center; font-size:34px; font-weight:900; letter-spacing:-1px; margin:10px 0 2px; }
+  .proy-sub{ text-align:center; font-size:12.5px; color:var(--soft); margin-bottom:14px; line-height:1.5; }
+  .tasa-row{ display:flex; justify-content:space-between; align-items:baseline; font-size:13px; color:var(--soft); font-weight:600; margin-bottom:2px; }
+  .tasa-row b{ font-size:19px; letter-spacing:-.3px; }
+  input[type=range].tasa{ -webkit-appearance:none; appearance:none; width:100%; height:12px; border-radius:99px; outline:none; margin:8px 0 2px;
+    background:linear-gradient(90deg,#e8b4ad 0%,#e8b4ad 23%,#b5dfc8 25%,#b5dfc8 48%,#ecd9a0 50%,#ecd9a0 100%); }
+  input[type=range].tasa::-webkit-slider-thumb{ -webkit-appearance:none; width:28px; height:28px; border-radius:50%; background:#fff; border:4px solid var(--azul); box-shadow:0 2px 8px rgba(15,39,66,.35); cursor:pointer; }
+  input[type=range].tasa::-moz-range-thumb{ width:24px; height:24px; border-radius:50%; background:#fff; border:4px solid var(--azul); box-shadow:0 2px 8px rgba(15,39,66,.35); cursor:pointer; }
+  .tasa-escala{ display:flex; justify-content:space-between; font-size:10.5px; color:#a5b2c2; font-weight:700; margin-bottom:2px; }
+  .tasa-actual{ text-align:center; font-size:12px; color:var(--soft); margin:6px 0 0; }
+  .tasa-actual a{ color:var(--azul); font-weight:700; text-decoration:none; }
+  .consejo{ background:#f2f7ff; border:1px solid #d5e4fb; border-radius:12px; padding:12px 14px; font-size:13.5px; line-height:1.5; margin-top:16px; }
+  .consejo .ct{ font-weight:800; font-size:12px; color:var(--azul); letter-spacing:.04em; text-transform:uppercase; margin-bottom:3px; }
+  .verTodos{ width:100%; margin-top:10px; padding:10px; border:1px solid var(--line); background:#fff; color:var(--azul); font-weight:700; font-size:13px; border-radius:10px; cursor:pointer; }
+  .consejoLi{ display:flex; gap:9px; align-items:flex-start; padding:9px 2px; border-bottom:1px solid #eef2f7; font-size:13px; line-height:1.45; }
+  .consejoLi:last-child{ border-bottom:0; }
+  .consejoLi .pts{ margin-left:auto; flex:none; font-size:11px; font-weight:800; color:var(--ok); background:#e9f8ef; border-radius:20px; padding:2px 8px; white-space:nowrap; }
+  .simTodos{ background:linear-gradient(135deg,#0f2742,#1f6feb); color:#fff; border-radius:12px; padding:13px 15px; font-size:13.5px; line-height:1.55; margin-top:12px; }
+  .simTodos b{ font-size:15px; }
+  .simTodos button{ display:block; width:100%; margin-top:9px; padding:9px; border:0; border-radius:9px; background:rgba(255,255,255,.16); color:#fff; font-weight:800; font-size:13px; cursor:pointer; }
+
+  .resp{ border:1px solid var(--line); border-radius:12px; padding:11px 13px; margin-bottom:9px; background:#f7faff; }
+  .resp .rt{ display:flex; align-items:center; gap:8px; font-weight:800; font-size:13px; margin-bottom:5px; }
+  .resp .rt button{ margin-left:auto; flex:none; border:1px solid var(--azul); background:#fff; color:var(--azul); font-weight:800; font-size:12px; border-radius:8px; padding:5px 13px; cursor:pointer; }
+  .resp .rt button.ok{ background:var(--ok); border-color:var(--ok); color:#fff; }
+  .resp .rx{ font-size:13px; line-height:1.5; color:#3d4f63; white-space:pre-line; }
+
+  .accesos{ display:flex; flex-direction:column; gap:11px; }
+  .acceso{ display:flex; align-items:center; gap:14px; background:#fff; border:1px solid var(--line); border-radius:16px; padding:16px; text-decoration:none; color:var(--navy); box-shadow:0 1px 3px rgba(15,39,66,.05); }
+  .acceso:active{ transform:scale(.99); }
+  .acceso .ic{ width:52px; height:52px; border-radius:14px; display:flex; align-items:center; justify-content:center; font-size:24px; flex:none; }
+  .acceso.a1 .ic{ background:#eaf2fe; } .acceso.a2 .ic{ background:#e9f8ef; } .acceso.a3 .ic{ background:#fff4e0; }
+  .acceso b{ font-size:16px; display:block; }
+  .acceso span{ font-size:13px; color:var(--soft); line-height:1.35; display:block; margin-top:1px; }
+  .acceso .go{ margin-left:auto; color:#b9c5d3; font-size:20px; flex:none; }
+
+  .salud{ display:flex; align-items:center; gap:9px; justify-content:center; margin-top:18px; font-size:13px; color:var(--soft); font-weight:600; }
+  .salud .dot{ width:9px; height:9px; border-radius:50%; background:#c9d4e0; }
+  .salud.ok .dot{ background:#1ed760; box-shadow:0 0 0 3px #e3f6ec; }
+</style>
+</head>
+<body>
+<script src="/panel-ui.js"></script>
+<div class="wrap">
+
+  <!-- Clave -->
+  <div class="card" id="loginCard" style="margin-top:14px">
+    <label for="pass">Clave de acceso</label>
+    <input id="pass" type="password" placeholder="Escribe la clave" autocomplete="current-password">
+    <label class="showpass"><input type="checkbox" onchange="document.getElementById('pass').type = this.checked ? 'text' : 'password'"> 👁 Mostrar clave</label>
+    <div class="passhint">¿La olvidaste? Pista: <b>g******3</b></div>
+    <button class="btn" onclick="entrar()">Entrar</button>
+    <div class="msg" id="loginMsg"></div>
+  </div>
+
+  <!-- Bienvenida -->
+  <div id="home" class="hide">
+    <div class="saludo"><h1 id="hola">¡Hola! 👋</h1><p>Este es el panel de tu negocio. Todo en simple.</p></div>
+
+    <div class="kpis" id="kpis" style="display:none">
+      <div class="kpi"><button class="pu-info" onclick="infoKpi('contactos')">i</button><div class="n" id="kContactos">—</div><div class="l">Contactos</div></div>
+      <div class="kpi"><button class="pu-info" onclick="PanelUI.infoCierre(DATA)">i</button><div class="n" id="kPct">—</div><div class="l">% de cierre</div><span class="kbar"><i id="kPctBar"></i></span></div>
+      <div class="kpi verde"><button class="pu-info" onclick="infoKpi('facturado')">i</button><div class="n" id="kFact">—</div><div class="l">Facturado</div></div>
+      <div class="kpi"><button class="pu-info" onclick="infoKpi('semana')">i</button><div class="n" id="kSemana">—</div><div class="l">Gasto esta semana <span style="font-weight:400">(aprox.)</span></div></div>
+    </div>
+
+    <!-- Proyección de ganancia mensual -->
+    <div class="card" id="cardProy" style="display:none">
+      <h2>📈 Tu proyección de ganancia mensual</h2>
+      <div class="proy-big" id="proyMonto">—</div>
+      <div class="proy-sub" id="proySub">—</div>
+
+      <div class="tasa-row"><span>Mueve la pelotita: ¿y si tu tasa de cierre fuera…?</span><b id="tasaVal">—</b></div>
+      <input type="range" class="tasa" id="tasaSlider" min="1" max="40" step="1" oninput="window._slMovido=Date.now();simular(this.value)">
+      <div class="tasa-escala"><span>1%</span><span>🔴 10%</span><span>🟢 20%</span><span>🏆 40%</span></div>
+      <div class="tasa-actual" id="tasaActual"></div>
+
+      <div class="consejo" id="consejoHoy"></div>
+      <button class="verTodos" id="btnConsejos" onclick="toggleConsejos()">Ver los 10 consejos para cerrar más ↓</button>
+      <div id="consejosTodos" class="hide"></div>
+
+      <div class="simTodos" id="simTodos"></div>
+    </div>
+
+    <!-- Respuestas rápidas para WhatsApp -->
+    <div class="card" id="cardResp">
+      <h2>💬 Respuestas listas para WhatsApp</h2>
+      <div class="proy-sub" style="text-align:left;margin-bottom:10px">Toca <b>Copiar</b>, pega en WhatsApp y ajusta la hora. Responder al tiro + decir el valor + dar hora concreta = más cierres.</div>
+      <div id="respuestas"></div>
+    </div>
+
+    <div class="accesos">
+      <a class="acceso a1" href="/resumen.html">
+        <span class="ic">📊</span>
+        <span><b>Resumen de tu publicidad</b><span>Cuánto invertiste, cuántos te contactaron y de dónde llegan.</span></span>
+        <span class="go">›</span>
+      </a>
+      <a class="acceso a2" href="/cierres.html">
+        <span class="ic">📋</span>
+        <span><b>Registrar un cierre</b><span>Anota los clientes que pagaron — con o sin código.</span></span>
+        <span class="go">›</span>
+      </a>
+      <a class="acceso a3" href="/mi-negocio.html">
+        <span class="ic">⚙️</span>
+        <span><b>Mi negocio</b><span>Tu horario, tus días libres y cuánto invertir por día.</span></span>
+        <span class="go">›</span>
+      </a>
+      <a class="acceso a1" href="/pago.html">
+        <span class="ic">💳</span>
+        <span><b>Pagos</b><span>Tu saldo de publicidad en vivo y tus comprobantes.</span></span>
+        <span class="go">›</span>
+      </a>
+    </div>
+
+    <div class="salud" id="salud"><span class="dot"></span><span id="saludTxt">Comprobando tu publicidad…</span></div>
+  </div>
+</div>
+
+<script>
+  var API = "https://asvrgruas-ref-api.rivera-ale98.workers.dev";
+  var DATA = null;
+  function pass() { return localStorage.getItem("panel_pass") || ""; }
+  function clp(n) { return "$" + Number(n || 0).toLocaleString("es-CL"); }
+
+  function infoKpi(cual) {
+    var d = DATA || {};
+    if (cual === "contactos") {
+      PanelUI.info("Tus contactos", "<p>Personas que hicieron clic en tu anuncio y luego <b>te escribieron o llamaron</b>.</p>" +
+        '<div style="display:flex;gap:8px;margin-top:8px"><span style="flex:1;text-align:center;background:#e9f8ef;border-radius:12px;padding:12px"><b style="font-size:22px;color:#0c8a4a">' + (d.whatsapp || 0) + "</b><br>📱 WhatsApp</span>" +
+        '<span style="flex:1;text-align:center;background:#eaf2fe;border-radius:12px;padding:12px"><b style="font-size:22px;color:#1f6feb">' + (d.telefono || 0) + "</b><br>📞 Teléfono</span></div>" +
+        "<p style='margin-top:10px'>Cada contacto te costó en promedio <b>" + clp(d.costoPorContacto) + "</b>.</p>");
+    } else if (cual === "facturado") {
+      var prom = d.cierresN ? Math.round(d.facturado / d.cierresN) : 0;
+      PanelUI.info("Tu facturado", "<p>La suma de todos los trabajos que registraste en <b>Cierres</b>: <b>" + clp(d.facturado) + "</b> en <b>" + (d.cierresN || 0) + " trabajos</b>.</p>" +
+        (prom ? "<p>Ticket promedio: <b>" + clp(prom) + "</b> por trabajo.</p>" : "") +
+        "<p style='background:#f2f7ff;border:1px solid #d5e4fb;border-radius:10px;padding:10px 12px;font-size:13px'>💡 Mientras más cierres registres (con o sin código), más aprende el sistema sobre qué anuncios traen <b>clientes que pagan</b>.</p>");
+    } else if (cual === "semana") {
+      PanelUI.info("Tu gasto semanal", "<p>Lo invertido en publicidad los <b>últimos 7 días</b>: <b>" + clp(d.gastoSemana) + "</b> (promedio " + clp(Math.round((d.gastoSemana || 0) / 7)) + " por día).</p>" +
+        "<p>Puedes ajustar cuánto invertir por día en <a href='/mi-negocio.html' style='color:#1f6feb;font-weight:700'>⚙️ Mi negocio</a>.</p>");
+    }
+  }
+
+  function entrar() {
+    var p = document.getElementById("pass").value.trim();
+    if (!p) return;
+    localStorage.setItem("panel_pass", p);
+    document.documentElement.classList.add("logged");
+    cargar(true);
+  }
+
+  function saludar() {
+    var h = new Date().getHours();
+    document.getElementById("hola").textContent = h < 12 ? "¡Buenos días! ☀️" : h < 20 ? "¡Buenas tardes! 👋" : "¡Buenas noches! 🌙";
+  }
+
+  function pintar(d) {
+    DATA = d;
+    document.getElementById("kpis").style.display = "";
+    document.getElementById("kContactos").textContent = d.contactos != null ? d.contactos : "—";
+    var ec = PanelUI.estadoCierre(d.pctCierre || 0);
+    var kp = document.getElementById("kPct");
+    kp.textContent = (d.pctCierre != null ? d.pctCierre : "—") + "%";
+    kp.style.color = ec.color;
+    var bar = document.getElementById("kPctBar");
+    bar.style.width = Math.min(Math.round((d.pctCierre || 0) / 25 * 100), 100) + "%";
+    bar.style.background = ec.color;
+    document.getElementById("kFact").textContent = clp(d.facturado);
+    document.getElementById("kSemana").textContent = d.gastoSemana != null ? clp(d.gastoSemana) : "—";
+    pintarProyeccion(d);
+  }
+
+  // ===== Proyección de ganancia mensual + simulador =====
+  // Consejos con impacto estimado (puntos de tasa de cierre). Fuentes: estudios de
+  // speed-to-lead (responder <5 min multiplica 4-8× la conversión; ~78% del cliente se lo
+  // lleva el primero que responde) y buenas prácticas de servicios a domicilio.
+  var CONSEJOS = [
+    { e: "⚡", t: "Responde en menos de 3 minutos", d: "El primero que contesta se lleva ~78% de los clientes. Deja el teléfono con sonido y respuestas rápidas listas.", pts: 6 },
+    { e: "🕐", t: "Di SIEMPRE un plazo concreto", d: "«Estoy ahí en 40 minutos» cierra mucho más que «voy en camino». La urgencia necesita certeza.", pts: 3 },
+    { e: "💬", t: "Haz seguimiento a la hora", d: "Si te pidió precio y no contestó, un mensaje corto de seguimiento recupera hasta 1 de cada 5.", pts: 3 },
+    { e: "🤖", t: "Un chatbot IA que responda 24/7", d: "Las urgencias de madrugada no esperan a que despiertes. Un bot que salude, tome el dato y avise, captura esos trabajos.", pts: 3 },
+    { e: "📱", t: "WhatsApp Business verificado", d: "El perfil de empresa (nombre verificado, catálogo, horario) da confianza inmediata: no eres un número desconocido.", pts: 2 },
+    { e: "⭐", t: "Pide reseña a cada cliente feliz", d: "Manda el link directo de reseña al terminar. Más reseñas frescas = más confianza = más cierres.", pts: 2 },
+    { e: "📸", t: "Manda fotos de trabajos similares", d: "Junto a la cotización, 2-3 fotos de un destape igual al suyo. Ver el resultado vende solo.", pts: 2 },
+    { e: "🛡️", t: "Ofrece garantía por escrito", d: "«Garantía de 30 días por escrito» elimina el miedo a pagar y que quede malo.", pts: 2 },
+    { e: "🎁", t: "Descuento por decidir ahora", d: "«Si agendamos ahora te dejo $5.000 menos» — empuja al indeciso sin regalar demasiado.", pts: 2 },
+    { e: "💳", t: "Acepta todos los medios de pago", d: "Tarjeta, transferencia, efectivo. Nunca pierdas un cierre por «no tengo efectivo».", pts: 1 }
+  ];
+  // Respuestas listas (nacidas de conversaciones reales; precios = rangos reales de sus cierres)
+  var RESPUESTAS = [
+    { e: "⚡", t: "Primera respuesta (al tiro)", x: "¡Hola! 👋 Sí, te podemos ayudar HOY mismo. Los destapes parten desde $30.000 y el valor exacto te lo confirmo al ver el trabajo. ¿En qué comuna estás? Puedo estar allá hoy entre las 12:00 y las 14:00." },
+    { e: "💰", t: "Si pregunta el valor", x: "El valor depende del tipo de destape: los simples (lavaplatos, WC) parten desde $30.000, y los trabajos de cámaras o alcantarillado van entre $70.000 y $200.000 según lo que encontremos. Te confirmo el valor exacto en terreno ANTES de empezar. ¿Te agendo una visita hoy?" },
+    { e: "🕐", t: "Agendar con hora concreta", x: "¡Perfecto! ✅ Te agendo para hoy entre las 15:00 y las 17:00. Mándame la dirección y te aviso 30 minutos antes de llegar." },
+    { e: "💬", t: "Seguimiento (si no contesta en 1 hora)", x: "Hola 👋 ¿pudiste ver mi mensaje? Sigo con disponibilidad para hoy — si quieres te reservo la hora y lo evaluamos sin compromiso." },
+    { e: "⭐", t: "Después del trabajo (reseña + garantía)", x: "¡Gracias por confiar en nosotros! 🙏 El trabajo tiene garantía — cualquier cosa me escribes. Y si quedaste conforme, ¿me regalas una reseña en Google? Te toma 30 segundos y nos ayuda muchísimo." }
+  ];
+  function pintarRespuestas() {
+    document.getElementById("respuestas").innerHTML = RESPUESTAS.map(function (r, i) {
+      return '<div class="resp"><div class="rt"><span>' + r.e + '</span><span>' + r.t + '</span>' +
+        '<button id="rbtn' + i + '" onclick="copiarResp(' + i + ')">Copiar</button></div>' +
+        '<div class="rx">' + r.x + "</div></div>";
+    }).join("");
+  }
+  function copiarResp(i) {
+    var b = document.getElementById("rbtn" + i);
+    (navigator.clipboard ? navigator.clipboard.writeText(RESPUESTAS[i].x) : Promise.reject()).then(function () {
+      b.textContent = "✓ Copiado"; b.className = "ok";
+      setTimeout(function () { b.textContent = "Copiar"; b.className = ""; }, 2000);
+    }).catch(function () {});
+  }
+  pintarRespuestas();
+
+  var TASA_TOPE = 35;   // techo realista para servicios de urgencia a domicilio
+  var PROY = null;      // {ticket, contactosMes, tasaActual}
+
+  function calcProyeccion(d) {
+    if (!d || !d.cierresN || !d.contactos) return null;
+    var fechas = {};
+    (d.bloques || []).forEach(function (b) { (b.dias || []).forEach(function (x) { fechas[x.fecha] = 1; }); });
+    var nDias = Math.max(Object.keys(fechas).length, 1);
+    return {
+      ticket: d.facturado / d.cierresN,
+      contactosMes: Math.round(d.contactos / nDias * 30),
+      tasaActual: d.pctCierre || 0
+    };
+  }
+  function ganancia(tasa) {
+    return Math.round(PROY.contactosMes * (tasa / 100) * PROY.ticket / 1000) * 1000;
+  }
+  function simular(tasa) {
+    tasa = Number(tasa);
+    var ec = PanelUI.estadoCierre(tasa);
+    document.getElementById("proyMonto").textContent = clp(ganancia(tasa)) + " / mes";
+    document.getElementById("proyMonto").style.color = ec.color;
+    var tv = document.getElementById("tasaVal");
+    tv.textContent = tasa + "%";
+    tv.style.color = ec.color;
+    // ¿cuántos trabajos hay que hacer para lograr esa tasa?
+    var cierresMes = PROY.contactosMes * tasa / 100;
+    var porDia = cierresMes / 30;
+    var ritmo = porDia >= 0.95
+      ? "~" + (Math.round(porDia * 10) / 10).toLocaleString("es-CL") + " trabajos al día"
+      : cierresMes >= 1 ? "un trabajo cada " + Math.round(30 / cierresMes) + " días" : "menos de 1 trabajo al mes";
+    document.getElementById("proySub").innerHTML =
+      "~<b>" + PROY.contactosMes + " contactos</b> al mes (a tu ritmo actual) × tasa de cierre <b>" + tasa + "%</b> × ticket promedio <b>" + clp(Math.round(PROY.ticket / 1000) * 1000) + "</b>" +
+      "<br>= <b style='color:" + ec.color + "'>" + Math.round(cierresMes) + " trabajos al mes</b> · " + ritmo;
+    var act = document.getElementById("tasaActual");
+    if (tasa === PROY.tasaActual) act.innerHTML = "📍 Esta es tu tasa REAL de hoy";
+    else act.innerHTML = "Tu tasa real hoy: <b>" + PROY.tasaActual + "%</b> (" + clp(ganancia(PROY.tasaActual)) + "/mes) · <a href='#' onclick=\"volverActual();return false\">volver ↩</a>";
+  }
+  function volverActual() {
+    document.getElementById("tasaSlider").value = PROY.tasaActual;
+    simular(PROY.tasaActual);
+  }
+  function pintarProyeccion(d) {
+    PROY = calcProyeccion(d);
+    if (!PROY) return;
+    document.getElementById("cardProy").style.display = "";
+    var sl = document.getElementById("tasaSlider");
+    // el auto-refresco no debe pisar la pelotita si el dueño la movió hace poco
+    if (!window._slMovido || Date.now() - window._slMovido > 60000) {
+      sl.value = Math.max(1, Math.min(40, PROY.tasaActual));
+    }
+    simular(sl.value);
+    // consejo del día (rota solo, uno distinto cada día)
+    var hoy = new Date();
+    var diaAno = Math.floor((hoy - new Date(hoy.getFullYear(), 0, 0)) / 86400000);
+    var c = CONSEJOS[diaAno % CONSEJOS.length];
+    document.getElementById("consejoHoy").innerHTML =
+      '<div class="ct">💡 Consejo de hoy para cerrar más</div><b>' + c.e + " " + c.t + "</b><br>" + c.d;
+    // lista completa
+    document.getElementById("consejosTodos").innerHTML = CONSEJOS.map(function (x) {
+      return '<div class="consejoLi"><span>' + x.e + '</span><span><b>' + x.t + "</b><br><span style='color:#5b6b7c'>" + x.d + "</span></span><span class='pts'>+" + x.pts + " pts</span></div>";
+    }).join("");
+    // simulación "si aplicaras todo"
+    var suma = CONSEJOS.reduce(function (s, x) { return s + x.pts; }, 0);
+    var tasaMax = Math.min(PROY.tasaActual + suma, TASA_TOPE);
+    document.getElementById("simTodos").innerHTML =
+      "🚀 Si aplicaras <b>todos estos consejos</b>, tu tasa de cierre podría llegar a <b>~" + tasaMax + "%</b> — o sea <b>" + clp(ganancia(tasaMax)) + " al mes</b> con la misma inversión en publicidad." +
+      '<button onclick="document.getElementById(\'tasaSlider\').value=' + tasaMax + ';simular(' + tasaMax + ');document.getElementById(\'tasaSlider\').scrollIntoView({block:\'center\',behavior:\'smooth\'})">▶ Verlo en el simulador</button>';
+  }
+  function toggleConsejos() {
+    var el = document.getElementById("consejosTodos");
+    var abierto = !el.classList.contains("hide");
+    el.classList.toggle("hide", abierto);
+    document.getElementById("btnConsejos").textContent = abierto ? "Ver los 10 consejos para cerrar más ↓" : "Ocultar consejos ↑";
+  }
+
+  function quizasTour() {
+    PanelUI.guia("panel", [
+      { el: null, titulo: "¡Bienvenido a tu panel! 👋", texto: "Aquí ves cómo va tu publicidad y controlas tu negocio. Te muestro lo básico en 30 segundos." },
+      { el: "#puBurger", titulo: "El menú ☰", texto: "Tócalo para moverte entre las secciones: 📊 Resumen, 📋 Cierres y ⚙️ Mi negocio." },
+      { el: "#kpis", titulo: "Tus números", texto: "Lo importante de un vistazo. Toca la ⓘ de cada número para entender qué significa y cómo mejorarlo." },
+      { el: ".accesos", titulo: "Los accesos", texto: "📊 mira lo que trae tu inversión · 📋 registra los clientes que pagaron · ⚙️ ajusta horario, días y presupuesto." },
+      { el: null, titulo: "¡Eso es todo! 🎉", texto: "Cada sección tiene su propia mini-guía la primera vez que entres. Repítelas cuando quieras: menú ☰ → 🎓 Ver la guía." }
+    ]);
+  }
+
+  function cargar(esLogin) {
+    saludar();
+    // 1) caché: pintar al instante
+    var cached = window.PanelUI && PanelUI.cacheGet("dash");
+    if (cached && pass()) { pintar(cached); quizasTour(); }
+    // 2) refrescar por detrás
+    fetch(API + "/dashboard?pass=" + encodeURIComponent(pass()), { cache: "no-store" })
+      .then(function (r) { return r.json().then(function (d) { return { ok: r.ok, status: r.status, d: d }; }); })
+      .then(function (res) {
+        if (res.status === 401) {
+          localStorage.removeItem("panel_pass");
+          if (window.PanelUI) PanelUI.cacheClear();
+          document.documentElement.classList.remove("logged");
+          document.getElementById("loginCard").classList.remove("hide");
+          document.getElementById("home").classList.add("hide");
+          if (esLogin) document.getElementById("loginMsg").textContent = "Clave incorrecta";
+          return;
+        }
+        document.getElementById("loginCard").classList.add("hide");
+        document.getElementById("home").classList.remove("hide");
+        var salud = document.getElementById("salud");
+        if (!res.ok) { document.getElementById("saludTxt").textContent = "No pudimos actualizar ahora — mostrando lo último guardado"; return; }
+        if (window.PanelUI) PanelUI.cacheSet("dash", res.d);
+        pintar(res.d);
+        salud.className = "salud ok";
+        document.getElementById("saludTxt").textContent = "Tu publicidad está funcionando";
+        quizasTour();
+      }).catch(function () { document.getElementById("saludTxt").textContent = "Sin conexión — mostrando lo último guardado"; });
+  }
+
+  if (pass()) cargar(true); else saludar();
+  PanelUI.autoRefresh(function () { if (pass()) cargar(false); }, 60000);
+</script>
+</body>
+</html>

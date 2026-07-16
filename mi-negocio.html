@@ -1,0 +1,448 @@
+<!-- Panel del cliente ASRV Grúas — instanciado de panel-cliente/ (maestro DIXDY) 2026-07-16 -->
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Mi negocio · ASRV Grúas</title>
+<script>try{ if(localStorage.getItem('panel_pass')) document.documentElement.classList.add('logged'); }catch(e){}</script>
+<style>
+  html.logged #loginCard{ display:none; }
+  html.logged #panel{ display:block; }
+  :root{ --navy:#0f2742; --azul:#1f6feb; --ok:#0c8a4a; --bad:#c0392b; --bg:#f4f7fb; --line:#e3eaf2; --amb:#b8791b; }
+  *{ box-sizing:border-box; }
+  body{ margin:0; background:var(--bg); color:var(--navy); font:16px/1.5 -apple-system,Segoe UI,Roboto,sans-serif; }
+  .wrap{ max-width:520px; margin:0 auto; padding:22px 16px 60px; }
+  h1{ font-size:21px; margin:0 0 2px; }
+  h2{ font-size:16px; margin:0 0 4px; }
+  .sub{ color:#5b6b7c; font-size:14px; margin:0 0 18px; }
+  .card{ background:#fff; border:1px solid var(--line); border-radius:14px; padding:18px; margin-bottom:16px; box-shadow:0 1px 3px rgba(0,0,0,.05); }
+  .hint{ color:#5b6b7c; font-size:13px; margin:2px 0 12px; line-height:1.45; }
+  label{ display:block; font-weight:700; font-size:14px; margin:12px 0 5px; }
+  input{ width:100%; padding:13px 14px; border:1.5px solid var(--line); border-radius:10px; font-size:16px; }
+  input:focus{ outline:none; border-color:var(--azul); }
+  .btn{ width:100%; padding:14px; border:0; border-radius:10px; background:var(--azul); color:#fff; font-size:16px; font-weight:700; cursor:pointer; margin-top:14px; }
+  .btn:active{ transform:translateY(1px); }
+  .btn:disabled{ opacity:.4; cursor:default; }
+  .msg{ margin-top:10px; font-weight:600; font-size:14px; text-align:center; min-height:20px; }
+  .msg.ok{ color:var(--ok); } .msg.bad{ color:var(--bad); }
+  .hide{ display:none; }
+  .navlink{ display:block; text-align:center; background:#fff; border:1px solid var(--line); border-radius:12px; padding:13px; margin-bottom:14px; color:var(--azul); font-weight:700; text-decoration:none; box-shadow:0 1px 3px rgba(0,0,0,.05); }
+  .showpass{ display:flex; align-items:center; gap:7px; font-size:13.5px; color:#5b6b7c; font-weight:500; margin-top:9px; cursor:pointer; }
+  .showpass input{ width:auto; margin:0; }
+  .passhint{ color:#5b6b7c; font-size:13px; margin-top:8px; }
+  .passhint b{ letter-spacing:1.5px; color:var(--navy); }
+
+  .cola{ background:linear-gradient(135deg,#0f2742,#1f6feb); color:#fff; border-radius:14px; padding:14px 16px; margin-bottom:16px; font-size:14px; line-height:1.5; display:none; }
+  .cola b{ font-size:15px; }
+
+  .chips{ display:flex; flex-wrap:wrap; gap:8px; }
+  .chip{ border:1.5px solid var(--line); background:#f7faff; color:var(--navy); border-radius:10px; padding:10px 0; font-size:15px; font-weight:700; cursor:pointer; text-align:center; flex:1 1 30%; min-width:88px; }
+  .chip.on{ background:var(--azul); border-color:var(--azul); color:#fff; }
+  .chip:disabled{ opacity:.35; cursor:default; }
+  .chip small{ display:block; font-weight:500; font-size:11px; opacity:.75; }
+
+  .dias{ display:grid; grid-template-columns:repeat(7,1fr); gap:6px; }
+  .dia{ border:1.5px solid var(--line); background:#f7faff; border-radius:10px; padding:6px 0 5px; text-align:center; cursor:pointer; font-size:11px; color:#5b6b7c; }
+  .dia b{ display:block; font-size:15px; color:var(--navy); }
+  .dia .em{ display:block; font-size:11px; line-height:1.15; min-height:13px; }
+  .dia.pausar{ background:#c0392b; border-color:#c0392b; color:#fff; } .dia.pausar b{ color:#fff; }
+  .dia.subir{ background:#0c8a4a; border-color:#0c8a4a; color:#fff; } .dia.subir b{ color:#fff; }
+  .dia.bajar{ background:#a8d8f5; border-color:#7cc4f0; color:var(--navy); }
+  .dia.hoy{ outline:2px solid #f3c94f; }
+  .modos{ margin:4px 0 12px; padding:0 0 0 4px; list-style:none; }
+  .modos li{ font-size:14px; padding:7px 10px; border:1px solid var(--line); border-radius:10px; margin-bottom:6px; background:#f7faff; }
+  .leyenda{ display:flex; gap:8px; margin-top:10px; flex-wrap:wrap; }
+  .lg{ font-size:11.5px; font-weight:700; border-radius:20px; padding:3px 10px; border:1px solid var(--line); background:#f7faff; }
+  .chk247{ display:flex; gap:10px; align-items:center; font-size:15px; cursor:pointer; margin:6px 0 2px; font-weight:400; }
+  .chk247 input{ width:22px; height:22px; margin:0; accent-color:var(--azul); }
+  .off{ opacity:.35; pointer-events:none; }
+  .linkav{ background:none; border:0; color:var(--azul); font-weight:700; font-size:13.5px; cursor:pointer; padding:0; margin-top:14px; display:block; width:auto; }
+  .pd-row{ display:flex; align-items:center; gap:7px; margin-top:8px; }
+  .pd-row label{ display:flex; align-items:center; gap:6px; margin:0; width:72px; font-size:14px; flex:none; }
+  .pd-row input[type=checkbox]{ width:18px; height:18px; margin:0; accent-color:var(--azul); }
+  .pd-row select{ flex:1; min-width:0; padding:9px 6px; border:1.5px solid var(--line); border-radius:9px; font-size:14px; background:#fff; color:var(--navy); }
+  .pd-row .sep{ color:#5b6b7c; font-size:13px; flex:none; }
+
+  .presu{ display:flex; align-items:center; justify-content:center; gap:14px; margin:8px 0 4px; }
+  .presu button{ width:54px; height:54px; border-radius:50%; border:0; font-size:26px; font-weight:800; background:#eef3f9; color:var(--azul); cursor:pointer; }
+  .presu button:disabled{ opacity:.3; }
+  .presu .val{ font-size:29px; font-weight:900; min-width:150px; text-align:center; }
+  .rango{ position:relative; height:14px; background:#eef3f9; border-radius:99px; margin:14px 2px 4px; }
+  .rango .rec{ position:absolute; top:0; height:100%; background:#dcefe4; border-radius:99px; }
+  .rango .dot{ position:absolute; top:50%; width:20px; height:20px; border-radius:50%; background:var(--azul); border:3px solid #fff; box-shadow:0 1px 4px rgba(0,0,0,.3); transform:translate(-50%,-50%); transition:left .3s; }
+  .rango-lbl{ display:flex; justify-content:space-between; font-size:11.5px; color:#90a0b3; margin-bottom:4px; }
+  .zona{ text-align:center; font-size:13px; font-weight:700; margin-top:6px; }
+  .zona.verde{ color:var(--ok); } .zona.ambar{ color:var(--amb); }
+
+  table{ width:100%; border-collapse:collapse; font-size:13.5px; }
+  th,td{ padding:8px 5px; text-align:left; border-bottom:1px solid var(--line); }
+  th{ font-size:11.5px; color:#5b6b7c; }
+  .pill{ font-size:11px; font-weight:700; padding:2px 8px; border-radius:99px; white-space:nowrap; }
+  .p-ok{ background:#e3f6ec; color:var(--ok); } .p-wait{ background:#fff3da; color:#b8791b; } .p-err{ background:#fdecea; color:var(--bad); }
+  .guarda{ background:#f2f7ff; border:1px solid #d5e4fb; border-radius:10px; padding:10px 12px; font-size:13px; color:#3b5e8f; line-height:1.5; margin-top:16px; }
+</style>
+</head>
+<body>
+<script src="/panel-ui.js"></script>
+<div class="wrap">
+  <h1 style="margin-top:10px">⚙️ Mi negocio</h1>
+  <p class="sub">ASRV Grúas — tu publicidad se adapta a ti</p>
+
+  <!-- Clave -->
+  <div class="card" id="loginCard">
+    <label for="pass">Clave de acceso</label>
+    <input id="pass" type="password" placeholder="Escribe la clave" autocomplete="current-password">
+    <label class="showpass"><input type="checkbox" onchange="document.getElementById('pass').type = this.checked ? 'text' : 'password'"> 👁 Mostrar clave</label>
+    <div class="passhint">¿La olvidaste? Pista: <b>g******3</b></div>
+    <button class="btn" onclick="entrar()">Entrar</button>
+    <div class="msg bad" id="loginMsg"></div>
+  </div>
+
+  <!-- Panel -->
+  <div id="panel" class="hide">
+    <div class="cola" id="colaBanner"></div>
+
+    <!-- Horario -->
+    <div class="card" id="cardHorario">
+      <h2>🕐 ¿En qué horario quieres recibir clientes?</h2>
+      <label class="chk247"><input type="checkbox" id="chk247" onchange="setModo247(this.checked)"> <span><b>Todo el día, todos los días (24/7)</b><br><span class="hint" style="margin:0">Como está ahora. Desmarca para elegir horario.</span></span></label>
+      <div id="horarioSimple" class="off">
+        <label>Desde</label>
+        <div class="chips" id="desdeChips"></div>
+        <label>Hasta</label>
+        <div class="chips" id="hastaChips"></div>
+        <div class="hint" style="margin-top:8px">Si trabajas hasta tarde puedes elegir hasta las <b>02:00 de la mañana</b>. Aplica a todos los días.</div>
+      </div>
+      <button type="button" class="linkav" id="btnAv" onclick="toggleAvanzado()">⚙️ Configuración avanzada — horario distinto por día</button>
+      <div id="horarioAvanzado" class="hide"></div>
+      <button class="btn" onclick="guardarHorario()">Guardar horario</button>
+      <div class="msg" id="horarioMsg"></div>
+    </div>
+
+    <!-- Días programados -->
+    <div class="card" id="cardDias">
+      <h2>📅 Programa tus días</h2>
+      <div class="hint">Toca un día y elige qué hace tu publicidad ese día:</div>
+      <ul class="modos">
+        <li><b>⏸ Pausar</b> — no trabajas, no gastas</li>
+        <li><b>🟢 Invertir más</b> — +25% ese día</li>
+        <li><b>🩵 Invertir menos</b> — −25% ese día</li>
+      </ul>
+      <div class="hint">Vuelve a tocar el día para cambiar o quitar. Máximo <b>2 días</b>; al día siguiente todo vuelve solo a la normalidad.</div>
+      <div class="dias" id="diasGrid"></div>
+      <div class="leyenda"><span class="lg">toca 1 vez → ⏸ pausar</span><span class="lg">2 veces → 🟢 más</span><span class="lg">3 veces → 🩵 menos</span></div>
+      <button class="btn" onclick="guardarDias()">Guardar días</button>
+      <div class="msg" id="diasMsg"></div>
+    </div>
+
+    <!-- Presupuesto -->
+    <div class="card" id="cardPresu">
+      <h2>💰 ¿Cuánto quieres invertir por día?</h2>
+      <div class="hint">Muévelo de a $1.000. La <b>zona verde ($20.000–$30.000)</b> es la recomendada; puedes salirte un poco si lo necesitas.</div>
+      <div class="presu">
+        <button onclick="presuMove(-1000)" id="pMenos">−</button>
+        <div class="val" id="pVal">—</div>
+        <button onclick="presuMove(1000)" id="pMas">+</button>
+      </div>
+      <div class="rango-lbl"><span>$15.000</span><span>$35.000</span></div>
+      <div class="rango"><div class="rec" id="pRec"></div><div class="dot" id="pDot"></div></div>
+      <div class="zona" id="pZona"></div>
+      <button class="btn" onclick="guardarPresupuesto()">Guardar presupuesto</button>
+      <div class="msg" id="presuMsg"></div>
+    </div>
+
+    <!-- Historial -->
+    <div class="card" id="cardHist">
+      <h2>📜 Tus cambios</h2>
+      <div class="hint" style="margin-bottom:8px">Los cambios se aplican <b>una vez por hora</b>, automáticamente.</div>
+      <table><thead><tr><th>Cambio</th><th>Estado</th></tr></thead><tbody id="histBody"><tr><td colspan="2" class="hint">Cargando…</td></tr></tbody></table>
+    </div>
+
+    <div class="guarda">🛡️ <b>¿Por qué hay límites?</b> Google "aprende" con tu campaña. Muchos cambios bruscos la hacen partir de cero y sale más caro. Por eso: máximo <b>2 días programados</b>, <b>1 cambio de presupuesto al día</b>, ajustes de ±25% y siempre dentro de rangos seguros.</div>
+  </div>
+</div>
+
+<script>
+  var API = "https://asvrgruas-ref-api.rivera-ale98.workers.dev";
+  var REGLAS = { presupuestoMin: 15000, presupuestoMax: 35000, presupuestoPaso: 1000, presupuestoRecomendadoMin: 20000, presupuestoRecomendadoMax: 30000, maxDiasBloqueados: 2, diasVentana: 13 };
+  var CFG = null, presuVal = 20000, desdeSel = 8, hastaSel = 22;
+  var horarioModo = "247";                 // "247" | "simple" | "porDia"
+  var PD = {};                             // horario por día: {lun:{desde,hasta}|null,...}
+  var diasProg = {};                       // días programados: {"2026-07-05":"pausar"|"subir"|"bajar"}
+  var DESDE_OPTS = [5, 6, 7, 8, 9, 10];
+  var HASTA_OPTS = [18, 19, 20, 21, 22, 23, 0, 1, 2];
+  var PD_KEYS = ["lun", "mar", "mie", "jue", "vie", "sab", "dom"];
+  var PD_NOM = { lun: "Lun", mar: "Mar", mie: "Mié", jue: "Jue", vie: "Vie", sab: "Sáb", dom: "Dom" };
+  var MODO_TXT = { pausar: "⏸ pausado (no gastas)", subir: "🟢 invertir más (+25%)", bajar: "🩵 invertir menos (−25%)" };
+  var MODO_EM = { pausar: "⏸", subir: "🟢", bajar: "🩵" };
+  var CICLO = [null, "pausar", "subir", "bajar"];
+  var DIAS_L = ["dom", "lun", "mar", "mié", "jue", "vie", "sáb"];
+  var MESES = ["ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sep", "oct", "nov", "dic"];
+
+  function pass() { return localStorage.getItem("panel_pass") || ""; }
+  function clp(n) { return "$" + Number(n || 0).toLocaleString("es-CL"); }
+  function h2s(h) { return String(h).padStart(2, "0") + ":00"; }
+
+  function entrar() {
+    var p = document.getElementById("pass").value.trim();
+    if (!p) return;
+    localStorage.setItem("panel_pass", p);
+    document.documentElement.classList.add("logged");
+    cargar(true);
+  }
+
+  function adoptar(d, esRefresco) {
+    CFG = d;
+    if (CFG.reglas) REGLAS = CFG.reglas;
+    if (esRefresco) { pintarCola(); pintarHist(); return; }   // un refresco NO pisa lo que el dueño está eligiendo
+    var c = CFG.config || {};
+    var apl = c.aplicado || {};
+    presuVal = c.presupuesto || apl.presupuesto || 20000;
+    var hor = c.horario || apl.horario;
+    if (hor && hor.modo === "porDia") {
+      horarioModo = "porDia";
+      PD = {};
+      PD_KEYS.forEach(function (k) { PD[k] = hor.dias && hor.dias[k] ? { desde: hor.dias[k].desde, hasta: hor.dias[k].hasta } : null; });
+    } else if (hor && hor.modo !== "247" && hor.desde != null) {
+      horarioModo = "simple"; desdeSel = hor.desde; hastaSel = hor.hasta % 24;
+    } else {
+      horarioModo = "247";   // por defecto: como está hoy la campaña
+    }
+    diasProg = {};
+    (c.diasProgramados || []).forEach(function (d2) { if (d2.fecha >= (CFG.hoy || "")) diasProg[d2.fecha] = d2.modo; });
+    (c.diasBloqueados || []).forEach(function (f) { if (f >= (CFG.hoy || "")) diasProg[f] = diasProg[f] || "pausar"; });
+    pintarTodo();
+  }
+
+  var yaPintado = false;
+  function cargar(esLogin, esRefresco) {
+    // 1) caché local: la página aparece cargada AL INSTANTE
+    if (!yaPintado && pass() && window.PanelUI) {
+      var cached = PanelUI.cacheGet("config");
+      if (cached) {
+        yaPintado = true;
+        document.getElementById("loginCard").classList.add("hide");
+        document.getElementById("panel").classList.remove("hide");
+        adoptar(cached, false);
+      }
+    }
+    // 2) datos frescos por detrás
+    fetch(API + "/config?pass=" + encodeURIComponent(pass()), { cache: "no-store" })
+      .then(function (r) { return r.json().then(function (d) { return { ok: r.ok, status: r.status, d: d }; }); })
+      .then(function (res) {
+        if (res.status === 401) {
+          localStorage.removeItem("panel_pass");
+          if (window.PanelUI) PanelUI.cacheClear();
+          document.documentElement.classList.remove("logged");
+          document.getElementById("loginCard").classList.remove("hide");
+          document.getElementById("panel").classList.add("hide");
+          if (esLogin) document.getElementById("loginMsg").textContent = "Clave incorrecta";
+          return;
+        }
+        if (!res.ok) return;
+        document.getElementById("loginCard").classList.add("hide");
+        document.getElementById("panel").classList.remove("hide");
+        if (window.PanelUI) PanelUI.cacheSet("config", res.d);
+        adoptar(res.d, esRefresco || yaPintado);
+        yaPintado = true;
+      }).catch(function () {});
+  }
+
+  function pintarTodo() {
+    pintarHorarioUI(); pintarDias(); pintarPresu(); pintarCola(); pintarHist();
+    PanelUI.guia("negocio", [
+      { el: null, titulo: "⚙️ Mi negocio", texto: "Tu publicidad se adapta a ti. Lo que cambies aquí queda en cola y se aplica solo en ~1 hora." },
+      { el: "#cardHorario", titulo: "Tu horario", texto: "Por defecto 24/7. Desmarca para elegir horas, o usa la configuración avanzada para un horario distinto cada día." },
+      { el: "#cardDias", titulo: "Programa tus días", texto: "Toca un día: ⏸ pausar · 🟢 invertir más · 🩵 invertir menos. Al día siguiente todo vuelve solo a la normalidad." },
+      { el: "#cardPresu", titulo: "Tu inversión diaria", texto: "Muévela de a $1.000, siempre dentro del rango seguro. La zona verde es la recomendada." },
+      { el: "#cardHist", titulo: "Tus cambios", texto: "Aquí ves cada cambio: ⏳ en cola → ✓ aplicado. ¡Eso es todo! 🎉" }
+    ]);
+  }
+
+  function pintarHorarioUI() {
+    document.getElementById("chk247").checked = horarioModo === "247";
+    document.getElementById("horarioSimple").classList.toggle("off", horarioModo !== "simple");
+    document.getElementById("horarioAvanzado").classList.toggle("hide", horarioModo !== "porDia");
+    pintarChips();
+    if (horarioModo === "porDia") pintarPorDia();
+  }
+
+  function setModo247(on) {
+    horarioModo = on ? "247" : "simple";
+    pintarHorarioUI();
+  }
+
+  function toggleAvanzado() {
+    if (horarioModo === "porDia") { horarioModo = "247"; }
+    else {
+      if (!Object.keys(PD).length) PD_KEYS.forEach(function (k) { PD[k] = { desde: desdeSel, hasta: hastaSel === 0 ? 24 : hastaSel }; });
+      horarioModo = "porDia";
+    }
+    pintarHorarioUI();
+  }
+
+  function pintarPorDia() {
+    var DESDE_VALS = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23];
+    var HASTA_VALS = [12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 1, 2, 3];
+    function opts(vals, cur, esHasta) {
+      return vals.map(function (h2) {
+        var lbl = h2 === 24 ? "24:00 (medianoche)" : h2s(h2) + (esHasta && h2 <= 3 ? " (madrugada sgte.)" : "");
+        return '<option value="' + h2 + '"' + (h2 === cur ? " selected" : "") + ">" + lbl + "</option>";
+      }).join("");
+    }
+    document.getElementById("horarioAvanzado").innerHTML = PD_KEYS.map(function (k) {
+      var v = PD[k];
+      return '<div class="pd-row"><label><input type="checkbox" ' + (v ? "checked" : "") + ' onchange="pdToggle(\'' + k + '\',this.checked)"> ' + PD_NOM[k] + "</label>" +
+        (v ? '<select onchange="pdSet(\'' + k + '\',\'desde\',this.value)">' + opts(DESDE_VALS, v.desde, false) + '</select><span class="sep">a</span>' +
+             '<select onchange="pdSet(\'' + k + '\',\'hasta\',this.value)">' + opts(HASTA_VALS, v.hasta, true) + "</select>"
+           : '<span class="sep" style="flex:1">sin anuncios este día</span>') + "</div>";
+    }).join("");
+  }
+  function pdToggle(k, on) {
+    PD[k] = on ? { desde: desdeSel, hasta: hastaSel === 0 ? 24 : hastaSel } : null;
+    pintarPorDia();
+  }
+  function pdSet(k, campo, v) { if (PD[k]) PD[k][campo] = Number(v); }
+
+  function pintarCola() {
+    var cola = (CFG.cola || []).filter(function (c) { return c.estado === "pendiente"; });
+    var el = document.getElementById("colaBanner");
+    if (!cola.length) { el.style.display = "none"; return; }
+    el.style.display = "block";
+    el.innerHTML = "⏳ <b>" + cola.length + (cola.length === 1 ? " cambio en cola" : " cambios en cola") + "</b> — se " +
+      (cola.length === 1 ? "aplica" : "aplican") + " en ~<b>" + (CFG.minutosRestantes || 60) + " min</b>. Puedes cerrar esta página tranquilo 🙂";
+  }
+
+  function pintarChips() {
+    document.getElementById("desdeChips").innerHTML = DESDE_OPTS.map(function (h) {
+      return '<button class="chip' + (h === desdeSel ? " on" : "") + '" onclick="setDesde(' + h + ')">' + h2s(h) + "<small>mañana</small></button>";
+    }).join("");
+    document.getElementById("hastaChips").innerHTML = HASTA_OPTS.map(function (h) {
+      var lbl = h <= 2 ? "madrugada" : "noche";
+      return '<button class="chip' + (h === hastaSel ? " on" : "") + '" onclick="setHasta(' + h + ')">' + h2s(h) + "<small>" + lbl + "</small></button>";
+    }).join("");
+  }
+  function setDesde(h) { desdeSel = h; pintarChips(); }
+  function setHasta(h) { hastaSel = h; pintarChips(); }
+
+  function guardarHorario() {
+    if (horarioModo === "247") {
+      if (!confirm("Tus anuncios correrán TODO el día, TODOS los días. ¿Confirmas?")) return;
+      enviar({ tipo: "horario", modo: "247" }, "horarioMsg", "✓ Horario 24/7 en cola");
+      return;
+    }
+    if (horarioModo === "porDia") {
+      var dias = {}, resumen = [], activos = 0;
+      PD_KEYS.forEach(function (k) {
+        if (PD[k]) { dias[k] = { desde: Number(PD[k].desde), hasta: Number(PD[k].hasta) }; activos++;
+          resumen.push(PD_NOM[k] + " " + h2s(PD[k].desde) + "–" + h2s(PD[k].hasta % 24)); }
+        else { dias[k] = null; resumen.push(PD_NOM[k] + " sin anuncios"); }
+      });
+      var msg = document.getElementById("horarioMsg");
+      if (!activos) { msg.className = "msg bad"; msg.textContent = "Debes dejar al menos un día con anuncios"; return; }
+      if (!confirm("Horario por día:\n" + resumen.join("\n") + "\n\n¿Confirmas?")) return;
+      enviar({ tipo: "horario", modo: "porDia", dias: dias }, "horarioMsg", "✓ Horario por día en cola");
+      return;
+    }
+    var hastaTxt = h2s(hastaSel) + (hastaSel <= 2 ? " de la madrugada del día siguiente" : "");
+    if (!confirm("Tus anuncios aparecerán de " + h2s(desdeSel) + " a " + hastaTxt + ", todos los días. ¿Confirmas?")) return;
+    enviar({ tipo: "horario", modo: "simple", desde: desdeSel, hasta: hastaSel }, "horarioMsg", "✓ Horario en cola");
+  }
+
+  function pintarDias() {
+    var hoy = CFG.hoy || new Date().toISOString().slice(0, 10);
+    var base = new Date(hoy + "T12:00:00Z");
+    var html = "";
+    for (var i = 0; i <= REGLAS.diasVentana; i++) {
+      var d = new Date(base); d.setUTCDate(d.getUTCDate() + i);
+      var iso = d.toISOString().slice(0, 10);
+      var modo = diasProg[iso] || "";
+      html += '<button class="dia ' + modo + (i === 0 ? " hoy" : "") + '" onclick="toggleDia(\'' + iso + '\')">' +
+        DIAS_L[d.getUTCDay()] + "<b>" + d.getUTCDate() + "</b><span class='em'>" + (MODO_EM[modo] || MESES[d.getUTCMonth()]) + "</span></button>";
+    }
+    document.getElementById("diasGrid").innerHTML = html;
+  }
+  function toggleDia(iso) {
+    var msg = document.getElementById("diasMsg");
+    var cur = diasProg[iso] || null;
+    var next = CICLO[(CICLO.indexOf(cur) + 1) % CICLO.length];
+    if (next && !cur && Object.keys(diasProg).length >= REGLAS.maxDiasBloqueados) {
+      msg.className = "msg bad"; msg.textContent = "Máximo " + REGLAS.maxDiasBloqueados + " días programados — quita uno primero";
+      return;
+    }
+    if (next) diasProg[iso] = next; else delete diasProg[iso];
+    msg.textContent = "";
+    pintarDias();
+  }
+  function guardarDias() {
+    var fechas = Object.keys(diasProg).sort();
+    var txt = fechas.length
+      ? "Días programados:\n" + fechas.map(function (f) { return f.slice(8, 10) + "/" + f.slice(5, 7) + ": " + MODO_TXT[diasProg[f]]; }).join("\n") +
+        "\n\nAl día siguiente todo vuelve solo a la normalidad. ¿Confirmas?"
+      : "Vas a quitar todos los días programados: tu publicidad corre normal todos los días. ¿Confirmas?";
+    if (!confirm(txt)) return;
+    enviar({ tipo: "dias", dias: fechas.map(function (f) { return { fecha: f, modo: diasProg[f] }; }) }, "diasMsg", "✓ Días en cola");
+  }
+
+  function pintarPresu() {
+    document.getElementById("pVal").textContent = clp(presuVal);
+    document.getElementById("pMenos").disabled = presuVal <= REGLAS.presupuestoMin;
+    document.getElementById("pMas").disabled = presuVal >= REGLAS.presupuestoMax;
+    var span = REGLAS.presupuestoMax - REGLAS.presupuestoMin;
+    var pct = (presuVal - REGLAS.presupuestoMin) / span * 100;
+    document.getElementById("pDot").style.left = pct + "%";
+    var rec = document.getElementById("pRec");
+    rec.style.left = ((REGLAS.presupuestoRecomendadoMin - REGLAS.presupuestoMin) / span * 100) + "%";
+    rec.style.width = ((REGLAS.presupuestoRecomendadoMax - REGLAS.presupuestoRecomendadoMin) / span * 100) + "%";
+    var zona = document.getElementById("pZona");
+    if (presuVal >= REGLAS.presupuestoRecomendadoMin && presuVal <= REGLAS.presupuestoRecomendadoMax) {
+      zona.className = "zona verde"; zona.textContent = "✓ Dentro del rango recomendado";
+    } else {
+      zona.className = "zona ambar"; zona.textContent = "⚠ Fuera del rango recomendado (permitido, pero úsalo poco)";
+    }
+  }
+  function presuMove(delta) {
+    presuVal = Math.max(REGLAS.presupuestoMin, Math.min(REGLAS.presupuestoMax, presuVal + delta));
+    pintarPresu();
+  }
+  function guardarPresupuesto() {
+    if (!confirm("Tu inversión diaria pasará a " + clp(presuVal) + " desde la próxima hora. Solo se permite 1 cambio al día. ¿Confirmas?")) return;
+    enviar({ tipo: "presupuesto", presupuesto: presuVal }, "presuMsg", "✓ Presupuesto en cola");
+  }
+
+  function pintarHist() {
+    var cola = CFG.cola || [];
+    var tb = document.getElementById("histBody");
+    if (!cola.length) { tb.innerHTML = '<tr><td colspan="2" class="hint">Aún no has hecho cambios.</td></tr>'; return; }
+    tb.innerHTML = cola.slice(0, 10).map(function (c) {
+      var pill = c.estado === "aplicado" ? '<span class="pill p-ok">✓ aplicado</span>'
+        : c.estado === "error" ? '<span class="pill p-err">✗ no se pudo</span>'
+        : '<span class="pill p-wait">⏳ en cola</span>';
+      return "<tr><td>" + (c.detalle || c.tipo) + "</td><td>" + pill + "</td></tr>";
+    }).join("");
+  }
+
+  function enviar(body, msgId, okTxt) {
+    var msg = document.getElementById(msgId);
+    msg.className = "msg"; msg.textContent = "Guardando…";
+    body.pass = pass();
+    fetch(API + "/config", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) })
+      .then(function (r) { return r.json().then(function (d) { return { ok: r.ok, d: d }; }); })
+      .then(function (res) {
+        if (!res.ok) { msg.className = "msg bad"; msg.textContent = res.d.error || "Error"; return; }
+        msg.className = "msg ok";
+        msg.textContent = okTxt + " — se aplica en ~" + (res.d.minutosRestantes || 60) + " min";
+        CFG.cola = res.d.cola; CFG.minutosRestantes = res.d.minutosRestantes;
+        pintarCola(); pintarHist();
+        setTimeout(function () { msg.textContent = ""; }, 6000);
+      }).catch(function () { msg.className = "msg bad"; msg.textContent = "Sin conexión"; });
+  }
+
+  if (pass()) cargar(true);
+  // el refresco periódico solo actualiza la cola y el historial (nunca pisa la selección del dueño)
+  PanelUI.autoRefresh(function () { if (pass() && !document.getElementById("panel").classList.contains("hide")) cargar(false, true); }, 60000);
+</script>
+</body>
+</html>

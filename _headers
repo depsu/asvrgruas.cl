@@ -13,3 +13,35 @@
 # El HTML NO se cachea en el navegador: así los cambios se ven de inmediato.
 /lp/*
   X-Robots-Tag: noindex, nofollow
+
+# Panel del cliente (páginas + UI compartida): SIEMPRE revalidar antes de usar la copia.
+# Con ETag la revalidación es un 304 baratísimo, así que sigue cargando rápido.
+# LECCIÓN (destapando, jul-2026): nada de stale-while-revalidate aquí (mostraba versiones
+# viejas y mezcladas) y rutas explícitas (no /panel*) para no pisar a panel-ui.js.
+/panel-ui.js
+  Cache-Control: no-cache
+
+/panel
+  Cache-Control: no-cache
+/panel.html
+  Cache-Control: no-cache
+/resumen
+  Cache-Control: no-cache
+/resumen.html
+  Cache-Control: no-cache
+/cierres
+  Cache-Control: no-cache
+/cierres.html
+  Cache-Control: no-cache
+/mi-negocio
+  Cache-Control: no-cache
+/mi-negocio.html
+  Cache-Control: no-cache
+/pago
+  Cache-Control: no-cache
+/pago.html
+  Cache-Control: no-cache
+/transferencias
+  Cache-Control: no-cache
+/transferencias.html
+  Cache-Control: no-cache
