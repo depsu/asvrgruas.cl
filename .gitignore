@@ -12,3 +12,4 @@ docs/
 lp/_*.html
 imagenes/sin-usar/
 .wrangler/
+lp-src/
