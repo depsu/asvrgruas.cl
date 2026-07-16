@@ -1,0 +1,15 @@
+# Cloudflare — cabeceras (Workers Static Assets)
+
+# Recursos estáticos (imágenes y videos): cache en el navegador.
+# stale-while-revalidate: usa la copia guardada mientras refresca en segundo plano.
+/imagenes/*
+  Cache-Control: public, max-age=86400, stale-while-revalidate=604800
+
+/favicon.svg
+  Cache-Control: public, max-age=86400
+
+# Las landings de Ads no se indexan en buscadores (AdsBot las rastrea igual,
+# no afecta el Quality Score). Jamás bloquear AdsBot-Google en robots.txt.
+# El HTML NO se cachea en el navegador: así los cambios se ven de inmediato.
+/lp/*
+  X-Robots-Tag: noindex, nofollow

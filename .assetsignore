@@ -1,0 +1,16 @@
+# Qué NO se publica como asset del sitio (wrangler deploy --assets).
+# El sitio público es: index.html, lp/, imagenes/, panel*.html, resumen/cierres/mi-negocio,
+# panel-ui.js, favicon, robots.txt y _headers. Todo lo interno queda fuera.
+docs/
+ref-worker/
+google-ads/
+.claude/
+tests/
+scripts/
+lp-src/
+*.md
+.gitignore
+.git/
+.wrangler/
+imagenes/sin-usar/
+*.py

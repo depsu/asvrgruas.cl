@@ -1,0 +1,8 @@
+# Las landings /lp/ se excluyen del índice vía meta robots y X-Robots-Tag,
+# NO vía Disallow: AdsBot-Google debe poder rastrearlas (Quality Score).
+# Los bots de IA (GPTBot, ClaudeBot, PerplexityBot, etc.) quedan permitidos
+# a propósito: aparecer en respuestas de IA también trae clientes.
+User-agent: *
+Allow: /
+
+Sitemap: https://www.asvrgruas.cl/sitemap.xml

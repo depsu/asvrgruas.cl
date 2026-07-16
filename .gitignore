@@ -1,0 +1,14 @@
+.DS_Store
+# --- Credenciales e internos: NUNCA subir ---
+scripts/
+.env
+.env*.local
+**/.env.local
+CLAUDE.md
+bitacora.md
+.claude/
+docs/
+# --- temporales de render / imágenes sin usar ---
+lp/_*.html
+imagenes/sin-usar/
+.wrangler/
