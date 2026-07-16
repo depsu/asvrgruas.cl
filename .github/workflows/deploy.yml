@@ -10,8 +10,13 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-      - name: Deploy (Workers Static Assets)
+      - name: Deploy (si hay token)
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: a757b3f38f203502871fa7053adfc05c
-        run: npx --yes wrangler deploy --assets=./ --name asvrgruas --compatibility-date 2026-06-28 --compatibility-flags=nodejs_compat
+        run: |
+          if [ -z "$CLOUDFLARE_API_TOKEN" ]; then
+            echo "Sin CLOUDFLARE_API_TOKEN: se omite el auto-deploy. Agrega el secreto para activarlo."
+            exit 0
+          fi
+          npx --yes wrangler deploy

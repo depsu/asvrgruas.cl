@@ -1,0 +1,11 @@
+{
+  "name": "asvrgruas",
+  "compatibility_date": "2026-06-28",
+  "compatibility_flags": ["nodejs_compat"],
+  "workers_dev": true,
+  "assets": { "directory": "./" },
+  "routes": [
+    { "pattern": "asvrgruas.cl", "custom_domain": true },
+    { "pattern": "www.asvrgruas.cl", "custom_domain": true }
+  ]
+}
