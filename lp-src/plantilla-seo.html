@@ -1,0 +1,122 @@
+<!doctype html>
+<!-- PLANTILLA DE REFERENCIA para las páginas SEO de asvrgruas.cl (NO se publica: lp-src/ está en .assetsignore).
+     Reglas de contenido (obligatorias en toda página):
+     · Horario REAL: lunes a viernes 8:00 a 20:00 — JAMÁS prometer 24/7 ni fin de semana.
+     · Teléfono real: +56 9 8822 7797 · WhatsApp wa.me/56988227797 (con texto prellenado según la página).
+     · Sin estrellas ni reseñas ni AggregateRating (ASVR es nuevo, aún sin reseñas públicas).
+     · Precios solo del tarifario real, siempre "desde" y "+ IVA".
+     · Capacidad real: hasta ~1.400 kg (citycar, sedán, moto, cuatrimoto, carga liviana). Nada de SUV grandes, camiones ni maquinaria pesada.
+     · Diferenciador: la pluma permite subir autos que NO ruedan (no se vende izaje como servicio).
+     · Título ≤60 chars con keyword; meta description 140–160 chars con keyword + gancho.
+     · Canonical con www y barra final. og:image = foto real.
+     · JSON-LD: Service + FAQPage en páginas de servicio/comuna; BlogPosting en artículos; LocalBusiness solo en la home.
+     · Todo CTA lleva data-cta (call_click | whatsapp_click | form_submit) + data-location.
+-->
+<html lang="es-CL">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{TITULO ≤60 chars}}</title>
+  <meta name="description" content="{{DESCRIPTION 140–160 chars}}">
+  <link rel="canonical" href="https://www.asvrgruas.cl/{{RUTA}}/">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="{{TITULO}}">
+  <meta property="og:description" content="{{DESCRIPTION}}">
+  <meta property="og:url" content="https://www.asvrgruas.cl/{{RUTA}}/">
+  <meta property="og:image" content="https://www.asvrgruas.cl/imagenes/grua-para-autos-santiago.webp">
+  <meta property="og:locale" content="es_CL">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="stylesheet" href="/assets/sitio.css">
+  <!-- GA4 (propiedad real creada por API) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-CJ4PH7K0B5"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-CJ4PH7K0B5');
+  </script>
+</head>
+<body>
+  <header class="cabecera">
+    <div class="cabecera-fila">
+      <a class="marca" href="/"><img src="/imagenes/logo.webp" alt="ASVR Grúas" width="34" height="34">ASVR Grúas</a>
+      <a class="btn-llamar" href="tel:+56988227797" data-cta="call_click" data-location="header">📞 +56 9 8822 7797</a>
+    </div>
+    <nav class="nav-sitio" aria-label="Secciones del sitio">
+      <ul>
+        <li><a href="/servicios/">Servicios</a></li>
+        <li><a href="/precios/">Precios</a></li>
+        <li><a href="/cobertura/">Cobertura</a></li>
+        <li><a href="/fletes-carga-liviana/">Fletes</a></li>
+        <li><a href="/convenios-empresas/">Empresas</a></li>
+        <li><a href="/blog/">Blog</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <p class="miga"><a href="/">Inicio</a> › <a href="/servicios/">Servicios</a> › {{NOMBRE PÁGINA}}</p>
+    <h1>{{H1 con keyword principal}}</h1>
+    <p class="bajada">{{Bajada: beneficio + zona + horario real}}</p>
+
+    <div class="cta-doble">
+      <a class="cta-tel" href="tel:+56988227797" data-cta="call_click" data-location="hero">📞 Llamar ahora</a>
+      <a class="cta-wa" href="https://wa.me/56988227797?text={{TEXTO_PRELLENADO_URLENCODED}}" target="_blank" rel="noopener" data-cta="whatsapp_click" data-location="hero">💬 Cotizar por WhatsApp</a>
+    </div>
+
+    <!-- Contenido único de la página: secciones h2, tabla de precios si aplica (.tabla-envoltura), imagen real con alt descriptivo, enlaces internos en el texto -->
+
+    <section class="faq" aria-label="Preguntas frecuentes">
+      <h2>Preguntas frecuentes</h2>
+      <details><summary>{{Pregunta}}</summary><p>{{Respuesta}}</p></details>
+    </section>
+  </main>
+
+  <footer class="pie">
+    <div class="pie-cols">
+      <div>
+        <h4>ASVR Grúas</h4>
+        <ul>
+          <li>Grúa de plataforma en Santiago</li>
+          <li>📞 <a href="tel:+56988227797" data-cta="call_click" data-location="pie">+56 9 8822 7797</a></li>
+          <li>💬 <a href="https://wa.me/56988227797" target="_blank" rel="noopener" data-cta="whatsapp_click" data-location="pie">WhatsApp</a></li>
+          <li>🕗 Lunes a viernes, 8:00 a 20:00 h</li>
+          <li>📍 Base en Pudahuel · atendemos todo Santiago</li>
+        </ul>
+      </div>
+      <div>
+        <h4>Servicios</h4>
+        <ul>
+          <li><a href="/gruas-para-autos/">Grúa para autos</a></li>
+          <li><a href="/traslado-de-vehiculos/">Traslado programado</a></li>
+          <li><a href="/grua-auto-sin-patente/">Auto sin patente</a></li>
+          <li><a href="/grua-auto-chocado/">Auto chocado</a></li>
+          <li><a href="/grua-auto-no-rueda/">Auto que no rueda</a></li>
+          <li><a href="/traslado-de-motos/">Traslado de motos</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Información</h4>
+        <ul>
+          <li><a href="/precios/">Precios y tarifas</a></li>
+          <li><a href="/cobertura/">Cobertura por comuna</a></li>
+          <li><a href="/fletes-carga-liviana/">Fletes de carga liviana</a></li>
+          <li><a href="/convenios-empresas/">Convenios para empresas</a></li>
+          <li><a href="/blog/">Blog</a></li>
+        </ul>
+      </div>
+    </div>
+    <p class="pie-legal">© 2026 ASVR Grúas · asvrgruas.cl · Precios netos + IVA</p>
+  </footer>
+
+  <div class="barra-fija" aria-hidden="false">
+    <a class="cta-tel" href="tel:+56988227797" data-cta="call_click" data-location="barra">📞 Llamar</a>
+    <a class="cta-wa" href="https://wa.me/56988227797?text={{TEXTO_PRELLENADO_URLENCODED}}" target="_blank" rel="noopener" data-cta="whatsapp_click" data-location="barra">💬 WhatsApp</a>
+  </div>
+
+  <script src="/assets/sitio.js" defer></script>
+  <script type="application/ld+json">
+  {{JSON-LD: Service + FAQPage según la página}}
+  </script>
+</body>
+</html>

@@ -1,0 +1,127 @@
+/* ASVR Grúas — hoja de estilo del sitio SEO (contenido primero, diseño definitivo pendiente).
+   Paleta heredada de la LP para que todo se sienta de la misma marca. Mobile-first, sin librerías. */
+
+:root {
+  --bg: #eef6f4;
+  --bg-2: #e3f0ed;
+  --blanco: #fff;
+  --abismo: #06231f;
+  --tinta: #173a34;
+  --gris: #577069;
+  --teal: #0fb9a6;
+  --teal-deep: #0a8e80;
+  --teal-pale: #d8f1ec;
+  --linea: #d2e6e0;
+  --call-a: #ff9a4d;
+  --call-b: #f15a1b;
+  --wa: #25d366;
+  --wa-ink: #06231f;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  background: var(--bg);
+  color: var(--tinta);
+  line-height: 1.65;
+  font-size: 1.0625rem;
+  -webkit-text-size-adjust: 100%;
+}
+
+/* ── Cabecera ── */
+.cabecera {
+  position: sticky; top: 0; z-index: 50;
+  background: var(--blanco);
+  border-bottom: 1px solid var(--linea);
+}
+.cabecera-fila {
+  max-width: 62rem; margin: 0 auto; padding: .55rem 1rem;
+  display: flex; align-items: center; gap: .75rem;
+}
+.marca { display: flex; align-items: center; gap: .5rem; text-decoration: none; color: var(--abismo); font-weight: 800; font-size: 1.05rem; }
+.marca img { height: 34px; width: auto; display: block; }
+.btn-llamar {
+  margin-left: auto;
+  background: linear-gradient(135deg, var(--call-a), var(--call-b));
+  color: #2a0f00; font-weight: 800; text-decoration: none;
+  padding: .55rem .95rem; border-radius: 999px; white-space: nowrap;
+  font-size: .95rem;
+}
+.nav-sitio { background: var(--blanco); border-bottom: 1px solid var(--linea); overflow-x: auto; }
+.nav-sitio ul {
+  max-width: 62rem; margin: 0 auto; padding: 0 1rem;
+  display: flex; gap: 1.1rem; list-style: none;
+}
+.nav-sitio a { display: block; padding: .5rem 0; color: var(--gris); text-decoration: none; font-size: .92rem; font-weight: 600; white-space: nowrap; }
+.nav-sitio a[aria-current="page"], .nav-sitio a:hover { color: var(--teal-deep); }
+
+/* ── Estructura ── */
+main { max-width: 62rem; margin: 0 auto; padding: 1rem 1rem 3rem; }
+.miga { font-size: .85rem; color: var(--gris); margin: .6rem 0 0; }
+.miga a { color: var(--teal-deep); text-decoration: none; }
+h1 { font-size: clamp(1.65rem, 4.5vw, 2.4rem); line-height: 1.2; color: var(--abismo); margin: .7rem 0 .4rem; }
+.bajada { font-size: 1.1rem; color: var(--gris); margin: 0 0 1.2rem; max-width: 46rem; }
+h2 { font-size: clamp(1.3rem, 3.2vw, 1.7rem); color: var(--abismo); margin: 2.2rem 0 .6rem; }
+h3 { font-size: 1.12rem; color: var(--abismo); margin: 1.4rem 0 .4rem; }
+p, ul, ol { max-width: 46rem; }
+a { color: var(--teal-deep); }
+img { max-width: 100%; height: auto; border-radius: 12px; }
+.destacado { background: var(--teal-pale); border-left: 4px solid var(--teal); padding: .8rem 1rem; border-radius: 8px; max-width: 46rem; }
+
+/* ── Botones CTA ── */
+.cta-doble { display: flex; flex-wrap: wrap; gap: .7rem; margin: 1.3rem 0; }
+.cta-doble a {
+  flex: 1 1 14rem; text-align: center; text-decoration: none; font-weight: 800;
+  padding: .95rem 1.1rem; border-radius: 14px; font-size: 1.05rem;
+}
+.cta-tel { background: linear-gradient(135deg, var(--call-a), var(--call-b)); color: #2a0f00; }
+.cta-wa { background: var(--wa); color: var(--wa-ink); }
+
+/* ── Tablas (precios) ── */
+.tabla-envoltura { overflow-x: auto; max-width: 46rem; }
+table { border-collapse: collapse; width: 100%; background: var(--blanco); border-radius: 12px; overflow: hidden; font-size: .97rem; }
+th, td { text-align: left; padding: .65rem .8rem; border-bottom: 1px solid var(--linea); }
+th { background: var(--abismo); color: var(--blanco); font-size: .88rem; }
+tr:last-child td { border-bottom: none; }
+
+/* ── Tarjetas de servicios / enlaces internos ── */
+.tarjetas { display: grid; grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr)); gap: .9rem; padding: 0; list-style: none; }
+.tarjetas li { background: var(--blanco); border: 1px solid var(--linea); border-radius: 14px; padding: 1rem; }
+.tarjetas a { font-weight: 700; text-decoration: none; color: var(--abismo); }
+.tarjetas p { font-size: .92rem; color: var(--gris); margin: .4rem 0 0; }
+
+/* ── FAQ ── */
+.faq details { background: var(--blanco); border: 1px solid var(--linea); border-radius: 12px; padding: .7rem 1rem; margin: .5rem 0; max-width: 46rem; }
+.faq summary { font-weight: 700; cursor: pointer; color: var(--abismo); }
+.faq p { margin: .6rem 0 .2rem; }
+
+/* ── Chips de comunas ── */
+.chips { display: flex; flex-wrap: wrap; gap: .45rem; padding: 0; list-style: none; max-width: 46rem; }
+.chips li a, .chips li span { display: inline-block; background: var(--blanco); border: 1px solid var(--linea); border-radius: 999px; padding: .3rem .75rem; font-size: .88rem; text-decoration: none; color: var(--tinta); }
+.chips li a:hover { border-color: var(--teal); color: var(--teal-deep); }
+
+/* ── Pie ── */
+.pie { background: var(--abismo); color: #cfe4df; margin-top: 3rem; }
+.pie-cols { max-width: 62rem; margin: 0 auto; padding: 2rem 1rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr)); gap: 1.4rem; font-size: .93rem; }
+.pie h4 { color: var(--blanco); margin: 0 0 .5rem; font-size: .95rem; }
+.pie ul { list-style: none; padding: 0; margin: 0; }
+.pie li { margin: .3rem 0; }
+.pie a { color: #9fd4cb; text-decoration: none; }
+.pie a:hover { text-decoration: underline; }
+.pie-legal { border-top: 1px solid #123f38; text-align: center; padding: .9rem 1rem; font-size: .8rem; color: #7fa49c; }
+
+/* ── Barra inferior fija (llamar / WhatsApp) ── */
+.barra-fija {
+  position: fixed; bottom: 0; left: 0; right: 0; z-index: 60;
+  display: flex; gap: .5rem; padding: .5rem .7rem calc(.5rem + env(safe-area-inset-bottom));
+  background: rgba(255,255,255,.95); border-top: 1px solid var(--linea); backdrop-filter: blur(6px);
+}
+.barra-fija a { flex: 1; text-align: center; font-weight: 800; text-decoration: none; padding: .7rem .5rem; border-radius: 12px; font-size: .98rem; }
+body { padding-bottom: 4.2rem; } /* aire para la barra fija */
+
+@media (min-width: 700px) {
+  .barra-fija { display: none; }
+  body { padding-bottom: 0; }
+}
