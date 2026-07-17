@@ -2321,15 +2321,127 @@
       background: #fff;
       border: 2px solid #e8553d;
       border-radius: 20px;
-      padding: 26px 22px 24px;
+      padding: 0;
+      overflow: hidden;
       text-align: center;
       box-shadow: 0 10px 26px rgba(232, 85, 61, .12);
+    }
+
+    /* foto real del riesgo: el titular va DENTRO, en negro, sobre el cielo */
+    .qm-shot {
+      position: relative;
+      margin: 0;
+      aspect-ratio: 4 / 5;
+      overflow: hidden;
+      background: #d7dbe0;
+    }
+
+    .qm-shot > img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: 50% 62%;
+      display: block;
+    }
+
+    /* velo claro arriba: asegura que el texto negro se lea siempre */
+    .qm-shot::before {
+      content: "";
+      position: absolute;
+      inset: 0 0 auto;
+      height: 62%;
+      background: linear-gradient(180deg, rgba(255, 255, 255, .92) 0%, rgba(255, 255, 255, .78) 42%, rgba(255, 255, 255, 0) 100%);
+      pointer-events: none;
+    }
+
+    .qm-over {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      padding: 16px 18px 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      text-align: center;
+    }
+
+    .qm-warn {
+      width: 44px;
+      height: 44px;
+      border-radius: 13px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: #ffd400;
+      color: #1a1a1a;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, .22);
+      animation: qm-pulse 2.4s ease-in-out infinite;
+    }
+
+    .qm-warn svg {
+      width: 25px;
+      height: 25px;
+    }
+
+    @keyframes qm-pulse {
+      0%, 70%, 100% { transform: translateY(0) }
+      35% { transform: translateY(-3px) }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .qm-warn { animation: none }
+    }
+
+    /* franja roja al pie de la foto: remata la escena y baja la vista a los datos */
+    .qm-tag {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      padding: 9px 14px;
+      background: rgba(20, 20, 22, .72);
+      backdrop-filter: blur(3px);
+      -webkit-backdrop-filter: blur(3px);
+      color: #fff;
+      font-size: 12.5px;
+      line-height: 1.35;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      text-align: left;
+    }
+
+    .qm-dot {
+      flex: none;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #ff4b3a;
+      box-shadow: 0 0 0 0 rgba(255, 75, 58, .7);
+      animation: qm-dot 1.8s ease-out infinite;
+    }
+
+    @keyframes qm-dot {
+      70% { box-shadow: 0 0 0 8px rgba(255, 75, 58, 0) }
+      100% { box-shadow: 0 0 0 0 rgba(255, 75, 58, 0) }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .qm-dot { animation: none }
+    }
+
+    .qm-body {
+      padding: 20px 20px 24px;
     }
 
     /* lista de datos dentro de la card: alineada a la izquierda */
     .qm-card .qm-facts {
       text-align: left;
-      margin: 4px 0 18px;
+      margin: 0 0 18px;
     }
 
     .qm-ico {
@@ -2350,16 +2462,31 @@
     }
 
     .qm-ttl {
-      margin: 0 0 8px;
-      font-size: clamp(21px, 6vw, 26px);
+      margin: 0;
+      max-width: 15ch;
+      font-size: clamp(22px, 6.4vw, 30px);
       font-weight: 900;
-      letter-spacing: -.02em;
-      color: var(--abismo);
-      line-height: 1.15;
+      letter-spacing: -.03em;
+      color: #101114;
+      line-height: 1.1;
+      text-shadow: 0 1px 10px rgba(255, 255, 255, .85);
     }
 
     .qm-ttl span {
       color: #e8553d;
+    }
+
+    .qm-kick {
+      margin: 0;
+      font-size: clamp(13px, 3.6vw, 15px);
+      font-weight: 800;
+      line-height: 1.3;
+      color: #2a2c31;
+      text-shadow: 0 1px 8px rgba(255, 255, 255, .9);
+    }
+
+    .qm-kick b {
+      color: #c8371f;
     }
 
     /* dato impactante (real: urgencias/intoxicaciones, NO una cifra de muertes inventada) */
@@ -3406,18 +3533,12 @@
       opacity:.4;animation:rainfall .85s linear infinite}
     @keyframes rainfall{from{transform:translate3d(-7%,-24%,0)}to{transform:translate3d(7%,24%,0)}}
     /* ░ Cierre: la grúa real de noche + mensaje.
-       Capas: foto (1) · lluvia (2) · texto (3)
-       -> la lluvia corre SOBRE la foto, pero nunca sobre el texto.
-       El texto va ARRIBA, aprovechando la pared oscura de la foto (sin velo: no hace falta). */
+       Capas: foto (1) · texto (2). El texto va ARRIBA, aprovechando la pared
+       oscura de la foto: da contraste sin necesidad de velos ni efectos. */
     .cierre-grua{position:relative;overflow:hidden;isolation:isolate;
       margin:22px auto 0;max-width:520px;border-radius:18px}
     .cierre-grua>img{display:block;width:100%;height:auto;position:relative;z-index:1}
-    .cg-rain{position:absolute;inset:-70% -25%;z-index:2;pointer-events:none;will-change:transform}
-    .cg-r1{background-image:repeating-linear-gradient(103deg,transparent 0 6px,rgba(255,255,255,.16) 6px 7px);
-      animation:rainfall .68s linear infinite}
-    .cg-r2{background-image:repeating-linear-gradient(100deg,transparent 0 10px,rgba(255,255,255,.10) 10px 11px);
-      animation:rainfall 1.05s linear infinite}
-    .cg-in{position:absolute;left:0;right:0;top:0;z-index:3;display:flex;flex-direction:column;
+    .cg-in{position:absolute;left:0;right:0;top:0;z-index:2;display:flex;flex-direction:column;
       align-items:center;gap:7px;text-align:center;padding:16px 14px 0;pointer-events:none}
     .cg-apunta{width:26px;height:26px;flex:none;color:#2dd9c8;
       filter:drop-shadow(0 2px 8px rgba(0,0,0,.7));animation:cgUp 1.9s ease-in-out infinite}
@@ -3425,7 +3546,7 @@
     .cg-ttl{margin:0;color:#fff;font-weight:900;letter-spacing:-.02em;line-height:1.08;
       font-size:clamp(19px,4.6vw,28px);text-shadow:0 2px 16px rgba(0,0,0,.8),0 1px 4px rgba(0,0,0,.9)}
     .cg-ttl span{color:#2dd9c8;text-shadow:0 0 22px rgba(45,217,200,.5),0 1px 4px rgba(0,0,0,.9)}
-    @media (prefers-reduced-motion:reduce){.cg-rain{animation:none;opacity:.3}.cg-apunta{animation:none}}
+    @media (prefers-reduced-motion:reduce){.cg-apunta{animation:none}}
     .tormenta .flash{position:absolute;inset:0;z-index:3;background:#dff0ff;mix-blend-mode:screen;opacity:0;
       pointer-events:none;animation:stormflash 9s linear infinite}
     @keyframes stormflash{0%,4%,10%,100%{opacity:0}1%{opacity:.26}2.4%{opacity:.05}8%{opacity:.5}9%{opacity:.08}}
@@ -3701,8 +3822,6 @@
       <figure class="cierre-grua">
         <img src="/imagenes/grua-24-horas-noche-santiago.webp" width="1000" height="1000" loading="lazy" decoding="async"
           alt="Grúa de plataforma ASRV trasladando un auto de noche bajo la lluvia en Santiago">
-        <div class="cg-rain cg-r1" aria-hidden="true"></div>
-        <div class="cg-rain cg-r2" aria-hidden="true"></div>
         <figcaption class="cg-in">
           <svg class="cg-apunta" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"
             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -3756,10 +3875,19 @@
   <section class="quimicos" aria-label="Por qué mover tu auto en plataforma">
     <div class="wrap">
       <div class="qm-card">
-        <span class="qm-ico" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.3 3.2 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.2a2 2 0 0 0-3.4 0Z"/><path d="M12 9v4M12 17h.01"/></svg>
-        </span>
-        <h2 class="qm-ttl">No arrastres tu <span>auto</span>: puede salir más caro</h2>
+        <figure class="qm-shot">
+          <img src="/imagenes/remolcar-auto-con-cuerda-santiago.webp" width="900" height="1200" loading="lazy" decoding="async"
+               alt="Auto remolcado con una cuerda por otro auto en plena avenida de Santiago">
+          <div class="qm-over">
+            <span class="qm-warn" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.3 3.2 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.2a2 2 0 0 0-3.4 0Z"/><path d="M12 9v4M12 17h.01"/></svg>
+            </span>
+            <h2 class="qm-ttl">No arrastres tu <span>auto</span></h2>
+            <p class="qm-kick">Puede salir <b>más caro</b> que la grúa</p>
+          </div>
+          <figcaption class="qm-tag"><span class="qm-dot" aria-hidden="true"></span>Con cuerda, sin frenos y en plena avenida: así se rompe una caja.</figcaption>
+        </figure>
+        <div class="qm-body">
         <ul class="qm-facts">
           <li>Remolcar con cuerda o barra puede dañar la <b>caja, el embrague y la transmisión</b>.</li>
           <li>Si las ruedas están trabadas, arrastrarlo <b>raya neumáticos, frenos y carrocería</b>.</li>
@@ -3773,6 +3901,7 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
         </button>
         <button class="qm-src-link" type="button" data-info="quimicos">Ver más</button>
+        </div>
       </div>
     </div>
   </section>
