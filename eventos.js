@@ -138,7 +138,11 @@
      .cabecera, sin .hero/.head) quedan sin efecto: el script no monta nada ahí. */
   var LLUVIA_EN = [
     { sel: ".hero", z: 0, cielo: true, mask: true, paleta: "auto" },
-    { sel: ".recientes", z: -1, desde: ".wa-btn", cielo: false, mask: false, paleta: "teal" }
+    { sel: ".recientes", z: -1, desde: ".wa-btn", cielo: false, mask: false, paleta: "teal" },
+    /* foto de cierre de las LPs: la lluvia cae SOBRE la foto (capa 2, encima de la
+       imagen que va en z:1) pero por debajo del texto (z:3), que queda legible.
+       paleta "blanca" siempre: la teal de escritorio se perdería sobre una foto nocturna */
+    { sel: ".cierre-grua", z: 2, cielo: false, mask: false, paleta: "blanca" }
   ];
 
   /* en pantallas muy anchas la lluvia no ocupa todo: banda centrada con
@@ -186,7 +190,8 @@
     var fundidos = [];              /* pases de borrado suave (top y laterales) */
 
     function palette() {
-      var teal = mqDesk.matches || opts.paleta === "teal";
+      /* "blanca" fuerza los trazos claros también en escritorio (fotos oscuras) */
+      var teal = opts.paleta === "blanca" ? false : (mqDesk.matches || opts.paleta === "teal");
       return teal
         /* teal: trazos sobre fondo claro (escritorio, y zonas claras también en móvil) */
         ? { rgb: "11, 110, 100", area: 8500, aBase: 0.18, aVar: 0.32, halo: null, wAdd: 0 }
