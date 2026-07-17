@@ -24,7 +24,11 @@
     content="Grúa de plataforma en Santiago. Llegamos en 30 a 45 minutos y subimos tu auto aunque no ruede. Precio claro antes de salir, fotos de recepción y entrega, factura inmediata. Respuesta al tiro. ¡Llama ahora!">
   <meta name="theme-color" content="#eef6f4">
   <meta name="color-scheme" content="light">
-  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="icon" type="image/png" sizes="48x48" href="/imagenes/favicon-48.png">
+  <link rel="icon" type="image/png" sizes="96x96" href="/imagenes/favicon-96.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/imagenes/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="/imagenes/favicon-192.png">
+  <link rel="apple-touch-icon" href="/imagenes/apple-touch-icon.png">
   <!-- Fondo del hero: descarga prioritaria desde el inicio -->
   <link rel="preload" as="image" href="/imagenes/collage-bg.webp" fetchpriority="high">
   <!-- Sin fuentes web: se usan las del sistema para que el texto pinte al instante en la 1ª carga -->
@@ -3405,6 +3409,27 @@
     .tormenta .r2{background-image:repeating-linear-gradient(100deg,transparent 0 10px,rgba(255,255,255,.10) 10px 11px);
       opacity:.4;animation:rainfall .85s linear infinite}
     @keyframes rainfall{from{transform:translate3d(-7%,-24%,0)}to{transform:translate3d(7%,24%,0)}}
+    /* ░ Cierre: la grúa real de noche + mensaje.
+       Capas: foto (1) · lluvia (2) · texto (3)
+       -> la lluvia corre SOBRE la foto, pero nunca sobre el texto.
+       El texto va ARRIBA, aprovechando la pared oscura de la foto (sin velo: no hace falta). */
+    .cierre-grua{position:relative;overflow:hidden;isolation:isolate;
+      margin:22px auto 0;max-width:520px;border-radius:18px}
+    .cierre-grua>img{display:block;width:100%;height:auto;position:relative;z-index:1}
+    .cg-rain{position:absolute;inset:-70% -25%;z-index:2;pointer-events:none;will-change:transform}
+    .cg-r1{background-image:repeating-linear-gradient(103deg,transparent 0 6px,rgba(255,255,255,.16) 6px 7px);
+      animation:rainfall .68s linear infinite}
+    .cg-r2{background-image:repeating-linear-gradient(100deg,transparent 0 10px,rgba(255,255,255,.10) 10px 11px);
+      animation:rainfall 1.05s linear infinite}
+    .cg-in{position:absolute;left:0;right:0;top:0;z-index:3;display:flex;flex-direction:column;
+      align-items:center;gap:7px;text-align:center;padding:16px 14px 0;pointer-events:none}
+    .cg-apunta{width:26px;height:26px;flex:none;color:#2dd9c8;
+      filter:drop-shadow(0 2px 8px rgba(0,0,0,.7));animation:cgUp 1.9s ease-in-out infinite}
+    @keyframes cgUp{0%,100%{transform:translateY(4px)}50%{transform:translateY(-4px)}}
+    .cg-ttl{margin:0;color:#fff;font-weight:900;letter-spacing:-.02em;line-height:1.08;
+      font-size:clamp(19px,4.6vw,28px);text-shadow:0 2px 16px rgba(0,0,0,.8),0 1px 4px rgba(0,0,0,.9)}
+    .cg-ttl span{color:#2dd9c8;text-shadow:0 0 22px rgba(45,217,200,.5),0 1px 4px rgba(0,0,0,.9)}
+    @media (prefers-reduced-motion:reduce){.cg-rain{animation:none;opacity:.3}.cg-apunta{animation:none}}
     .tormenta .flash{position:absolute;inset:0;z-index:3;background:#dff0ff;mix-blend-mode:screen;opacity:0;
       pointer-events:none;animation:stormflash 9s linear infinite}
     @keyframes stormflash{0%,4%,10%,100%{opacity:0}1%{opacity:.26}2.4%{opacity:.05}8%{opacity:.5}9%{opacity:.08}}
@@ -3459,6 +3484,17 @@
     @media (prefers-reduced-motion:reduce){
       .wd-msg{transition:none}.wd-live::before,.wd-typing i{animation:none}}
   </style>
+  <style>
+    /* ── Fondo de lluvia OPCIONAL (según el clima) ──
+       Activar:  agrega la clase "lluvia" al <body class="lluvia">  → <body class="lluvia">
+       Desactivar: quítala. Nada más. Sutil, sobre el hero, y respeta "reducir movimiento". */
+    .hero-rain{display:none;position:absolute;inset:-45% -22%;z-index:1;pointer-events:none;
+      background-image:repeating-linear-gradient(101deg,transparent 0 8px,rgba(255,255,255,.7) 8px 9px),repeating-linear-gradient(99deg,transparent 0 13px,rgba(220,235,255,.45) 13px 14px);
+      opacity:.28;animation:heroRain .65s linear infinite;will-change:transform}
+    body.lluvia .hero-rain{display:block}
+    @keyframes heroRain{from{transform:translate3d(-4%,-15%,0)}to{transform:translate3d(4%,15%,0)}}
+    @media (prefers-reduced-motion:reduce){.hero-rain{animation:none;opacity:.08}}
+  </style>
 </head>
 
 <body>
@@ -3474,7 +3510,7 @@
       <span>ASRV<span class="cl"> Grúas</span></span>
     </a>
     <a class="head-wa"
-      href="https://wa.me/56988227797?text=Hola%2C%20necesito%20una%20gr%C3%BAa.%20Estoy%20en%20%5Bcomuna%5D%2C%20mi%20auto%20es%20%5Bmarca%2Fmodelo%5D%20y%20%5Benciende%2Fno%20enciende%5D." target="_blank"
+      href="https://wa.me/56988227797?text=Hola%2C%20necesito%20una%20gr%C3%BAa%20para%20mi%20auto" target="_blank"
       rel="noopener" data-cta="whatsapp_click" data-location="header" aria-label="Escríbenos por WhatsApp">
       <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
         <path
@@ -3489,6 +3525,7 @@
     <section class="hero">
       <div class="hero-collage" aria-hidden="true">
         <img class="collage-img" src="/imagenes/collage-bg.webp" fetchpriority="high" decoding="async" loading="eager" alt="Grúa de plataforma ASRV en Santiago, frente del camión Rescate">
+      <div class="hero-rain" aria-hidden="true"></div>
       </div>
       <div class="wrap hero-body">
 
@@ -3577,7 +3614,7 @@
               <div class="mi-sub">Tu auto sube completo, no lo arrastramos</div>
             </div>
             <a class="media-cta"
-              href="https://wa.me/56988227797?text=Hola%2C%20mi%20auto%20est%C3%A1%20en%20pana%20y%20necesito%20una%20gr%C3%BAa.%20%C2%BFCu%C3%A1l%20es%20el%20valor%3F"
+              href="https://wa.me/56988227797?text=Hola%2C%20mi%20auto%20est%C3%A1%20en%20pana%20y%20necesito%20una%20gr%C3%BAa"
               target="_blank" rel="noopener" data-cta="whatsapp_click" data-location="job-plataforma"
               aria-label="Pedir grúa por WhatsApp">
               <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
@@ -3600,7 +3637,7 @@
               <div class="mi-sub">Autos, motos y camionetas livianas</div>
             </div>
             <a class="media-cta"
-              href="https://wa.me/56988227797?text=Hola%2C%20mi%20auto%20no%20enciende%20y%20necesito%20una%20gr%C3%BAa.%20%C2%BFCu%C3%A1l%20es%20el%20valor%3F"
+              href="https://wa.me/56988227797?text=Hola%2C%20mi%20auto%20no%20enciende%20y%20necesito%20una%20gr%C3%BAa"
               target="_blank" rel="noopener" data-cta="whatsapp_click" data-location="job-grua"
               aria-label="Pedir grúa por WhatsApp">
               <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
@@ -3623,7 +3660,7 @@
               <div class="mi-sub">Chocados o con ruedas trabadas</div>
             </div>
             <a class="media-cta"
-              href="https://wa.me/56988227797?text=Hola%2C%20choqu%C3%A9%20mi%20auto%20y%20no%20rueda%2C%20necesito%20una%20gr%C3%BAa.%20%C2%BFCu%C3%A1l%20es%20el%20valor%3F"
+              href="https://wa.me/56988227797?text=Hola%2C%20choqu%C3%A9%20mi%20auto%20y%20necesito%20una%20gr%C3%BAa"
               target="_blank" rel="noopener" data-cta="whatsapp_click" data-location="job-norueda"
               aria-label="Pedir grúa por WhatsApp">
               <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
@@ -3652,7 +3689,7 @@
             <path d="M12 5v14M6 13l6 6 6-6" />
           </svg>
           <a class="wa-btn"
-            href="https://wa.me/56988227797?text=Hola%2C%20quiero%20contarles%20mi%20situaci%C3%B3n%20y%20saber%20el%20valor."
+            href="https://wa.me/56988227797?text=Hola%2C%20quiero%20contarles%20qu%C3%A9%20le%20pasa%20a%20mi%20auto"
             target="_blank" rel="noopener" data-cta="whatsapp_click" data-location="consulta-feed"
             aria-label="Descubre tu precio en segundos y te enviamos la grúa en minutos por WhatsApp">
             <svg class="wa-ico" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
@@ -3665,10 +3702,18 @@
       </div>
 
       <!-- imagen de cierre: la grúa real, a lo ancho -->
-      <figure class="cierre-grua" style="margin:22px 0 0;overflow:hidden">
-        <img src="/imagenes/grua-plataforma-rampa-santiago.webp" width="1280" height="720" loading="lazy" decoding="async"
-          style="display:block;width:100%;height:auto"
-          alt="Grúa de plataforma ASRV en Santiago, con la rampa inclinada lista para cargar">
+      <figure class="cierre-grua">
+        <img src="/imagenes/grua-24-horas-noche-santiago.webp" width="1000" height="1000" loading="lazy" decoding="async"
+          alt="Grúa de plataforma ASRV trasladando un auto de noche bajo la lluvia en Santiago">
+        <div class="cg-rain cg-r1" aria-hidden="true"></div>
+        <div class="cg-rain cg-r2" aria-hidden="true"></div>
+        <figcaption class="cg-in">
+          <svg class="cg-apunta" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"
+            stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M12 19V5M6 11l6-6 6 6" />
+          </svg>
+          <p class="cg-ttl">Las lluvias no paran<br><span>nosotros tampoco</span></p>
+        </figcaption>
       </figure>
     </section>
 
@@ -3676,21 +3721,6 @@
   </main>
 
     <!-- ⛈️ La lluvia no nos detiene -->
-    <section class="tormenta" aria-label="Atendemos con lluvia y temporal">
-      <div class="tormenta-veil"></div>
-      <div class="rain r1" aria-hidden="true"></div>
-      <div class="rain r2" aria-hidden="true"></div>
-      <div class="flash" aria-hidden="true"></div>
-      <div class="wrap tormenta-in">
-        <span class="tormenta-kicker">⛈️ Temporal en Santiago</span>
-        <h2 class="tormenta-ttl">La lluvia<br><span>no nos detiene</span></h2>
-        <p class="tormenta-sub">¿Auto en pana, choque o varado con este temporal? Salimos igual y tu auto viaja seguro sobre la plataforma.</p>
-        <div class="tormenta-btns">
-          <a class="tormenta-cta" href="tel:+56988227797" data-cta="call_click" data-location="tormenta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3h4l2 5-2.5 1.5a12 12 0 0 0 6 6L16 13l5 2v4a2 2 0 0 1-2 2A17 17 0 0 1 3 5a2 2 0 0 1 2-2z"/></svg> Llamar ahora</a>
-          <a class="tormenta-wa" href="https://wa.me/56988227797?text=Hola%2C%20necesito%20una%20gr%C3%BAa%20urgente%20con%20este%20temporal.%20%C2%BFMe%20ayudan%3F" target="_blank" rel="noopener" data-cta="whatsapp_click" data-location="tormenta"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51l-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg> WhatsApp</a>
-        </div>
-      </div>
-    </section>
 
   <!-- ¿QUÉ TE GUSTARÍA VER ANTES DE COTIZAR? · cada botón abre un modal de info -->
   <section class="antes" aria-label="Información antes de cotizar">
@@ -3824,7 +3854,7 @@
       </div>
       <div class="cta-row">
         <a class="bar-wa" id="barWa"
-          href="https://wa.me/56988227797?text=Hola%2C%20necesito%20una%20gr%C3%BAa.%20%C2%BFCu%C3%A1l%20es%20el%20valor%20del%20traslado%3F"
+          href="https://wa.me/56988227797?text=Hola%2C%20necesito%20una%20gr%C3%BAa%20para%20mi%20auto"
           target="_blank" rel="noopener" data-cta="whatsapp_click" data-location="sticky-bar"
           aria-label="Cotizar por WhatsApp">
           <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
@@ -3937,8 +3967,22 @@
               .catch(function () {});
           }
         }
-        // stub: la LP no anexa código de descuento a los WhatsApp
-        window.adRefSuffix = function () { return ""; };
+        // El código de atribución viaja en TODOS los WhatsApp: así el dueño lo ve en el
+        // mensaje, registra el cierre con ese código y la conversión sube a Google Ads.
+        window.adRefSuffix = function () {
+          var c = ""; try { c = localStorage.getItem("ad_code") || ""; } catch (_e) {}
+          return c ? "\n\nCódigo: " + c : "";
+        };
+        // Lo anexa a CUALQUIER enlace wa.me justo antes de abrirlo: cubre los botones
+        // estáticos del HTML y también los que arma el JS (popover, modal, sticky).
+        document.addEventListener("click", function (ev) {
+          var a = ev.target && ev.target.closest ? ev.target.closest('a[href*="wa.me"]') : null;
+          if (!a) return;
+          var suf = window.adRefSuffix(); if (!suf) return;
+          var href = a.getAttribute("href") || "";
+          if (href.indexOf("C%C3%B3digo") !== -1 || href.indexOf("Código") !== -1) return;
+          a.setAttribute("href", href + encodeURIComponent(suf));
+        }, true);
       })();
       if (!("IntersectionObserver" in window)) { barra.classList.add("visible", "expanded"); return; }
 
@@ -4295,7 +4339,7 @@
         var c = el.textContent.trim();
         return {
           label: "Consultar grúa en <b>" + c + "</b>",
-          message: "Hola, quiero consultar una grúa en " + c + ". ¿Me pueden ayudar?",
+          message: "Hola, necesito una grúa en " + c,
           location: "comuna",
           pause: false
         };
@@ -4305,7 +4349,7 @@
         var s = el.textContent.trim();
         return {
           label: "Consultar por <b>" + s + "</b>",
-          message: "Hola, quiero consultar por " + s + ". ¿Me pueden ayudar?",
+          message: "Hola, quiero consultar por " + s,
           location: "hero-servicio",
           pause: true
         };
@@ -4381,7 +4425,7 @@
         function cfg() {
           return {
             label: "Respondemos al tiro por <b>WhatsApp</b>",
-            message: "Hola, necesito una grúa urgente. ¿Me ayudan?",
+            message: "Hola, necesito una grúa urgente",
             location: "hero-atencion",
             pause: false
           };
@@ -4399,7 +4443,7 @@
         function cfg() {
           return {
             label: "Grúa de plataforma en todo <b>Santiago</b><br>escríbenos qué le pasa a tu auto",
-            message: "Hola, necesito una grúa en Santiago. Les cuento qué le pasa a mi auto:",
+            message: "Hola, necesito una grúa. A mi auto le pasa esto:",
             location: "hero-titulo",
             pause: false
           };
@@ -4482,7 +4526,7 @@
             ["Traslado entre comunas (por distancia)", "desde $50.000 + IVA"],
             ["Traslado programado (agendado)", "desde $40.000 + IVA"],
             ["Traslado a otra región", "se cotiza por km"]
-          ]) + NOTE + waBtn("Hola, quiero cotizar una grúa. ¿Me ayudan con el valor?", "Cotizar mi caso")
+          ]) + NOTE + waBtn("Hola, quiero cotizar una grúa", "Cotizar mi caso")
         },
         servicios: {
           ttl: "Servicios", sub: "Todo lo que movemos",
@@ -4499,7 +4543,7 @@
             "Maquinaria liviana y objetos voluminosos",
             "Fotos de recepción y entrega · factura inmediata",
             "Atención inmediata y respuesta rápida"
-          ]) + waBtn("Hola, quiero consultar por un servicio. ¿Me ayudan?", "Consultar un servicio")
+          ]) + waBtn("Hola, quiero consultar por un servicio", "Consultar un servicio")
         },
         realizados: {
           ttl: "Casos frecuentes", sub: "Lo que resolvemos a diario",
@@ -4512,7 +4556,7 @@
             ["Moto", "Amarrada y protegida"],
             ["Puente de batería", "Auxilio en el lugar"],
             ["Auto sin patente", "Traslado en plataforma"]
-          ]) + '<p class="info-note">Casos típicos que atendemos. El precio final se confirma tras conocer tu comuna, el auto y su estado.</p>' + waBtn("Hola, tengo un caso parecido y quiero cotizar. ¿Me ayudan?", "Cotizar mi caso")
+          ]) + '<p class="info-note">Casos típicos que atendemos. El precio final se confirma tras conocer tu comuna, el auto y su estado.</p>' + waBtn("Hola, tengo un caso parecido y quiero cotizar", "Cotizar mi caso")
         },
         sectores: {
           ttl: "Sectores que trabajamos", sub: "Atendemos en todo Santiago",
@@ -4526,7 +4570,7 @@
             "Región Metropolitana (consúltanos por tu comuna)",
             "Particulares, edificios y estacionamientos subterráneos",
             "Automotoras, empresas y flotas"
-          ]) + waBtn("Hola, ¿llegan a mi sector? Quiero consultar una grúa.", "Consultar mi sector")
+          ]) + waBtn("Hola, ¿llegan a mi sector?", "Consultar mi sector")
         },
         pago: {
           ttl: "Método de pago", sub: "Cómo puedes pagar",
@@ -4537,11 +4581,11 @@
             "Pago con máquina (Redcompra) a domicilio",
             "Boleta y factura disponibles",
             "Pagas al finalizar el trabajo, no antes"
-          ]) + waBtn("Hola, quiero consultar por las formas de pago y cotizar una grúa.", "Consultar")
+          ]) + waBtn("Hola, quiero consultar las formas de pago", "Consultar")
         },
         otro: {
           ttl: "¿Tienes otra duda?", sub: "Escríbenos y te respondemos al tiro",
-          body: '<p class="info-note" style="font-size:14px;color:var(--tinta)">Cuéntanos qué le pasa a tu auto o qué quieres saber. Te respondemos por WhatsApp y te cotizamos gratis.</p>' + waBtn("Hola, tengo una consulta sobre una grúa. ¿Me ayudan?", "Escríbenos por WhatsApp")
+          body: '<p class="info-note" style="font-size:14px;color:var(--tinta)">Cuéntanos qué le pasa a tu auto o qué quieres saber. Te respondemos por WhatsApp y te cotizamos gratis.</p>' + waBtn("Hola, tengo una consulta sobre una grúa", "Escríbenos por WhatsApp")
         },
         quimicos: {
           ttl: "No arrastres tu auto", sub: "Por qué conviene la plataforma",
@@ -4555,7 +4599,7 @@
             + '</ul>'
             + '<div class="qm-hi">💰 En la <b>plataforma</b> tu auto viaja completo, sin tocar el suelo. Reparar una transmisión o un embrague dañados cuesta muchas veces más que un traslado.</div>'
             + '<p class="qm-close">Puedes contratar a la empresa que quieras —no tiene que ser nosotros—, pero <b>no arriesgues tu auto</b> ni transformes un traslado simple en un problema mayor.</p>'
-            + waBtn("Hola, prefiero no arrastrar mi auto. ¿Me ayudan con una grúa de plataforma?", "Mejor lo vemos nosotros")
+            + waBtn("Hola, prefiero no arrastrar mi auto, necesito una grúa", "Mejor lo vemos nosotros")
         }
       };
 
@@ -4750,7 +4794,18 @@
       function showTyping() { typingEl = document.createElement("div"); typingEl.className = "wd-typing"; typingEl.innerHTML = "<i></i><i></i><i></i>"; body.appendChild(typingEl); requestAnimationFrame(function () { typingEl.classList.add("show"); }); }
       function hideTyping() { if (typingEl) { typingEl.remove(); typingEl = null; } }
       function playAll() { steps.forEach(function (s) { if (!s.typing) addMsg(s); }); }
+      /* Reserva el espacio final ANTES de animar: pinta todos los mensajes,
+         mide el alto definitivo, lo fija y limpia. Así la caja nace con su
+         tamaño final y la página no salta mientras aparece el chat. */
+      function reservar() {
+        if (body.dataset.rsv) return;
+        steps.forEach(function (s) { if (!s.typing) addMsg(s); });
+        body.style.minHeight = body.scrollHeight + "px";
+        body.innerHTML = "";
+        body.dataset.rsv = "1";
+      }
       function play() {
+        reservar();
         if (reduce) { playAll(); return; }
         var i = 0;
         (function next() {
@@ -4767,6 +4822,7 @@
       }, { threshold: .4 }).observe(demo);
     })();
   </script>
+  <script src="/eventos.js" defer></script>
 </body>
 
 </html>

@@ -4375,6 +4375,17 @@
     @keyframes wdtype{0%,60%,100%{transform:translateY(0);opacity:.5}30%{transform:translateY(-4px);opacity:1}}
     @media (prefers-reduced-motion:reduce){.wd-msg{transition:none}.wd-live::before,.wd-typing i{animation:none}}
   </style>
+  <style>
+    /* ── Fondo de lluvia OPCIONAL (según el clima) ──
+       Activar:  agrega la clase "lluvia" al <body class="lluvia">  → <body class="lluvia">
+       Desactivar: quítala. Nada más. Sutil, sobre el hero, y respeta "reducir movimiento". */
+    .hero-rain{display:none;position:absolute;inset:-45% -22%;z-index:1;pointer-events:none;
+      background-image:repeating-linear-gradient(101deg,transparent 0 8px,rgba(255,255,255,.7) 8px 9px),repeating-linear-gradient(99deg,transparent 0 13px,rgba(220,235,255,.45) 13px 14px);
+      opacity:.28;animation:heroRain .65s linear infinite;will-change:transform}
+    body.lluvia .hero-rain{display:block}
+    @keyframes heroRain{from{transform:translate3d(-4%,-15%,0)}to{transform:translate3d(4%,15%,0)}}
+    @media (prefers-reduced-motion:reduce){.hero-rain{animation:none;opacity:.08}}
+  </style>
 </head>
 
 <body>
@@ -4410,6 +4421,7 @@
     <section class="hero">
       <div class="hero-collage" aria-hidden="true">
         <img class="collage-img" src="/imagenes/collage-bg.webp" fetchpriority="high" decoding="async" loading="eager" alt="Grúa de plataforma ASRV en Santiago, frente del camión">
+      <div class="hero-rain" aria-hidden="true"></div>
       </div>
       <div class="wrap hero-body">
 
@@ -6119,7 +6131,18 @@
       function showTyping() { typingEl = document.createElement("div"); typingEl.className = "wd-typing"; typingEl.innerHTML = "<i></i><i></i><i></i>"; body.appendChild(typingEl); requestAnimationFrame(function () { typingEl.classList.add("show"); }); }
       function hideTyping() { if (typingEl) { typingEl.remove(); typingEl = null; } }
       function playAll() { steps.forEach(function (s) { if (!s.typing) addMsg(s); }); }
+      /* Reserva el espacio final ANTES de animar: pinta todos los mensajes,
+         mide el alto definitivo, lo fija y limpia. Así la caja nace con su
+         tamaño final y la página no salta mientras aparece el chat. */
+      function reservar() {
+        if (body.dataset.rsv) return;
+        steps.forEach(function (s) { if (!s.typing) addMsg(s); });
+        body.style.minHeight = body.scrollHeight + "px";
+        body.innerHTML = "";
+        body.dataset.rsv = "1";
+      }
       function play() {
+        reservar();
         if (reduce) { playAll(); return; }
         var i = 0;
         (function next() {
@@ -6136,6 +6159,7 @@
       }, { threshold: .4 }).observe(demo);
     })();
   </script>
+  <script src="/eventos.js" defer></script>
 </body>
 
 </html>

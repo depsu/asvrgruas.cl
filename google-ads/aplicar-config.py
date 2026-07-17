@@ -33,12 +33,14 @@ from datetime import datetime, timezone, timedelta
 
 API_VERSION = "v22"
 CUSTOMER_ID = "8655524315"      # cuenta de Ads del cliente
-CAMPAIGN_ID = "0"           # campaña que el dueño controla
-BUDGET_ID = "0"               # presupuesto de la campaña
+CAMPAIGN_ID = "24035598684"   # [SEARCH] Grua_Autos_Urgente_RM_Mobile_F1 (publicada 17-jul-2026)
+BUDGET_ID = "15729245749"     # presupuesto de esa campaña ($12.000/día)
 
 # Topes duros del script (el worker ya valida, esto es el segundo candado — docs/18)
-PRESUPUESTO_MIN = 15000
-PRESUPUESTO_MAX = 35000
+# Deben ir SIEMPRE en espejo con REGLAS.presupuestoMin/Max del worker.
+# Escala de ESTA campaña: base $12.000/día (capacidad 3-4 servicios/día).
+PRESUPUESTO_MIN = 10000
+PRESUPUESTO_MAX = 20000
 
 DIAS_API = ["MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY"]
 
