@@ -2,13 +2,40 @@
 <html lang="es-CL">
 
 <head>
-  <!-- Google Tag Manager -->
-  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-  })(window,document,'script','dataLayer','GTM-N3JGFDJ9');</script>
-  <!-- End Google Tag Manager -->
+    <!-- Google Tag Manager -->
+    <script>(function(w, d, s, l, i){
+    function _loadGTM(){
+      w[l] = w[l] || []; w[l].push({'gtm.start': new Date().getTime(), event: 'gtm.js'});
+      var f = d.getElementsByTagName(s)[0], j = d.createElement(s),
+          dl = l != 'dataLayer' ? '&l=' + l : '';
+      j.async = true;
+      j.src = 'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
+      f.parentNode.insertBefore(j, f);
+    }
+    function _schedule(){
+      if ('requestIdleCallback' in w) { requestIdleCallback(_loadGTM, { timeout: 3000 }); }
+      else { setTimeout(_loadGTM, 1500); }
+    }
+    if (d.readyState === 'complete') { _schedule(); }
+    else { w.addEventListener('load', _schedule, { once: true }); }
+})(window, document, 'script', 'dataLayer', 'GTM-NSG29Z38');</script>
+    <!-- End Google Tag Manager -->
+    <!-- GA4 (propiedad real creada por API) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-CJ4PH7K0B5"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-CJ4PH7K0B5');
+  </script>
+  <!-- Microsoft Clarity (proyecto asvrgruas) -->
+  <script type="text/javascript">
+    (function(c,l,a,r,i,t,y){
+        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+    })(window, document, "clarity", "script", "xnvuhuvl5q");
+  </script>
   <!--
   ASRV GRÚAS — HOME SEO (indexable) · grúa de plataforma / traslado de autos en Santiago
   Mobile-first responsive: el diseño móvil es idéntico a la landing canónica; la capa de
@@ -4596,7 +4623,11 @@
   </style>
   <style>
     /* ── Fondo de lluvia OPCIONAL (según el clima) ──
-       Activar:  agrega la clase "lluvia" al <body class="lluvia">  → <body class="lluvia">
+       Activar:  agrega la clase "lluvia" al <body class="lluvia">
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NSG29Z38" height="0" width="0"
+            style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->  → <body class="lluvia">
        Desactivar: quítala. Nada más. Sutil, sobre el hero, y respeta "reducir movimiento". */
     .hero-rain{display:none;position:absolute;inset:-45% -22%;z-index:1;pointer-events:none;
       background-image:repeating-linear-gradient(101deg,transparent 0 8px,rgba(255,255,255,.7) 8px 9px),repeating-linear-gradient(99deg,transparent 0 13px,rgba(220,235,255,.45) 13px 14px);
@@ -4608,10 +4639,6 @@
 </head>
 
 <body>
-  <!-- Google Tag Manager (noscript) -->
-  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-N3JGFDJ9"
-  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-  <!-- End Google Tag Manager (noscript) -->
 
   <header class="head">
     <a class="brand" href="#" aria-label="ASRV Grúas">

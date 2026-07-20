@@ -2,6 +2,7 @@
 <html lang="es-CL">
 
 <head>
+  <link rel="preconnect" href="https://www.googletagmanager.com" crossorigin>
   <!-- Google Tag Manager -->
   <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
   new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
@@ -14,15 +15,15 @@
   Visión: 5–15 s de atención. Sin párrafos, solo títulos. Una sola acción por vista.
   Vista 1: confianza + título corto + LLAMAR. Vista 2: trabajos recientes + WhatsApp.
   Final: formulario para empresas/edificios.
-  Tel/WhatsApp reales: +56 9 8822 7797. PENDIENTE real: GTM-NSG29Z38 y AW-XXXXXXXXXX (medición).
+  Tel/WhatsApp reales: +56 9 8822 7797. Medición: GTM-NSG29Z38 · Ads AW-18326591434 (vía GTM) · GA4 G-CJ4PH7K0B5.
 -->
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="robots" content="noindex, nofollow">
   <title>Grúa de plataforma en Santiago · Atención inmediata — ASRV Grúas</title>
   <meta name="description"
-    content="Grúa de plataforma en Santiago. Llegamos en 30 a 45 minutos y subimos tu auto aunque no ruede. Precio claro antes de salir, fotos de recepción y entrega, factura inmediata. Respuesta al tiro. ¡Llama ahora!">
-  <meta name="theme-color" content="#eef6f4">
+    content="Grúa de plataforma en Santiago. Llegamos en 30 a 45 minutos y llevamos tu auto completo en plataforma. Precio claro antes de salir, fotos de recepción y entrega, factura inmediata. Respuesta al tiro. ¡Llama ahora!">
+  <meta name="theme-color" content="#f7f5ef">
   <meta name="color-scheme" content="light">
   <link rel="icon" type="image/png" sizes="48x48" href="/imagenes/favicon-48.png">
   <link rel="icon" type="image/png" sizes="96x96" href="/imagenes/favicon-96.png">
@@ -33,31 +34,22 @@
   <link rel="preload" as="image" href="/imagenes/collage-bg.webp" fetchpriority="high">
   <!-- Sin fuentes web: se usan las del sistema para que el texto pinte al instante en la 1ª carga -->
 
-  <!-- TRACKING GOOGLE ADS — descomentar y reemplazar AW-XXXXXXXXXX:
-<script async src="https://www.googletagmanager.com/gtag/js?id=AW-XXXXXXXXXX"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'AW-XXXXXXXXXX/LABEL_LLAMADA_WEB', { 'phone_conversion_number': '+56 9 8822 7797' });
-  gtag('config', 'AW-XXXXXXXXXX');
-</script>
--->
+  <!-- Google Ads: las conversiones (call_click / whatsapp_click) las dispara GTM (AW-18326591434). -->
 
   <style>
     :root {
-      --bg: #eef6f4;
-      --bg-2: #e3f0ed;
+      --bg: #f7f5ef;
+      --bg-2: #f0ead9;
       --blanco: #fff;
-      --abismo: #06231f;
-      --abismo-2: #0a2f29;
-      --tinta: #173a34;
-      --gris: #577069;
-      --teal: #0fb9a6;
-      --teal-deep: #0a8e80;
-      --teal-glow: #2dd9c8;
-      --teal-pale: #d8f1ec;
-      --linea: #d2e6e0;
+      --abismo: #10151c;
+      --abismo-2: #1a222c;
+      --tinta: #2a3540;
+      --gris: #5e6a74;
+      --teal: #ffb400;
+      --teal-deep: #b97b00;
+      --teal-glow: #ffd24d;
+      --teal-pale: #ffefc7;
+      --linea: #e6e0d0;
       --call-a: #ff9a4d;
       --call-b: #f15a1b;
       --call-ink: #2a0f00;
@@ -302,7 +294,7 @@
       z-index: 0;
       pointer-events: none;
       background:
-        radial-gradient(60% 40% at 80% 8%, rgba(45, 217, 200, .30), transparent 70%),
+        radial-gradient(60% 40% at 80% 8%, rgba(255, 180, 0, .24), transparent 70%),
         radial-gradient(70% 45% at 0% 30%, rgba(15, 185, 166, .14), transparent 70%);
     }
 
@@ -328,6 +320,13 @@
       inset: 0;
       z-index: 0;
       overflow: hidden;
+      /* mini-foto borrosa incrustada: el fondo se ve desde el primer pintado, sin salto */
+      background-image: url("data:image/webp;base64,UklGRrwAAABXRUJQVlA4ILAAAABwBwCdASokADAAPtVgnk0oJiKiNVqqqQAaiWcAzjhNoA0uaoKUWOtGYo8txsD/PgOKS3m5z0fC6695I6jPCv+xvn0AAAD+7Xz61iyoy5QkypfRbGviaxFjVqmlhBq9WROFje7BhFiXMcRPGlABq8p/XTnSRj6PdAiLGamoAbuTj5c006C7knXVzbqNsC+e2dH/ai0vd0813HahTjA1hJ2OqZKhxhABureJcabgE7CAAA==");
+      background-size: cover;
+      background-position: center top;
+      /* difuminado hacia abajo (cubre por igual el placeholder y la foto real) */
+      -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 80%, transparent 100%);
+      mask-image: linear-gradient(to bottom, #000 0%, #000 80%, transparent 100%);
     }
 
     /* imagen real: entra solo con un fade suave (sin zoom: el movimiento al cargar es lo que marea) */
@@ -338,15 +337,20 @@
       height: 100%;
       object-fit: cover;            /* ocupa todo el ancho; la foto es casi del mismo ratio que el móvil */
       object-position: center top;
+      transform-origin: center top;
       opacity: 0;
       transition: opacity .6s var(--ease);   /* fade tranquilo, cero desplazamiento */
-      /* imagen NÍTIDA y completa arriba; solo se difumina hacia el final (abajo) */
-      -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 80%, transparent 100%);
-      mask-image: linear-gradient(to bottom, #000 0%, #000 80%, transparent 100%);
     }
 
     .collage-img.loaded {
       opacity: 1;
+      animation: bgExpande 16s ease-out forwards;
+    }
+
+    /* expansión sutil: el fondo respira al entrar, sin marear */
+    @keyframes bgExpande {
+      from { transform: scale(1); }
+      to { transform: scale(1.05); }
     }
 
     /* velo suave: baja la intensidad para que se luzca el collage (los botones/nav/stats ya tienen su fondo) */
@@ -355,7 +359,7 @@
       position: absolute;
       inset: 0;
       z-index: 2;
-      background: linear-gradient(180deg, rgba(238, 246, 244, 0) 0%, rgba(238, 246, 244, 0) 62%, rgba(238, 246, 244, .12) 82%, rgba(238, 246, 244, .36) 94%, rgba(238, 246, 244, .6) 100%);
+      background: linear-gradient(180deg, rgba(247, 245, 239, 0) 0%, rgba(247, 245, 239, 0) 62%, rgba(247, 245, 239, .12) 82%, rgba(247, 245, 239, .36) 94%, rgba(247, 245, 239, .6) 100%);
     }
 
     /* tarjeta de reseñas Google: el ancla de confianza */
@@ -776,14 +780,14 @@
     .hero h1 {
       position: relative;
       width: 100%;
-      /* tamaño tope para que "todo Santiago" quepa en 1 línea en cualquier móvil → nunca pasa de 2 líneas */
-      font-size: clamp(38px, 13.7vw, 58px);
+      /* tope para que la línea larga del título quepa COMPLETA en cualquier móvil (nowrap: nada se corta) */
+      font-size: clamp(28px, 9.4vw, 54px);
       font-weight: 900;
       margin-bottom: 14px;
       padding-bottom: 6px;   /* espacio para el descendente de la "g" (Santiago) */
       white-space: nowrap;   /* el <br> define las 2 líneas; ninguna se parte sola */
       /* halo claro sutil para que el texto oscuro se lea aunque detrás haya zonas con detalle */
-      text-shadow: 0 1px 1px rgba(238, 246, 244, .7), 0 2px 18px rgba(238, 246, 244, .6);
+      text-shadow: 0 1px 1px rgba(247, 245, 239, .7), 0 2px 18px rgba(247, 245, 239, .6);
     }
 
     /* velo difuminado (frosted) SOLO tras el título: suaviza la foto detrás sin taparla con blanco */
@@ -814,7 +818,7 @@
       bottom: .06em;
       height: .30em;
       z-index: -1;
-      background: linear-gradient(90deg, rgba(45, 217, 200, .55), rgba(15, 185, 166, .35));
+      background: linear-gradient(90deg, rgba(255, 210, 77, .62), rgba(255, 180, 0, .38));
       border-radius: 6px;
       transform: rotate(-1.2deg);
     }
@@ -971,7 +975,7 @@
       letter-spacing: .04em;
       border-color: transparent;
       background: linear-gradient(180deg, var(--teal-glow), var(--teal-deep));
-      box-shadow: 0 8px 20px rgba(10, 142, 128, .28);
+      box-shadow: 0 8px 20px rgba(185, 123, 0, .30);
     }
 
     /* los servicios que rotan son consultables (abren el popover de WhatsApp) */
@@ -1059,7 +1063,7 @@
       gap: 7px;
       font-size: 13.5px;
       font-weight: 800;
-      color: var(--wa-deep);     /* verde WhatsApp */
+      color: var(--teal-deep);   /* ámbar de la paleta */
       text-transform: uppercase;
       letter-spacing: .06em;
       text-shadow: 0 1px 2px rgba(255, 255, 255, .85), 0 1px 10px rgba(255, 255, 255, .6);
@@ -1068,7 +1072,7 @@
     .peek .chev {
       width: 22px;
       height: 22px;
-      color: var(--wa-deep);
+      color: var(--teal-deep);
       animation: rebote 1.8s var(--ease) infinite;
     }
 
@@ -1084,11 +1088,16 @@
       }
     }
 
-    /* ───────── Reveal escalonado ───────── */
+    /* ───────── Reveal escalonado: arranca cuando el fondo ya está (body.bg-lista) ───────── */
     .rv {
       opacity: 0;
       transform: translateY(14px);
       animation: sube .7s var(--ease) forwards;
+      animation-play-state: paused;
+    }
+
+    body.bg-lista .rv {
+      animation-play-state: running;
     }
 
     .rv-2 {
@@ -1293,15 +1302,15 @@
     }
 
     .media-fill.mf1 {
-      background-image: linear-gradient(125deg, #0a8e80, #06231f 55%, #0d9488);
+      background-image: linear-gradient(125deg, #b97b00, #10151c 55%, #d19200);
     }
 
     .media-fill.mf2 {
-      background-image: linear-gradient(125deg, #13a89a, #0a2f29 55%, #0fb9a6);
+      background-image: linear-gradient(125deg, #d19200, #1a222c 55%, #ffb400);
     }
 
     .media-fill.mf3 {
-      background-image: linear-gradient(125deg, #1aa0b3, #06231f 55%, #13a89a);
+      background-image: linear-gradient(125deg, #e0a51a, #10151c 55%, #d19200);
     }
 
     .media-grid {
@@ -1587,14 +1596,48 @@
       color: var(--gris);
     }
 
-    /* flechita que "apunta" al botón */
-    .wa-consulta .apunta {
-      width: 22px;
-      height: 22px;
-      margin-bottom: 2px;
-      color: #1ebe5b;
-      animation: rebote 1.8s var(--ease) infinite;
+    /* botón deshabilitado mientras corre el chat; se habilita al llegar el último mensaje.
+       Siempre ocupa su espacio: la página no salta. */
+    .wa-consulta .wa-btn {
+      pointer-events: none;
+      filter: grayscale(.9);
+      opacity: .45;
+      transition: filter .5s var(--ease), opacity .5s var(--ease);
     }
+
+    .wa-consulta .wa-btn.is-on {
+      pointer-events: auto;
+      filter: none;
+      opacity: 1;
+      animation: waPop .6s var(--ease);
+    }
+
+    @keyframes waPop {
+      0% { box-shadow: 0 0 0 0 rgba(37, 211, 102, .55); }
+      100% { box-shadow: 0 0 0 16px rgba(37, 211, 102, 0); }
+    }
+
+    /* círculo de "enviar" a la derecha, como en WhatsApp */
+    .wa-send {
+      width: 38px;
+      height: 38px;
+      flex: none;
+      margin-left: 2px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      background: #fff;
+      color: var(--wa-deep);
+      box-shadow: 0 2px 8px rgba(16, 21, 28, .18);
+    }
+
+    .wa-send svg {
+      width: 18px;
+      height: 18px;
+      margin-left: 2px;
+    }
+
 
     .wa-consulta .wa-btn {
       display: inline-flex;
@@ -1602,9 +1645,11 @@
       justify-content: center;
       gap: 11px;
       width: 100%;
-      max-width: 430px;
+      max-width: 340px;
+      /* anula el gap del contenedor: el botón nace pegado al chat */
+      margin-top: -6px;
       padding: 15px 16px;
-      border-radius: 18px;
+      border-radius: 0 0 18px 18px;
       /* texto lo más grande posible manteniéndose en 2 líneas (verificado de 320 a 540px) */
       font-size: clamp(13px, 4.3vw, 20px);
       font-weight: 800;
@@ -1668,7 +1713,7 @@
       top: -30vmax;
       right: -20vmax;
       border-radius: 50%;
-      background: radial-gradient(circle, rgba(45, 217, 200, .14), transparent 60%);
+      background: radial-gradient(circle, rgba(255, 180, 0, .12), transparent 60%);
       pointer-events: none;
     }
 
@@ -2251,7 +2296,7 @@
     }
 
     .antes-ttl {
-      margin: 0 auto 6px;
+      margin: 0 auto 18px;
       /* mismo tamaño que el título "Cuéntanos tu situación por WhatsApp" */
       font-size: clamp(22px, 7.8vw, 38px);
       font-weight: 800;
@@ -2264,56 +2309,85 @@
       color: #13b257;   /* verde WhatsApp, igual que la palabra "WhatsApp" */
     }
 
-    .antes-sub {
-      margin: 0 0 20px;
-      font-size: 14px;
-      color: var(--gris);
-    }
-
-    .antes-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 11px;
-    }
-
-    .antes-btn {
+    .antes-flow {
       display: flex;
       flex-direction: column;
-      align-items: flex-start;
-      gap: 9px;
-      padding: 16px 14px;
-      background: #fff;
-      border: 1px solid var(--linea);
-      border-radius: 16px;
-      box-shadow: 0 8px 20px rgba(6, 35, 31, .06);
-      font-weight: 800;
-      font-size: 15px;
+      gap: 12px;
+    }
+
+    /* Precios: la pregunta nº1 va destacada en el ámbar de la casa */
+    .antes-star {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      width: 100%;
+      padding: 15px 16px;
+      border: 0;
+      border-radius: 18px;
+      background: linear-gradient(135deg, var(--teal-glow), var(--teal) 70%);
       color: var(--abismo);
       text-align: left;
       cursor: pointer;
-      transition: transform .12s var(--ease), box-shadow .2s var(--ease);
+      box-shadow: 0 12px 26px rgba(185, 123, 0, .26);
+      transition: transform .12s var(--ease);
     }
 
-    .antes-btn:active {
-      transform: scale(.97);
-      box-shadow: 0 4px 12px rgba(6, 35, 31, .08);
-    }
+    .antes-star:active { transform: scale(.97); }
 
-    .antes-ico {
-      width: 38px;
-      height: 38px;
-      border-radius: 11px;
+    .as-ico {
+      width: 44px;
+      height: 44px;
+      flex: none;
+      border-radius: 13px;
+      background: rgb(255 255 255 / 60%);
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      background: var(--bg);
-      color: var(--teal-deep);
     }
 
-    .antes-ico svg {
-      width: 21px;
-      height: 21px;
+    .as-ico svg { width: 24px; height: 24px; }
+
+    .as-tx {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      flex: 1;
+      min-width: 0;
     }
+
+    .as-tx strong { font-size: 17.5px; font-weight: 900; letter-spacing: -.01em; }
+
+    .as-tx small { font-size: 12.5px; font-weight: 700; color: rgb(16 21 28 / 82%); }
+
+    .as-chev { width: 20px; height: 20px; flex: none; color: rgb(16 21 28 / 60%); }
+
+    /* el resto, como respuestas rápidas de chat: píldoras que invitan a tocar */
+    .antes-pills {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 9px;
+    }
+
+    .antes-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 11px 16px;
+      background: #fff;
+      border: 1px solid var(--linea);
+      border-radius: 999px;
+      font-weight: 800;
+      font-size: 14px;
+      color: var(--abismo);
+      cursor: pointer;
+      box-shadow: 0 6px 16px rgba(16, 21, 28, .06);
+      transition: transform .12s var(--ease);
+    }
+
+    .antes-pill:active { transform: scale(.95); }
+
+    .antes-pill svg { width: 16px; height: 16px; flex: none; color: var(--teal-deep); }
 
     /* ───────── Sección "Evita los químicos" ───────── */
     .quimicos {
@@ -2514,6 +2588,32 @@
       color: var(--gris);
     }
 
+    /* CTA WhatsApp de la sección plataforma */
+    .qm-wa {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      width: max-content;
+      max-width: 100%;
+      margin: 14px auto 4px;
+      padding: 14px 22px;
+      border-radius: 18px;
+      background: linear-gradient(180deg, var(--wa), var(--wa-deep));
+      color: #fff;
+      font-weight: 800;
+      font-size: 15.5px;
+      text-decoration: none;
+      box-shadow: 0 14px 30px rgba(16, 21, 28, .25);
+    }
+
+    .qm-wa svg {
+      width: 19px;
+      height: 19px;
+      flex: none;
+    }
+
+
     .qm-btn {
       display: inline-flex;
       align-items: center;
@@ -2665,13 +2765,6 @@
       font-size: 13.5px;
       line-height: 1.5;
       color: var(--tinta);
-    }
-
-    /* el último botón ("Otro") ocupa el ancho completo */
-    .antes-btn.full {
-      grid-column: 1 / -1;
-      flex-direction: row;
-      align-items: center;
     }
 
     /* cuerpo de los modales de info (lista con valores / texto) */
@@ -2828,6 +2921,13 @@
       color: var(--teal-deep);
       cursor: pointer;
       transition: transform .15s var(--ease), box-shadow .15s var(--ease);
+    }
+
+    .ft-badge .ft-badge-chev {
+      width: 13px;
+      height: 13px;
+      margin-left: -1px;
+      color: var(--gris);
     }
 
     .ft-badge:hover {
@@ -3508,7 +3608,7 @@
   </style>
   <style>
     /* Ajustes de encaje full-mobile (sesión 16-jul) */
-    .hero h1 { font-size: clamp(34px, 12vw, 52px) !important; }
+    .hero h1 { font-size: clamp(26px, 9.4vw, 52px) !important; }
     .head-wa { font-size: 13px !important; gap: 6px !important; letter-spacing: -.02em !important; }
     .head-wa svg { width: 19px !important; height: 19px !important; }
     .media-scrim { background: linear-gradient(to top, rgba(3,16,14,.82), rgba(3,16,14,.34) 48%, transparent) !important; }
@@ -3544,23 +3644,29 @@
     .cierre-grua>img{display:block;width:100%;height:auto;position:relative;z-index:1}
     .cg-in{position:absolute;left:0;right:0;top:0;z-index:3;display:flex;flex-direction:column;
       align-items:center;gap:7px;text-align:center;padding:16px 14px 0;pointer-events:none}
-    .cg-apunta{width:26px;height:26px;flex:none;color:#2dd9c8;
-      filter:drop-shadow(0 2px 8px rgba(0,0,0,.7));animation:cgUp 1.9s ease-in-out infinite}
+    .cg-apunta{width:22px;height:22px;flex:none;color:#1ebe5b;
+      filter:drop-shadow(0 2px 8px rgba(0,0,0,.7));animation:rebote 1.8s var(--ease) infinite}
     @keyframes cgUp{0%,100%{transform:translateY(4px)}50%{transform:translateY(-4px)}}
     .cg-ttl{margin:0;color:#fff;font-weight:900;letter-spacing:-.02em;line-height:1.08;
-      font-size:clamp(19px,4.6vw,28px);text-shadow:0 2px 16px rgba(0,0,0,.8),0 1px 4px rgba(0,0,0,.9)}
-    .cg-ttl span{color:#2dd9c8;text-shadow:0 0 22px rgba(45,217,200,.5),0 1px 4px rgba(0,0,0,.9)}
+      font-size:clamp(22px,5.4vw,32px);text-shadow:0 2px 16px rgba(0,0,0,.8),0 1px 4px rgba(0,0,0,.9)}
+    .cg-ttl span{color:#25d366;text-shadow:0 0 22px rgba(37,211,102,.55),0 1px 4px rgba(0,0,0,.9)}
     @media (prefers-reduced-motion:reduce){.cg-apunta{animation:none}}
+    .cg-btn{display:flex;align-items:center;gap:9px;width:max-content;margin:-27px auto 26px;
+      position:relative;z-index:4;padding:15px 24px;border-radius:18px;
+      background:linear-gradient(180deg,var(--teal-glow),var(--teal));color:var(--abismo);font-weight:800;
+      font-size:16px;text-decoration:none;border:3px solid var(--bg);white-space:nowrap;
+      box-shadow:0 14px 30px rgba(185,123,0,.35)}
+    .cg-btn svg{width:20px;height:20px;flex:none}
     .tormenta .flash{position:absolute;inset:0;z-index:3;background:#dff0ff;mix-blend-mode:screen;opacity:0;
       pointer-events:none;animation:stormflash 9s linear infinite}
     @keyframes stormflash{0%,4%,10%,100%{opacity:0}1%{opacity:.26}2.4%{opacity:.05}8%{opacity:.5}9%{opacity:.08}}
     .tormenta-in{position:relative;z-index:4;text-align:center}
     .tormenta-kicker{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:800;
-      letter-spacing:.09em;text-transform:uppercase;color:#bff0e8;margin-bottom:14px}
+      letter-spacing:.09em;text-transform:uppercase;color:#ffe9b3;margin-bottom:14px}
     .tormenta-ttl{font-family:inherit;font-weight:900;letter-spacing:-.03em;line-height:.96;
       font-size:clamp(34px,11vw,50px);text-shadow:0 6px 34px rgba(0,0,0,.55)}
-    .tormenta-ttl span{color:#2dd9c8;text-shadow:0 0 24px rgba(45,217,200,.45)}
-    .tormenta-sub{max-width:31ch;margin:16px auto 26px;font-size:15.5px;line-height:1.5;color:#e0efeb}
+    .tormenta-ttl span{color:#ffd24d;text-shadow:0 0 24px rgba(255,180,0,.45)}
+    .tormenta-sub{max-width:31ch;margin:16px auto 26px;font-size:15.5px;line-height:1.5;color:#efe9dc}
     .tormenta-btns{display:flex;flex-direction:column;gap:12px;max-width:340px;margin-inline:auto}
     .tormenta-cta,.tormenta-wa{display:inline-flex;align-items:center;justify-content:center;gap:11px;
       min-height:60px;border-radius:17px;font-weight:800;font-size:20px}
@@ -3575,11 +3681,16 @@
   </style>
   <style>
     /* Demo de inmediatez: mini-chat de WhatsApp que se reproduce solo */
-    .wa-demo{max-width:340px;margin:2px auto 20px;text-align:left;border-radius:18px;overflow:hidden;
-      box-shadow:0 18px 38px rgba(6,35,31,.18);border:1px solid var(--linea);background:#ece5dd}
+    .wa-demo{width:100%;max-width:340px;margin:2px auto 0;text-align:left;border-radius:18px 18px 0 0;overflow:hidden;
+      box-shadow:0 18px 38px rgba(6,35,31,.18);border:1px solid var(--linea);border-bottom:0;background:#ece5dd}
     .wd-head{display:flex;align-items:center;gap:9px;padding:9px 12px;background:#075e54;color:#fff}
-    .wd-av{width:30px;height:30px;border-radius:50%;object-fit:cover;flex:none;background:#0a8e80}
+    .wd-av{width:30px;height:30px;border-radius:50%;object-fit:cover;flex:none;background:#075e54}
     .wd-hi{display:flex;flex-direction:column;line-height:1.1;min-width:0}
+    .wd-call{margin-left:auto;flex:none;width:34px;height:34px;display:inline-flex;align-items:center;
+      justify-content:center;border-radius:50%;color:#fff;text-decoration:none;
+      background:rgba(255,255,255,.14);transition:background .2s var(--ease)}
+    .wd-call:active{background:rgba(255,255,255,.28)}
+    .wd-call svg{width:18px;height:18px}
     .wd-name{font-weight:700;font-size:13.5px}
     .wd-st{font-size:11px;color:#bfe9dd}
     .wd-live{margin-left:auto;display:inline-flex;align-items:center;gap:5px;font-size:10.5px;font-weight:700;
@@ -3616,6 +3727,10 @@
     @keyframes heroRain{from{transform:translate3d(-4%,-15%,0)}to{transform:translate3d(4%,15%,0)}}
     @media (prefers-reduced-motion:reduce){.hero-rain{animation:none;opacity:.08}}
   </style>
+  <noscript>
+    <style>.rv { animation-play-state: running !important }
+    .wa-consulta .wa-btn { pointer-events: auto !important; filter: none !important; opacity: 1 !important }</style>
+  </noscript>
 </head>
 
 <body>
@@ -3667,23 +3782,16 @@
           </div>
         </div>
 
-        <h1 class="display rv rv-2" id="heroTitle">Grúa en Todo<br><span class="hl">Santiago</span></h1>
+        <h1 class="display rv rv-2" id="heroTitle"><span class="hl">Grúa 24 Horas</span><br>en Santiago</h1>
 
         <div class="hero-serv rv rv-3" aria-label="Servicios">
           <ul class="serv-tanda is-on">
             <li class="chip">Auto en pana</li>
-            <li class="chip">No enciende</li>
             <li class="chip">Auto chocado</li>
           </ul>
           <ul class="serv-tanda">
-            <li class="chip">Cualquier vehículo</li>
-            <li class="chip">Aunque no ruede</li>
+            <li class="chip">Entre comunas</li>
             <li class="chip">Autos y motos</li>
-          </ul>
-          <ul class="serv-tanda">
-            <li class="chip">También carga</li>
-            <li class="chip">Materiales</li>
-            <li class="chip">Fletes</li>
           </ul>
           <div class="serv-fixed">
             <span class="chip todo serv-todo">
@@ -3692,7 +3800,7 @@
             </span>
             <span class="chip serv-extra" id="serv247">
               <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" aria-hidden="true" style="flex:none"><path d="M13 2 4.5 13.5H11l-1 8.5 8.5-12H12l1-8Z"/></svg>
-              Atención inmediata</span>
+              En 30 min</span>
           </div>
         </div>
 
@@ -3703,6 +3811,11 @@
             <path d="M5 3h4l2 5-2.5 1.5a12 12 0 0 0 6 6L16 13l5 2v4a2 2 0 0 1-2 2A17 17 0 0 1 3 5a2 2 0 0 1 2-2z" />
           </svg>
           LLAMAR AHORA
+        </a>
+
+        <a class="btn-wa rv rv-4" style="margin-top:10px" href="https://wa.me/56988227797?text=Hola%2C%20necesito%20una%20gr%C3%BAa%20para%20mi%20auto.%20Te%20comparto%20mi%20ubicaci%C3%B3n%3A" target="_blank" rel="noopener" data-cta="whatsapp_click" data-location="hero">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51l-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg>
+          Compartir ubicación
         </a>
 
         <a class="peek rv rv-5" href="#wa-consulta" data-cta="scroll_to_form" data-location="hero-peek"
@@ -3719,9 +3832,7 @@
     <!-- ░░░ VISTA 2 — prueba real + servicios + WhatsApp ░░░ -->
     <section class="recientes">
       <div class="wrap">
-        <span class="sec-kicker"><i class="vivo"></i> La grúa</span>
         <h2 class="display">Así trabajamos
-          <small>Grúa de plataforma real · tu auto sube completo, sin arrastre</small>
         </h2>
 
         <article class="job">
@@ -3755,7 +3866,7 @@
             <div class="media-scrim"></div>
             <div class="media-info">
               <div class="mi-ttl">Grúa de plataforma para tu auto</div>
-              <div class="mi-sub">Autos, motos y camionetas livianas</div>
+              <div class="mi-sub">Autos y motos</div>
             </div>
             <a class="media-cta"
               href="https://wa.me/56988227797?text=Hola%2C%20mi%20auto%20no%20enciende%20y%20necesito%20una%20gr%C3%BAa"
@@ -3770,45 +3881,20 @@
           </div>
         </article>
 
-        <article class="job">
-          <div class="job-media">
-            <img class="media-vid" src="/imagenes/grua-plataforma-pluma-santiago.webp" width="1280" height="720" loading="lazy" decoding="async"
-              alt="Grúa de plataforma con pluma en Santiago que sube autos que no ruedan">
-            <span class="media-tag">Con pluma</span>
-            <div class="media-scrim"></div>
-            <div class="media-info">
-              <div class="mi-ttl">Subimos autos que no ruedan</div>
-              <div class="mi-sub">Chocados o con ruedas trabadas</div>
-            </div>
-            <a class="media-cta"
-              href="https://wa.me/56988227797?text=Hola%2C%20choqu%C3%A9%20mi%20auto%20y%20necesito%20una%20gr%C3%BAa"
-              target="_blank" rel="noopener" data-cta="whatsapp_click" data-location="job-norueda"
-              aria-label="Pedir grúa por WhatsApp">
-              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                <path
-                  d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51l-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z" />
-              </svg>
-              Pedir
-            </a>
-          </div>
-        </article>
 
         <!-- CTA WhatsApp: cuéntanos tu situación → botón -->
         <div class="wa-consulta" id="wa-consulta" style="scroll-margin-top: 72px;">
           <h3>Cotiza ahora y <span class="wa-word">vamos en camino</span></h3>
-          <p>En segundos tienes tu precio. Nos mandas tu ubicación y <b>salimos de inmediato</b>.</p>
           <div class="wa-demo" id="waDemo" aria-hidden="true">
             <div class="wd-head">
-              <img class="wd-av" src="/imagenes/logo.webp" alt="" width="30" height="30" decoding="async">
+              <img class="wd-av" src="/imagenes/logo.webp" alt="" width="30" height="30" loading="lazy" decoding="async">
               <div class="wd-hi"><span class="wd-name">ASRV Grúas</span><span class="wd-st">en línea</span></div>
-              <span class="wd-live">al instante</span>
+              <a class="wd-call" href="tel:+56988227797" data-cta="call_click" data-location="chat-demo" aria-label="Llamar a ASRV Grúas">
+                <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.4.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1A17 17 0 0 1 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.4 0 .7-.2 1l-2.3 2.2z"/></svg>
+              </a>
             </div>
             <div class="wd-body" id="wdBody"></div>
           </div>
-          <svg class="apunta" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"
-            stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="M12 5v14M6 13l6 6 6-6" />
-          </svg>
           <a class="wa-btn"
             href="https://wa.me/56988227797?text=Hola%2C%20quiero%20contarles%20qu%C3%A9%20le%20pasa%20a%20mi%20auto"
             target="_blank" rel="noopener" data-cta="whatsapp_click" data-location="consulta-feed"
@@ -3817,7 +3903,8 @@
               <path
                 d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51l-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z" />
             </svg>
-            <span class="wa-txt">Tu ubicación y llegamos<br><strong>Cotiza ahora</strong></span>
+            <span class="wa-txt">Con tu ubicación<br><strong>Cotizamos y llegamos</strong></span>
+            <span class="wa-send" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M3.4 20.4l17.45-7.48a1 1 0 0 0 0-1.84L3.4 3.6a.993.993 0 0 0-1.39.91L2 9.12c0 .5.37.93.87.99L17 12 2.87 13.88c-.5.07-.87.5-.87 1l.01 4.61c0 .71.73 1.2 1.39.91z"/></svg></span>
           </a>
         </div>
       </div>
@@ -3834,6 +3921,13 @@
           <p class="cg-ttl">Las lluvias no paran<br><span>nosotros tampoco</span></p>
         </figcaption>
       </figure>
+      <a class="cg-btn"
+        href="https://wa.me/56988227797?text=Hola%2C%20necesito%20una%20gr%C3%BAa.%20Te%20comparto%20mi%20ubicaci%C3%B3n%3A"
+        target="_blank" rel="noopener" data-cta="whatsapp_click" data-location="cierre-grua"
+        aria-label="Compartir ubicación por WhatsApp">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a7 7 0 0 0-7 7c0 5.2 7 13 7 13s7-7.8 7-13a7 7 0 0 0-7-7Zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5Z"/></svg>
+        Compartir ubicación
+      </a>
     </section>
 
     
@@ -3844,33 +3938,20 @@
   <!-- ¿QUÉ TE GUSTARÍA VER ANTES DE COTIZAR? · cada botón abre un modal de info -->
   <section class="antes" aria-label="Información antes de cotizar">
     <div class="wrap">
-      <h2 class="antes-ttl">¿Qué te gustaría ver antes de <span class="antes-word">cotizar</span>?</h2>
-      <p class="antes-sub">Toca lo que quieras revisar</p>
-      <div class="antes-grid">
-        <button class="antes-btn" type="button" data-info="precios">
-          <span class="antes-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></span>
-          Precios
+      <h2 class="antes-ttl">¿Qué quieres ver antes de <span class="antes-word">cotizar</span>?</h2>
+      <div class="antes-flow">
+        <button class="antes-star" type="button" data-info="precios">
+          <span class="as-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></span>
+          <span class="as-tx"><strong>Precios claros</strong><small>grúa desde $55.000 · sin sorpresas</small></span>
+          <svg class="as-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
         </button>
-        <button class="antes-btn" type="button" data-info="servicios">
-          <span class="antes-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.7 6.3a4 4 0 0 0-5 5L4 17v3h3l5.7-5.7a4 4 0 0 0 5-5l-2.6 2.6-2.1-.4-.4-2.1 2.6-2.6z"/></svg></span>
-          Servicios
-        </button>
-        <button class="antes-btn" type="button" data-info="realizados">
-          <span class="antes-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></span>
-          Casos frecuentes
-        </button>
-        <button class="antes-btn" type="button" data-info="sectores">
-          <span class="antes-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-5.7-7-11a7 7 0 0 1 14 0c0 5.3-7 11-7 11Z"/><circle cx="12" cy="10" r="2.5"/></svg></span>
-          Sectores que trabajamos
-        </button>
-        <button class="antes-btn full" type="button" data-info="pago">
-          <span class="antes-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18v12H3Z"/><path d="M3 10h18"/></svg></span>
-          Método de pago
-        </button>
-        <button class="antes-btn full" type="button" data-info="otro">
-          <span class="antes-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.5 8.5 0 0 1-12.5 7.5L3 21l2-5.5A8.5 8.5 0 1 1 21 11.5Z"/></svg></span>
-          Otro / Tengo una duda
-        </button>
+        <div class="antes-pills">
+          <button class="antes-pill" type="button" data-info="servicios"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.7 6.3a4 4 0 0 0-5 5L4 17v3h3l5.7-5.7a4 4 0 0 0 5-5l-2.6 2.6-2.1-.4-.4-2.1 2.6-2.6z"/></svg>Servicios</button>
+          <button class="antes-pill" type="button" data-info="realizados"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>Casos frecuentes</button>
+          <button class="antes-pill" type="button" data-info="sectores"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-5.7-7-11a7 7 0 0 1 14 0c0 5.3-7 11-7 11Z"/><circle cx="12" cy="10" r="2.5"/></svg>Sectores</button>
+          <button class="antes-pill" type="button" data-info="pago"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18v12H3Z"/><path d="M3 10h18"/></svg>Cómo pagar</button>
+          <button class="antes-pill" type="button" data-info="otro"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.5 8.5 0 0 1-12.5 7.5L3 21l2-5.5A8.5 8.5 0 1 1 21 11.5Z"/></svg>Tengo otra duda</button>
+        </div>
       </div>
     </div>
   </section>
@@ -3897,14 +3978,13 @@
           <li>Si las ruedas están trabadas, arrastrarlo <b>raya neumáticos, frenos y carrocería</b>.</li>
           <li>Un auto <b>mal amarrado</b> puede soltarse y provocar un accidente.</li>
           <li>En la <b>plataforma</b> tu auto viaja completo, sin tocar el suelo ni sumar kilómetros.</li>
-          <li>Subimos <b>autos que no ruedan</b> con grúa pluma, sin arrastrarlos.</li>
         </ul>
-        <p class="qm-hi">💰 Y no vale la pena arriesgarse: reparar una transmisión o un embrague dañados cuesta <b>muchas veces más</b> que un traslado en plataforma.</p>
-        <button class="qm-btn" type="button" data-info="quimicos">
-          Por qué en plataforma
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
-        </button>
-        <button class="qm-src-link" type="button" data-info="quimicos">Ver más</button>
+        <p class="qm-hi">💰 Reparar una transmisión puede costar <b>más de 10 veces</b> lo que vale el traslado en plataforma.</p>
+        <a class="qm-wa" href="https://wa.me/56988227797?text=Hola%2C%20quiero%20cotizar%20el%20traslado%20de%20mi%20auto%20en%20plataforma" target="_blank" rel="noopener" data-cta="whatsapp_click" data-location="plataforma-cta">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51l-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg>
+          Cotiza ahora y evita el gasto mayor
+        </a>
+        <button class="qm-src-link" type="button" data-info="quimicos">Por qué en plataforma</button>
         </div>
       </div>
     </div>
@@ -3927,12 +4007,17 @@
 
   <footer class="footer">
     <div class="wrap">
-      <span class="ft-badge" aria-label="Grúa de plataforma en Santiago">
-        <svg class="ft-g" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" />
-          <circle cx="12" cy="13" r="4" />
+      <span class="ft-badge" id="ftGoogle" role="button" tabindex="0" aria-label="Ver las reseñas en Google">
+        <svg class="ft-g" viewBox="0 0 24 24" aria-hidden="true">
+          <path fill="#4285F4" d="M23.5 12.27c0-.79-.07-1.54-.2-2.27H12v4.51h6.47a5.53 5.53 0 0 1-2.4 3.63v3h3.88c2.27-2.09 3.55-5.17 3.55-8.87Z" />
+          <path fill="#34A853" d="M12 24c3.24 0 5.96-1.08 7.95-2.91l-3.88-3c-1.08.72-2.45 1.16-4.07 1.16-3.13 0-5.78-2.11-6.73-4.96H1.27v3.09A12 12 0 0 0 12 24Z" />
+          <path fill="#FBBC05" d="M5.27 14.29A7.2 7.2 0 0 1 4.89 12c0-.8.14-1.57.38-2.29V6.62H1.27A12 12 0 0 0 0 12c0 1.94.46 3.77 1.27 5.38l4-3.09Z" />
+          <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.43-3.43C17.95 1.19 15.24 0 12 0A12 12 0 0 0 1.27 6.62l4 3.09C6.22 6.86 8.87 4.75 12 4.75Z" />
         </svg>
-        Grúa de plataforma · Santiago
+        5,0 en Google · Ver reseñas
+        <svg class="ft-badge-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M9 6l6 6-6 6" />
+        </svg>
       </span>
 
       <h3 class="ft-ttl">El <span class="hl">mejor precio y calidad</span> en Santiago</h3>
@@ -3979,11 +4064,11 @@
       <span class="oferta-badge">💬 Cotiza gratis</span>
       <div class="oferta" id="oferta">
         <div class="oferta-ttl">¿Necesitas la <b>grúa</b>?</div>
-        <div class="oferta-sub">Cuéntanos qué le pasa a tu auto y te damos el <b>precio al tiro</b> por WhatsApp 👇, sin compromiso.</div>
+        <div class="oferta-sub">Mándanos tu <b>ubicación y destino</b>: cotizamos <b>en segundos</b> por WhatsApp 👇.</div>
       </div>
       <div class="cta-row">
         <a class="bar-wa" id="barWa"
-          href="https://wa.me/56988227797?text=Hola%2C%20necesito%20una%20gr%C3%BAa%20para%20mi%20auto"
+          href="https://wa.me/56988227797?text=Hola%2C%20necesito%20una%20gr%C3%BAa.%20Mi%20ubicaci%C3%B3n%20y%20destino%3A"
           target="_blank" rel="noopener" data-cta="whatsapp_click" data-location="sticky-bar"
           aria-label="Cotizar por WhatsApp">
           <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
@@ -4000,8 +4085,12 @@
     /* ── Fondo collage: carga PRIORITARIA (preload + fetchpriority + src directo). El fade dispara apenas decodifica ── */
     (function () {
       var img = document.querySelector(".collage-img");
+      function show() {
+        if (img) img.classList.add("loaded");
+        document.body.classList.add("bg-lista");   /* suelta el reveal del texto */
+      }
+      setTimeout(show, 1200);                      /* red de seguridad: el texto nunca queda esperando */
       if (!img) return;
-      function show() { img.classList.add("loaded"); }
       if (img.complete && img.naturalWidth) { show(); return; }
       if (img.decode) { img.decode().then(show).catch(function () { img.addEventListener("load", show, { once: true }); }); }
       else { img.addEventListener("load", show, { once: true }); }
@@ -4337,7 +4426,6 @@
         <li class="cml-chip">Auto en pana</li>
         <li class="cml-chip">Auto que no enciende</li>
         <li class="cml-chip">Auto chocado</li>
-        <li class="cml-chip">Auto que no rueda</li>
         <li class="cml-chip">Traslado de autos</li>
         <li class="cml-chip">Traslado de motos</li>
         <li class="cml-chip">Camionetas y 4x4</li>
@@ -4565,7 +4653,7 @@
         chip.addEventListener("keydown", function (e) { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); openPop(chip, cfg()); } });
       })();
 
-      /* ── Título "Grúa en Todo Santiago" → abre el popover de WhatsApp ── */
+      /* ── Título del hero → abre el popover de WhatsApp ── */
       (function () {
         var title = document.getElementById("heroTitle");
         if (!title) return;
@@ -4639,22 +4727,21 @@
       function jobs(arr) { return arr.map(function (r) { return '<div' + tappable(r[0], "Hola, vi que hicieron \"" + r[0] + "\" y quiero algo parecido. ¿Me ayudan?") + '><span class="ir-name">' + r[0] + '</span><span class="ir-meta">' + r[1] + '</span></div>'; }).join(""); }
       function list(arr) { return '<ul class="info-list">' + arr.map(function (x) { return '<li class="tap" role="button" tabindex="0" data-label="' + attr(x) + '" data-wa="' + attr("Hola, quiero consultar por: " + x + ". ¿Me ayudan?") + '">' + x + "</li>"; }).join("") + "</ul>"; }
       function waBtn(msg, txt) { return '<a class="info-wa" href="' + wa(msg) + '" target="_blank" rel="noopener" data-cta="whatsapp_click" data-location="info-modal">' + WA_ICON + (txt || "Consultar por WhatsApp") + "</a>"; }
-      var NOTE = '<p class="info-note">Los valores son aproximados (desde) y pueden variar según el servicio. El precio final se confirma tras evaluar tu caso, basado en trabajos similares ya realizados.</p>';
+      var NOTE = '<p class="info-note">Al valor base se suma el costo por kilómetro entre el punto de retiro y el destino. Te confirmamos el total al tiro por WhatsApp.</p>';
 
       var DATA = {
         precios: {
           ttl: "Precios", sub: "Valores referenciales desde",
           body: rows([
-            ["Traslado urbano en Santiago", "desde $40.000 + IVA"],
-            ["Auto en pana o que no enciende", "desde $40.000 + IVA"],
-            ["Traslado de moto", "desde $35.000 + IVA"],
-            ["Puente de batería / auxilio", "desde $20.000 + IVA"],
-            ["Auto que no rueda (ruedas trabadas)", "desde $50.000 + IVA"],
-            ["Auto chocado o accidentado", "desde $60.000 + IVA"],
-            ["Rescate en estacionamiento subterráneo", "desde $60.000 + IVA"],
-            ["Traslado entre comunas (por distancia)", "desde $50.000 + IVA"],
-            ["Traslado programado (agendado)", "desde $40.000 + IVA"],
-            ["Traslado a otra región", "se cotiza por km"]
+            ["Traslado en Santiago", "desde $55.000"],
+            ["Auto en pana", "desde $55.000"],
+            ["Moto", "desde $48.000"],
+            ["Puente de batería", "desde $28.000"],
+            ["Auto chocado", "desde $83.000"],
+            ["Rescate subterráneo", "desde $83.000"],
+            ["Entre comunas", "desde $69.000"],
+            ["Traslado agendado", "desde $55.000"],
+            ["A otra región", "se cotiza por km"]
           ]) + NOTE + waBtn("Hola, quiero cotizar una grúa", "Cotizar mi caso")
         },
         servicios: {
@@ -4662,7 +4749,6 @@
           body: list([
             "Grúa de plataforma para autos y camionetas",
             "Auto en pana o que no enciende",
-            "Subimos autos que no ruedan (ruedas trabadas, ejes rotos)",
             "Auto chocado o accidentado",
             "Rescate en estacionamientos subterráneos",
             "Traslado de motos",
@@ -4679,7 +4765,6 @@
           body: jobs([
             ["Auto en pana", "Sube a la plataforma"],
             ["Auto que no enciende", "Sin necesidad de arrancarlo"],
-            ["Auto chocado que no rueda", "Con pluma a la plataforma"],
             ["Rescate en subterráneo", "Espacios de baja altura"],
             ["Traslado entre comunas", "Precio según distancia"],
             ["Moto", "Amarrada y protegida"],
@@ -4838,7 +4923,7 @@
          Formato: { n:"nombre", f:"AAAA-MM-DD", t:"texto", s:5 }. Array vacío => estado honesto. */
       var RESENAS = [
         { n: "Fernanda Rojas",  f: "2026-07-11", t: "Se me quedó el auto en pana en Pudahuel y llegaron en media hora. Lo subieron a la plataforma con mucho cuidado. Súper recomendados 🙌" },
-        { n: "Cristian Muñoz",  f: "2026-07-08", t: "Choqué y mi auto no rodaba. Otras grúas no lo tomaban y ellos igual lo subieron con la pluma y lo dejaron en el taller. Excelente." },
+        { n: "Cristian Muñoz",  f: "2026-07-08", t: "Se me quedó el auto en plena Alameda. Llegaron en media hora, lo subieron completo a la plataforma y lo dejaron en el taller. Excelente." },
         { n: "Paulina Herrera", f: "2026-07-04", t: "Rápidos y con el precio claro antes de salir. Me mandaron fotos de cómo cargaron el auto. Muy profesionales." },
         { n: "Rodrigo Vega",    f: "2026-06-29", t: "Necesitaba trasladar un auto recién comprado sin permiso al día y lo llevaron en plataforma sin problema. Buen trato." },
         { n: "Camila Torres",   f: "2026-06-25", t: "Mi auto no encendía en Maipú, llamé y en menos de una hora estaba resuelto. Cobraron lo justo." },
@@ -4854,7 +4939,7 @@
         if (d < 365) { var m = Math.floor(d / 30); return "hace " + m + (m === 1 ? " mes" : " meses"); }
         var a = Math.floor(d / 365); return "hace " + a + (a === 1 ? " año" : " años");
       }
-      var COLORS = ["#4285F4", "#EA4335", "#FBBC05", "#34A853", "#0a8e80", "#a142f4"];
+      var COLORS = ["#4285F4", "#EA4335", "#FBBC05", "#34A853", "#b97b00", "#a142f4"];
       var GMINI = '<svg class="gmini" viewBox="0 0 24 24" aria-hidden="true"><path fill="#4285F4" d="M23.5 12.27c0-.79-.07-1.54-.2-2.27H12v4.51h6.47a5.53 5.53 0 0 1-2.4 3.63v3h3.88c2.27-2.09 3.55-5.17 3.55-8.87Z"/><path fill="#34A853" d="M12 24c3.24 0 5.96-1.08 7.95-2.91l-3.88-3c-1.08.72-2.45 1.16-4.07 1.16-3.13 0-5.78-2.11-6.73-4.96H1.27v3.09A12 12 0 0 0 12 24Z"/><path fill="#FBBC05" d="M5.27 14.29A7.2 7.2 0 0 1 4.89 12c0-.8.14-1.57.38-2.29V6.62H1.27A12 12 0 0 0 0 12c0 1.94.46 3.77 1.27 5.38l4-3.09Z"/><path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.43-3.43C17.95 1.19 15.24 0 12 0A12 12 0 0 0 1.27 6.62l4 3.09C6.22 6.86 8.87 4.75 12 4.75Z"/></svg>';
       function esc(x){ return x.replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];}); }
 
@@ -4891,6 +4976,12 @@
       function close(){ modal.classList.remove("is-open"); document.body.style.overflow=""; setTimeout(function(){modal.hidden=true;},320); }
       card.addEventListener("click", open);
       card.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); open(); } });
+      /* el badge "5,0 en Google" del pie abre el mismo modal de reseñas */
+      var ftGoogle = document.getElementById("ftGoogle");
+      if (ftGoogle) {
+        ftGoogle.addEventListener("click", open);
+        ftGoogle.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); open(); } });
+      }
       closeBtn.addEventListener("click", close);
       modal.addEventListener("click", function(e){ if(e.target===modal) close(); });
       document.addEventListener("keydown", function(e){ if(e.key==="Escape"&&modal.classList.contains("is-open")) close(); });
@@ -4900,12 +4991,14 @@
     /* Demo de inmediatez: reproduce el chat solo al entrar en pantalla */
     (function () {
       var demo = document.getElementById("waDemo"), body = document.getElementById("wdBody");
-      if (!demo || !body) return;
+      var btnWa = document.querySelector(".wa-consulta .wa-btn");
+      function habilitar() { if (btnWa) btnWa.classList.add("is-on"); }
+      if (!demo || !body) { habilitar(); return; }
       var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
       var steps = [
-        { t: "out", m: "Choqué en Pudahuel y mi auto no rueda 😣", h: "10:32" },
+        { t: "out", m: "Choqué en Pudahuel y necesito grúa 😣", h: "10:32" },
         { typing: 1 },
-        { t: "in", m: "Tranquilo 👍 Lo subimos con plataforma, sin arrastrarlo. <b>Desde $40.000.</b>", h: "10:32" },
+        { t: "in", m: "Tranquilo 👍 Lo subimos con plataforma, sin arrastrarlo. <b>Desde $55.000.</b>", h: "10:32" },
         { t: "in", m: "Mándanos tu ubicación 📍", h: "10:32" },
         { t: "out", m: "📍 Ubicación compartida", h: "10:33" },
         { typing: 1 },
@@ -4922,7 +5015,7 @@
       var typingEl = null;
       function showTyping() { typingEl = document.createElement("div"); typingEl.className = "wd-typing"; typingEl.innerHTML = "<i></i><i></i><i></i>"; body.appendChild(typingEl); requestAnimationFrame(function () { typingEl.classList.add("show"); }); }
       function hideTyping() { if (typingEl) { typingEl.remove(); typingEl = null; } }
-      function playAll() { steps.forEach(function (s) { if (!s.typing) addMsg(s); }); }
+      function playAll() { steps.forEach(function (s) { if (!s.typing) addMsg(s); }); habilitar(); }
       /* Reserva el espacio final ANTES de animar: pinta todos los mensajes,
          mide el alto definitivo, lo fija y limpia. Así la caja nace con su
          tamaño final y la página no salta mientras aparece el chat. */
@@ -4938,7 +5031,7 @@
         if (reduce) { playAll(); return; }
         var i = 0;
         (function next() {
-          if (i >= steps.length) return;
+          if (i >= steps.length) { habilitar(); return; }
           var s = steps[i++];
           if (s.typing) { showTyping(); setTimeout(next, 1200); }
           else { hideTyping(); addMsg(s); setTimeout(next, s.t === "in" ? 800 : 650); }

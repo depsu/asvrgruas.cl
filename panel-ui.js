@@ -1,4 +1,4 @@
-// Panel del cliente ASRV Grúas — instanciado de panel-cliente/ (maestro DIXDY) 2026-07-16.
+/* Panel del cliente ASRV Grúas — instanciado de panel-cliente/ (maestro DIXDY) 2026-07-16.
    - Barra superior + menú hamburguesa en todas las vistas del panel
    - Caché local (localStorage) para pintar al instante y refrescar por detrás
    Se incluye con: <script src="/panel-ui.js"></script> (al inicio del <body>) */
@@ -66,7 +66,7 @@
   var top = document.createElement("div");
   top.className = "pu-top";
   top.innerHTML =
-    '<a class="pu-brand" href="/panel.html"><img src="/imagenes/logo.webp" alt="" style="height:32px;width:auto;display:block;flex:none">' +
+    '<a class="pu-brand" href="/panel.html"><img src="/imagenes/logo.webp?v=e323dac5" alt="" style="height:32px;width:auto;display:block;flex:none">' +
     '<span>ASRV Grúas<small>panel del negocio</small></span></a>' +
     '<button class="pu-burger" id="puBurger" aria-label="Menú"><span></span><span></span><span></span></button>';
   var ovl = document.createElement("div"); ovl.className = "pu-ovl";

@@ -63,7 +63,7 @@
 </style>
 </head>
 <body>
-<script src="/panel-ui.js"></script>
+<script src="/panel-ui.js?v=60d297e7"></script>
 <div class="wrap">
   <h1 style="margin-top:10px">📋 Cierres del día</h1>
   <p class="sub">ASRV Grúas — registra los trabajos que cerraste</p>
@@ -119,12 +119,23 @@
       <label for="nota">Nota (opcional)</label>
       <input id="nota" placeholder="ej: cliente frecuente">
 
+      <label class="nr-check" style="display:flex;align-items:center;gap:9px;font-weight:600;margin-top:14px;cursor:pointer">
+        <input type="checkbox" id="noRealizado" onchange="toggleNoRealizado()" style="width:18px;height:18px;flex:none">
+        No pude realizar el servicio (problema mío)
+      </label>
+      <div id="causaBox" class="hide">
+        <label for="causa">¿Qué pasó?</label>
+        <input id="causa" placeholder="ej: se me pinchó la rueda, camión en pana" maxlength="120">
+        <div class="hint">El cliente igual cuenta como conversión de Google (lo trajo el anuncio), pero NO suma a tu % de cierre ni a lo facturado. Queda en la lista con su causa para que veas el patrón.</div>
+      </div>
+
       <button onclick="guardar()">Guardar cierre</button>
       <div class="msg" id="saveMsg"></div>
     </div>
 
     <div class="card" id="cardLista">
       <h1 style="font-size:16px;margin:0 0 10px">Cargados</h1>
+      <div id="noRealBox" class="hide" style="background:#fff5f5;border:1px solid #f3c6c6;border-radius:10px;padding:9px 11px;margin-bottom:10px;font-size:13px;color:#a03030;line-height:1.4"></div>
       <table>
         <thead><tr><th>Código</th><th>Precio</th><th>Estado</th><th></th></tr></thead>
         <tbody id="lista"><tr><td colspan="4" class="hint">Cargando…</td></tr></tbody>
@@ -141,8 +152,8 @@
     "Puente Alto", "Quilicura", "Quinta Normal", "Recoleta", "Renca", "San Bernardo", "San Joaquín", "San Miguel",
     "San Ramón", "Vitacura", "Buin", "Calera de Tango", "Colina", "Lampa", "Padre Hurtado", "Peñaflor", "Pirque",
     "Talagante", "Otra"];
-  var SERVICIOS = ["", "Destape de alcantarillado", "Destape de WC", "Destape de cañerías", "Destape de lavaplatos",
-    "Limpieza de fosa séptica", "Video inspección", "Otro"];
+  var SERVICIOS = ["", "Auto en pana", "Auto chocado", "Auto no enciende", "Auto que no rueda",
+    "Puente de batería", "Rescate en subterráneo", "Traslado a taller", "Traslado programado", "Moto", "Otro"];
   document.getElementById("comuna").innerHTML = COMUNAS.map(function (c) { return '<option value="' + c + '">' + (c || "— Elige la comuna —") + "</option>"; }).join("");
   document.getElementById("servicio").innerHTML = SERVICIOS.map(function (s) { return '<option value="' + s + '">' + (s || "— Elige el servicio —") + "</option>"; }).join("");
   function pass() { return localStorage.getItem("panel_pass") || ""; }
@@ -171,6 +182,11 @@
     if (sinCodigo && !document.getElementById("diaContacto").value) document.getElementById("diaContacto").value = hoyLocal();
   }
 
+  function toggleNoRealizado() {
+    var on = document.getElementById("noRealizado").checked;
+    document.getElementById("causaBox").classList.toggle("hide", !on);
+  }
+
   function entrar() {
     var p = document.getElementById("pass").value.trim();
     if (!p) return;
@@ -197,18 +213,23 @@
     var hora = document.getElementById("horaContacto").value.trim();
     var dia = document.getElementById("diaContacto").value.trim();
     var nota = document.getElementById("nota").value.trim();
+    var noRealizado = document.getElementById("noRealizado").checked;
+    var causa = document.getElementById("causa").value.trim();
     var msg = document.getElementById("saveMsg");
     if (!sinCodigo && (!codigo || !precio)) { msg.className = "msg bad"; msg.textContent = "Faltan código o precio (¿no tiene código? toca «Sin código»)"; return; }
     if (sinCodigo && (!hora || !precio)) { msg.className = "msg bad"; msg.textContent = "Falta la hora del contacto o el precio"; return; }
+    if (noRealizado && !causa) { msg.className = "msg bad"; msg.textContent = "Escribe qué pasó (por qué no pudiste hacerlo)"; return; }
     msg.className = "msg"; msg.textContent = "Guardando…";
     fetch(API + "/cierre", { method: "POST", headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ pass: pass(), manual: sinCodigo, codigo: sinCodigo ? "" : codigo, precio: precio,
-        comuna: comuna, servicio: servicio, hora: hora, dia: sinCodigo ? dia : "", nota: nota }) })
+        comuna: comuna, servicio: servicio, hora: hora, dia: sinCodigo ? dia : "", nota: nota,
+        noRealizado: noRealizado, causa: causa }) })
       .then(function (r) { return r.json().then(function (d) { return { ok: r.ok, d: d }; }); })
       .then(function (res) {
         if (!res.ok) { msg.className = "msg bad"; msg.textContent = res.d.error || "Error"; return; }
-        msg.className = "msg ok"; msg.textContent = sinCodigo ? "✓ Guardado — cuenta para tu % de cierre" : "✓ Guardado";
-        ["codigo", "precio", "comuna", "servicio", "horaContacto", "diaContacto", "nota"].forEach(function (id) { document.getElementById(id).value = ""; });
+        msg.className = "msg ok"; msg.textContent = noRealizado ? "✓ Guardado como no realizado — no suma a tu % de cierre" : (sinCodigo ? "✓ Guardado — cuenta para tu % de cierre" : "✓ Guardado");
+        ["codigo", "precio", "comuna", "servicio", "horaContacto", "diaContacto", "nota", "causa"].forEach(function (id) { document.getElementById(id).value = ""; });
+        document.getElementById("noRealizado").checked = false; toggleNoRealizado();
         if (sinCodigo) toggleSinCodigo();
         cargarLista();
         setTimeout(function () { msg.textContent = ""; }, 2500);
@@ -266,8 +287,19 @@
         var pend = items.filter(function (it) { return !it.subido && !it.manual; }).length;
         // --- Meta: barra hacia los 30 cierres ---
         var GOAL = 30;
-        var total = items.filter(function (it) { return !it.manual; }).length;  // los manuales (teléfono) no cuentan hasta validarse
-        var fact = items.reduce(function (s, it) { return s + (Number(it.precio) || 0); }, 0);
+        // Los "no realizados" (problema del dueño) NO cuentan como cierre ni suman a lo facturado.
+        var noReal = items.filter(function (it) { return it.noRealizado; });
+        var hechos = items.filter(function (it) { return !it.noRealizado; });
+        var total = hechos.filter(function (it) { return !it.manual; }).length;  // los manuales (teléfono) no cuentan hasta validarse
+        var fact = hechos.reduce(function (s, it) { return s + (Number(it.precio) || 0); }, 0);
+        // Resumen de "cerrados que no pude hacer" (con lo que se escapó)
+        var nrBox = document.getElementById("noRealBox");
+        if (noReal.length) {
+          var perdido = noReal.reduce(function (s, it) { return s + (Number(it.precio) || 0); }, 0);
+          nrBox.classList.remove("hide");
+          nrBox.innerHTML = "<b>" + noReal.length + (noReal.length === 1 ? " cerrado que no pudiste hacer" : " cerrados que no pudiste hacer") +
+            "</b> · $" + perdido.toLocaleString("es-CL") + " que se te escaparon. Míralos abajo con su causa para atacar el problema.";
+        } else { nrBox.classList.add("hide"); }
         var pct = Math.min(total / GOAL, 1) * 100;
         var meta = document.getElementById("meta");
         document.getElementById("metaBar").style.width = pct.toFixed(0) + "%";
@@ -284,14 +316,21 @@
         if (pend === 0) { est.className = "estado ok"; est.textContent = "✓ Todo al día — nada pendiente de subir a Google"; }
         else { est.className = "estado wait"; est.textContent = "🕒 " + pend + (pend === 1 ? " en cola · se sube" : " en cola · se suben") + " automáticamente esta noche"; }
         tb.innerHTML = items.map(function (it) {
-          var estado = it.subido ? '<span class="pill p-ok">subido</span>'
-            : (it.manual ? '<span class="pill p-man">sin código</span>' : '<span class="pill p-wait">en cola</span>');
+          var estado;
+          if (it.noRealizado) {
+            var sub = it.subido ? " · subido" : (it.manual ? "" : " · en cola");
+            estado = '<span class="pill" style="background:#fde8e8;color:#a03030">no realizado</span><span class="hint">' + sub + '</span>';
+          } else {
+            estado = it.subido ? '<span class="pill p-ok">subido</span>'
+              : (it.manual ? '<span class="pill p-man">sin código</span>' : '<span class="pill p-wait">en cola</span>');
+          }
           var precio = "$" + Number(it.precio).toLocaleString("es-CL");
           var diaC = (it.diaContacto || "").length === 10 ? (it.diaContacto.slice(8, 10) + "/" + it.diaContacto.slice(5, 7) + " ") : "";
           var horaTxt = (diaC + (it.hora || "")).trim();
           // sin hora conocida (ej: código mal escrito convertido) → mostrar el código original
           var label = it.manual ? ("📞 " + (horaTxt || it.codigo)) : it.codigo;
           var detalle = [it.servicio, it.comuna, it.nota].filter(Boolean).join(" · ");
+          if (it.noRealizado && it.causa) detalle = (detalle ? detalle + " · " : "") + "No realizado: " + it.causa;
           if (it.notaSistema) detalle = (detalle ? detalle + " · " : "") + "⚠️ el código no existía (¿mal escrito?)";
           var borrable = !it.subido && !it.noBorrar;   // tras el cron nocturno son data definitiva
           // ✏️ solo para los que pasaron por la cola con código MALO (los de teléfono no tienen código que corregir)

@@ -1,8 +1,40 @@
-# Las landings /lp/ se excluyen del índice vía meta robots y X-Robots-Tag,
-# NO vía Disallow: AdsBot-Google debe poder rastrearlas (Quality Score).
-# Los bots de IA (GPTBot, ClaudeBot, PerplexityBot, etc.) quedan permitidos
-# a propósito: aparecer en respuestas de IA también trae clientes.
+# asvrgruas.cl — ASVR Grúas · grúa de plataforma / traslado de autos, Santiago
+#
+# Política de acceso (DIXDY):
+#   • Bienvenidos TODOS los buscadores y motores de IA. Queremos que nos lean y
+#     nos CITEN. La regla "User-agent: *  Allow: /" ya los cubre a todos —incluidos
+#     los que aún no existen— sin mantener una lista al día. Motores de IA
+#     bienvenidos: OpenAI/ChatGPT, Anthropic/Claude, Google/Gemini (Google-Extended),
+#     xAI/Grok, Perplexity, Apple, Common Crawl, Mistral, Meta AI, Amazon, Cohere.
+#   • Las landings /lp/ NO se bloquean aquí: se excluyen del índice por X-Robots-Tag
+#     (_headers), para que AdsBot-Google pueda rastrearlas (Quality Score).
+#   • Solo bloqueamos scrapers de inteligencia SEO (espían, gastan crawl budget).
+
 User-agent: *
 Allow: /
+
+# URLs con parámetros de tracking (evita duplicados; NO afecta a AdsBot-Google)
+Disallow: /*?utm_*
+Disallow: /*?gclid=*
+Disallow: /*?fbclid=*
+
+# ── Scrapers de inteligencia SEO — bloqueados ──
+User-agent: AhrefsBot
+Disallow: /
+
+User-agent: SemrushBot
+Disallow: /
+
+User-agent: MJ12bot
+Disallow: /
+
+User-agent: DotBot
+Disallow: /
+
+User-agent: PetalBot
+Disallow: /
+
+User-agent: BLEXBot
+Disallow: /
 
 Sitemap: https://www.asvrgruas.cl/sitemap.xml

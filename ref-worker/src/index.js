@@ -207,14 +207,14 @@ async function recalcularDash(env) {
   const range = `segments.date BETWEEN '2026-07-16' AND '${today}'`;
 
   // gasto por día
-  const spendRows = await gaql(token, env, `SELECT segments.date, metrics.cost_micros FROM campaign WHERE campaign.id = 0 AND ${range} ORDER BY segments.date`);
+  const spendRows = await gaql(token, env, `SELECT segments.date, metrics.cost_micros FROM campaign WHERE campaign.id = ${GADS_CAMPAIGN_ID} AND ${range} ORDER BY segments.date`);
   const days = {};  // date -> {gasto, whatsapp, telefono, formulario}
   for (const r of spendRows) {
     const d = r.segments.date;
     (days[d] = days[d] || { gasto: 0, whatsapp: 0, telefono: 0, formulario: 0 }).gasto += Math.round(Number(r.metrics.costMicros || 0) / 1e6);
   }
   // contactos por día y acción — los nombres de las acciones pueden venir en español o inglés
-  const actRows = await gaql(token, env, `SELECT segments.date, segments.conversion_action_name, metrics.all_conversions FROM campaign WHERE campaign.id = 0 AND ${range}`);
+  const actRows = await gaql(token, env, `SELECT segments.date, segments.conversion_action_name, metrics.all_conversions FROM campaign WHERE campaign.id = ${GADS_CAMPAIGN_ID} AND ${range}`);
   for (const r of actRows) {
     const d = r.segments.date;
     const name = (r.segments.conversionActionName || "").toLowerCase();
@@ -258,7 +258,7 @@ async function recalcularDash(env) {
   bloques.forEach((b, i) => { b.completo = i < maxIdx; b.costoPorContacto = b.contactos > 0 ? Math.round(b.gastado / b.contactos) : 0; });
 
   // keywords (en total) — cómo te encontraron
-  const kws = await gaql(token, env, `SELECT ad_group_criterion.keyword.text, metrics.conversions FROM keyword_view WHERE campaign.id = 0 AND ${range} AND metrics.clicks > 0 ORDER BY metrics.conversions DESC LIMIT 30`);
+  const kws = await gaql(token, env, `SELECT ad_group_criterion.keyword.text, metrics.conversions FROM keyword_view WHERE campaign.id = ${GADS_CAMPAIGN_ID} AND ${range} AND metrics.clicks > 0 ORDER BY metrics.conversions DESC LIMIT 30`);
   const kwMap = {};
   for (const r of kws) { const t = r.adGroupCriterion.keyword.text; kwMap[t] = (kwMap[t] || 0) + Number(r.metrics.conversions || 0); }
   const keywords = Object.entries(kwMap).filter(e => e[1] > 0).sort((a, b) => b[1] - a[1]).slice(0, 6).map(e => ({ text: e[0], contactos: Math.round(e[1]) }));
@@ -266,10 +266,20 @@ async function recalcularDash(env) {
   // cierres (en total) + estadísticas: con/sin código, horario y comuna
   const list = await env.REF.list({ prefix: "cierre:" });
   let cierresN = 0, facturado = 0, cierresConCodigo = 0, cierresSinCodigo = 0;
+  let noRealizadosN = 0, facturaPerdida = 0;
+  const noRealizados = [];
   const porHora = {}, porComunaMap = {}, porServicioMap = {};
   for (const k of list.keys) {
     const v = await env.REF.get(k.name); if (!v) continue;
     const c = JSON.parse(v);
+    // "No realizado" (problema del dueño): lo trajo Google y se sube a Ads igual, pero NO
+    // cuenta en el % de cierre ni en lo facturado — se guarda aparte con su causa (revisión operativa).
+    if (c.noRealizado) {
+      noRealizadosN++; facturaPerdida += Number(c.precio) || 0;
+      noRealizados.push({ codigo: c.codigo, precio: Number(c.precio) || 0, causa: c.causa || "",
+        comuna: c.comuna || "", servicio: c.servicio || "", fecha: c.fecha || "", subido: !!c.subido, manual: !!c.manual });
+      continue;
+    }
     cierresN++; facturado += Number(c.precio) || 0;
     if (c.manual) cierresSinCodigo++; else cierresConCodigo++;
     // hora del CONTACTO (no del registro del cierre — esa sería mentira):
@@ -309,6 +319,7 @@ async function recalcularDash(env) {
     costoPorContacto: contactos > 0 ? Math.round(invertido / contactos) : 0,
     keywords, cierresN, facturado, bloques,
     cierresConCodigo, cierresSinCodigo,
+    noRealizadosN, facturaPerdida, noRealizados,
     pctCierre: contactos > 0 ? Math.round(cierresN / contactos * 100) : 0,
     cierresPorHora: porHora, cierresPorComuna: porComuna, cierresPorServicio: porServicio,
     gastoSemana,
@@ -517,7 +528,10 @@ export default {
       if (manual && !hora) return jsonCors({ error: "falta la hora del primer contacto" }, 400);
       const item = { codigo, precio: Number(precio), nota: String(b.nota || "").slice(0, 120),
         comuna: String(b.comuna || "").slice(0, 40), servicio: String(b.servicio || "").slice(0, 40),
-        manual, hora, diaContacto, fecha: new Date().toISOString().slice(0, 19).replace("T", " "), subido: false };
+        manual, hora, diaContacto, fecha: new Date().toISOString().slice(0, 19).replace("T", " "), subido: false,
+        // "No realizado" = el cliente cerró pero el dueño no pudo hacer el servicio (rueda, camión en pana…).
+        // Se sube a Ads igual (Google trajo un buen cliente), pero NO cuenta en el % de cierre ni en lo facturado.
+        noRealizado: !!b.noRealizado, causa: String(b.causa || "").slice(0, 120) };
       await env.REF.put("cierre:" + codigo.toUpperCase(), JSON.stringify(item), { expirationTtl: CIERRE_TTL });
       await env.REF.delete("dash-cache");   // que el resumen refleje el cierre al tiro
       return jsonCors({ ok: true, item });

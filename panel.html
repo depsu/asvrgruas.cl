@@ -83,7 +83,7 @@
 </style>
 </head>
 <body>
-<script src="/panel-ui.js"></script>
+<script src="/panel-ui.js?v=60d297e7"></script>
 <div class="wrap">
 
   <!-- Clave -->
@@ -223,18 +223,18 @@
     { e: "🤖", t: "Un chatbot IA que responda 24/7", d: "Las urgencias de madrugada no esperan a que despiertes. Un bot que salude, tome el dato y avise, captura esos trabajos.", pts: 3 },
     { e: "📱", t: "WhatsApp Business verificado", d: "El perfil de empresa (nombre verificado, catálogo, horario) da confianza inmediata: no eres un número desconocido.", pts: 2 },
     { e: "⭐", t: "Pide reseña a cada cliente feliz", d: "Manda el link directo de reseña al terminar. Más reseñas frescas = más confianza = más cierres.", pts: 2 },
-    { e: "📸", t: "Manda fotos de trabajos similares", d: "Junto a la cotización, 2-3 fotos de un destape igual al suyo. Ver el resultado vende solo.", pts: 2 },
+    { e: "📸", t: "Manda fotos de traslados parecidos", d: "Junto a la cotización, 2-3 fotos de un auto como el suyo arriba de la plataforma. Ver que llega intacto vende solo.", pts: 2 },
     { e: "🛡️", t: "Ofrece garantía por escrito", d: "«Garantía de 30 días por escrito» elimina el miedo a pagar y que quede malo.", pts: 2 },
     { e: "🎁", t: "Descuento por decidir ahora", d: "«Si agendamos ahora te dejo $5.000 menos» — empuja al indeciso sin regalar demasiado.", pts: 2 },
     { e: "💳", t: "Acepta todos los medios de pago", d: "Tarjeta, transferencia, efectivo. Nunca pierdas un cierre por «no tengo efectivo».", pts: 1 }
   ];
   // Respuestas listas (nacidas de conversaciones reales; precios = rangos reales de sus cierres)
   var RESPUESTAS = [
-    { e: "⚡", t: "Primera respuesta (al tiro)", x: "¡Hola! 👋 Sí, te podemos ayudar HOY mismo. Los destapes parten desde $30.000 y el valor exacto te lo confirmo al ver el trabajo. ¿En qué comuna estás? Puedo estar allá hoy entre las 12:00 y las 14:00." },
-    { e: "💰", t: "Si pregunta el valor", x: "El valor depende del tipo de destape: los simples (lavaplatos, WC) parten desde $30.000, y los trabajos de cámaras o alcantarillado van entre $70.000 y $200.000 según lo que encontremos. Te confirmo el valor exacto en terreno ANTES de empezar. ¿Te agendo una visita hoy?" },
-    { e: "🕐", t: "Agendar con hora concreta", x: "¡Perfecto! ✅ Te agendo para hoy entre las 15:00 y las 17:00. Mándame la dirección y te aviso 30 minutos antes de llegar." },
-    { e: "💬", t: "Seguimiento (si no contesta en 1 hora)", x: "Hola 👋 ¿pudiste ver mi mensaje? Sigo con disponibilidad para hoy — si quieres te reservo la hora y lo evaluamos sin compromiso." },
-    { e: "⭐", t: "Después del trabajo (reseña + garantía)", x: "¡Gracias por confiar en nosotros! 🙏 El trabajo tiene garantía — cualquier cosa me escribes. Y si quedaste conforme, ¿me regalas una reseña en Google? Te toma 30 segundos y nos ayuda muchísimo." }
+    { e: "⚡", t: "Primera respuesta (al tiro)", x: "Hola, sí te podemos ayudar ahora. El traslado dentro de Santiago va entre $45.000 y $55.000 y te confirmo el valor exacto antes de salir. ¿En qué comuna estás y tu auto rueda o está trabado?" },
+    { e: "💰", t: "Si pregunta el valor", x: "El valor depende de la distancia y del estado del auto. Dentro de Santiago va entre $45.000 y $55.000. Comuna periférica o más de 20 km, entre $65.000 y $80.000. Si el auto no rueda o está chocado se suma un recargo de $20.000 a $30.000 por la maniobra. Te confirmo el valor exacto antes de salir, sin sorpresas" },
+    { e: "🕐", t: "Confirmar y salir ahora", x: "Listo, te tomo el servicio. Salimos ahora y llegamos en 30 a 45 minutos. Mándame la dirección exacta y te aviso apenas el camión vaya en camino" },
+    { e: "💬", t: "Seguimiento (si no contesta en 1 hora)", x: "Hola, ¿alcanzaste a ver mi mensaje? Sigo con grúa disponible hoy. Si aún necesitas mover el auto, dime la comuna y salgo para allá" },
+    { e: "⭐", t: "Después del traslado (fotos + reseña)", x: "Gracias por preferirnos. Te dejo las fotos de la entrega para tu respaldo y la factura te llega al correo. Si quedaste conforme, ¿nos regalas una reseña en Google? Te toma 30 segundos y nos ayuda un montón" }
   ];
   function pintarRespuestas() {
     document.getElementById("respuestas").innerHTML = RESPUESTAS.map(function (r, i) {
