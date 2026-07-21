@@ -2,20 +2,20 @@
    Paleta heredada de la LP para que todo se sienta de la misma marca. Mobile-first, sin librerías. */
 
 :root {
-  --bg: #eef6f4;
-  --bg-2: #e3f0ed;
+  --bg: #f7f5ef;
+  --bg-2: #f0ead9;
   --blanco: #fff;
-  --abismo: #06231f;
-  --tinta: #173a34;
-  --gris: #577069;
-  --teal: #0fb9a6;
-  --teal-deep: #0a8e80;
-  --teal-pale: #d8f1ec;
-  --linea: #d2e6e0;
+  --abismo: #10151c;
+  --tinta: #2a3540;
+  --gris: #5e6a74;
+  --teal: #ffb400;
+  --teal-deep: #b97b00;
+  --teal-pale: #ffefc7;
+  --linea: #e6e0d0;
   --call-a: #ff9a4d;
   --call-b: #f15a1b;
   --wa: #25d366;
-  --wa-ink: #06231f;
+  --wa-ink: #04230f;
 }
 
 * { box-sizing: border-box; }
