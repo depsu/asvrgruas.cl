@@ -63,7 +63,7 @@
 </style>
 </head>
 <body>
-<script src="/panel-ui.js?v=60d297e7"></script>
+<script src="/panel-ui.js?v=ecd653c4"></script>
 <div class="wrap">
   <h1 style="margin-top:10px">📋 Cierres del día</h1>
   <p class="sub">ASRV Grúas — registra los trabajos que cerraste</p>
@@ -254,16 +254,24 @@
   }
   var pintadoDeCache = false;
   function cargarLista(esLogin) {
-    // 1) caché local: la lista aparece AL INSTANTE con lo último conocido
-    if (!pintadoDeCache && pass() && window.PanelUI) {
-      var cached = PanelUI.cacheGet("cierres");
-      if (cached) { pintadoDeCache = true; mostrarPanel(); pintarLista(cached); }
+    // 1) caché fresca (<2 min) → al instante; vieja → "Actualizando tus datos…" (nada atrasado)
+    var entrada = window.PanelUI && PanelUI.esEntrada();
+    var info = pass() && window.PanelUI ? PanelUI.cacheInfo("cierres") : null;
+    if (!pintadoDeCache && info && info.fresca) { pintadoDeCache = true; mostrarPanel(); pintarLista(info.d); }
+    else if (entrada && pass() && window.PanelUI && !(info && info.fresca)) PanelUI.cargando(true);
+    // no llegó data fresca → mostrar lo guardado con aviso claro de que es viejo
+    function sinFrescos() {
+      if (window.PanelUI) PanelUI.cargando(false);
+      if (pintadoDeCache || !info) return;
+      pintadoDeCache = true; mostrarPanel(); pintarLista(info.d);
+      if (!info.fresca) PanelUI.avisoViejo(info.age);
     }
     // 2) datos frescos por detrás
     fetch(API + "/cierres?pass=" + encodeURIComponent(pass()), { cache: "no-store" })
       .then(function (r) { return r.json().then(function (d) { return { ok: r.ok, status: r.status, d: d }; }); })
       .then(function (res) {
         if (res.status === 401) {        // clave REALMENTE incorrecta → pedirla de nuevo
+          if (window.PanelUI) PanelUI.cargando(false);
           localStorage.removeItem("panel_pass");
           if (window.PanelUI) PanelUI.cacheClear();
           document.documentElement.classList.remove("logged");
@@ -272,11 +280,13 @@
           if (esLogin) document.getElementById("loginMsg").textContent = "Clave incorrecta";
           return;
         }
-        if (!res.ok) return;             // error transitorio (red/servidor) → NO cerrar la sesión
+        if (!res.ok) { sinFrescos(); return; }   // error transitorio (red/servidor) → NO cerrar la sesión
         mostrarPanel();
-        if (window.PanelUI) PanelUI.cacheSet("cierres", res.d.items || []);
+        if (window.PanelUI) { PanelUI.cacheSet("cierres", res.d.items || []); PanelUI.cargando(false); }
         pintarLista(res.d.items || []);
-      }).catch(function () {});
+        pintadoDeCache = true;
+        if (window.PanelUI) PanelUI.precargar();
+      }).catch(function () { sinFrescos(); });
   }
   function pintarLista(items) {
         var tb = document.getElementById("lista");

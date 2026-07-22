@@ -93,7 +93,7 @@
 </style>
 </head>
 <body>
-<script src="/panel-ui.js?v=60d297e7"></script>
+<script src="/panel-ui.js?v=ecd653c4"></script>
 <div class="wrap">
   <h1 style="margin-top:10px">📊 Tu publicidad en simple</h1>
   <p class="sub">ASRV Grúas — lo que tu inversión te está trayendo</p>
@@ -215,15 +215,25 @@
   }
 
   function cargar(esLogin) {
-    // 1) caché local: la página aparece cargada AL INSTANTE con lo último conocido
-    if (!DATA && pass() && window.PanelUI) {
-      var cached = PanelUI.cacheGet("dash");
-      if (cached) {
-        document.getElementById("loginCard").classList.add("hide");
-        document.getElementById("dash").classList.remove("hide");
-        pintarTodo(cached);
-        guiaResumen();
-      }
+    // 1) caché fresca (<2 min) → al instante; vieja → "Actualizando tus datos…" (nada atrasado)
+    var entrada = window.PanelUI && PanelUI.esEntrada();
+    var info = pass() && window.PanelUI ? PanelUI.cacheInfo("dash") : null;
+    if (!DATA && info && info.fresca) {
+      document.getElementById("loginCard").classList.add("hide");
+      document.getElementById("dash").classList.remove("hide");
+      pintarTodo(info.d);
+      guiaResumen();
+    } else if (entrada && pass() && window.PanelUI && !(info && info.fresca)) PanelUI.cargando(true);
+    // no llegó data fresca → mostrar lo guardado con aviso claro de que es viejo
+    function sinFrescos() {
+      if (window.PanelUI) PanelUI.cargando(false);
+      if (DATA) return;   // ya hay algo (fresco) en pantalla
+      if (!info) { document.getElementById("loginMsg").textContent = "Error cargando datos"; return; }
+      document.getElementById("loginCard").classList.add("hide");
+      document.getElementById("dash").classList.remove("hide");
+      pintarTodo(info.d);
+      guiaResumen();
+      if (!info.fresca) PanelUI.avisoViejo(info.age);
     }
     cargarComentario();
     // 2) datos frescos por detrás
@@ -231,6 +241,7 @@
       .then(function (r) { return r.json().then(function (d) { return { ok: r.ok, status: r.status, d: d }; }); })
       .then(function (res) {
         if (res.status === 401) {
+          if (window.PanelUI) PanelUI.cargando(false);
           localStorage.removeItem("panel_pass");
           if (window.PanelUI) PanelUI.cacheClear();
           document.documentElement.classList.remove("logged");
@@ -239,13 +250,14 @@
           if (esLogin) document.getElementById("loginMsg").textContent = "Clave incorrecta";
           return;
         }
-        if (!res.ok) { if (!DATA) document.getElementById("loginMsg").textContent = "Error cargando datos"; return; }
+        if (!res.ok) { sinFrescos(); return; }
         document.getElementById("loginCard").classList.add("hide");
         document.getElementById("dash").classList.remove("hide");
-        if (window.PanelUI) PanelUI.cacheSet("dash", res.d);
+        if (window.PanelUI) { PanelUI.cacheSet("dash", res.d); PanelUI.cargando(false); }
         pintarTodo(res.d);
         guiaResumen();
-      }).catch(function () {});
+        if (window.PanelUI) PanelUI.precargar();
+      }).catch(function () { sinFrescos(); });
   }
 
   // 💬 comentario del asistente (semáforo + explicación simple, lo publica el monitor)

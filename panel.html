@@ -83,7 +83,7 @@
 </style>
 </head>
 <body>
-<script src="/panel-ui.js?v=60d297e7"></script>
+<script src="/panel-ui.js?v=ecd653c4"></script>
 <div class="wrap">
 
   <!-- Clave -->
@@ -340,14 +340,23 @@
 
   function cargar(esLogin) {
     saludar();
-    // 1) caché: pintar al instante
-    var cached = window.PanelUI && PanelUI.cacheGet("dash");
-    if (cached && pass()) { pintar(cached); quizasTour(); }
-    // 2) refrescar por detrás
+    // 1) caché fresca (<2 min) → pintar al tiro; vieja → "Actualizando tus datos…" (nada atrasado a la vista)
+    var entrada = window.PanelUI && PanelUI.esEntrada();
+    var info = pass() && window.PanelUI ? PanelUI.cacheInfo("dash") : null;
+    if (info && info.fresca) { pintar(info.d); quizasTour(); }
+    else if (entrada && pass() && window.PanelUI) PanelUI.cargando(true);
+    // no llegó data fresca → mostrar lo guardado, pero con aviso claro de que es viejo
+    function sinFrescos(msg) {
+      if (window.PanelUI) PanelUI.cargando(false);
+      document.getElementById("saludTxt").textContent = msg;
+      if (info && !info.fresca) { pintar(info.d); quizasTour(); PanelUI.avisoViejo(info.age); }
+    }
+    // 2) datos frescos
     fetch(API + "/dashboard?pass=" + encodeURIComponent(pass()), { cache: "no-store" })
       .then(function (r) { return r.json().then(function (d) { return { ok: r.ok, status: r.status, d: d }; }); })
       .then(function (res) {
         if (res.status === 401) {
+          if (window.PanelUI) PanelUI.cargando(false);
           localStorage.removeItem("panel_pass");
           if (window.PanelUI) PanelUI.cacheClear();
           document.documentElement.classList.remove("logged");
@@ -359,13 +368,14 @@
         document.getElementById("loginCard").classList.add("hide");
         document.getElementById("home").classList.remove("hide");
         var salud = document.getElementById("salud");
-        if (!res.ok) { document.getElementById("saludTxt").textContent = "No pudimos actualizar ahora — mostrando lo último guardado"; return; }
-        if (window.PanelUI) PanelUI.cacheSet("dash", res.d);
+        if (!res.ok) { sinFrescos("No pudimos actualizar ahora — mostrando lo último guardado"); return; }
+        if (window.PanelUI) { PanelUI.cacheSet("dash", res.d); PanelUI.cargando(false); }
         pintar(res.d);
         salud.className = "salud ok";
         document.getElementById("saludTxt").textContent = "Tu publicidad está funcionando";
         quizasTour();
-      }).catch(function () { document.getElementById("saludTxt").textContent = "Sin conexión — mostrando lo último guardado"; });
+        if (window.PanelUI) PanelUI.precargar();   // deja las otras vistas listas al tiro
+      }).catch(function () { sinFrescos("Sin conexión — mostrando lo último guardado"); });
   }
 
   if (pass()) cargar(true); else saludar();

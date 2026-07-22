@@ -56,7 +56,7 @@
 </style>
 </head>
 <body>
-<script src="/panel-ui.js?v=60d297e7"></script>
+<script src="/panel-ui.js?v=ecd653c4"></script>
 <div class="wrap">
   <h1 style="margin-top:10px">💳 Pagos</h1>
   <p class="sub">ASRV Grúas — tu saldo de publicidad y tus pagos, claros</p>
@@ -129,13 +129,31 @@
   }
 
   function cargar(esLogin) {
-    var cachedP = window.PanelUI && PanelUI.cacheGet("pagos");
-    var cachedD = window.PanelUI && PanelUI.cacheGet("dash");
-    if (cachedP && pass()) { PAGOS = cachedP; DASH = cachedD; pintar(); }
+    // 1) caché fresca (<2 min) → al instante; vieja → "Actualizando tus datos…" (nada atrasado)
+    var entrada = window.PanelUI && PanelUI.esEntrada();
+    var infoP = pass() && window.PanelUI ? PanelUI.cacheInfo("pagos") : null;
+    var infoD = window.PanelUI && PanelUI.cacheInfo("dash");
+    if (!PAGOS && infoP && infoP.fresca) {
+      PAGOS = infoP.d;
+      if (PAGOS.reglas) REGLAS = PAGOS.reglas;
+      DASH = infoD ? infoD.d : null;
+      pintar();
+    } else if (entrada && pass() && window.PanelUI && !(infoP && infoP.fresca)) PanelUI.cargando(true);
+    // no llegó data fresca → mostrar lo guardado con aviso claro de que es viejo
+    function sinFrescos() {
+      if (window.PanelUI) PanelUI.cargando(false);
+      if (PAGOS || !infoP) return;
+      PAGOS = infoP.d;
+      if (PAGOS.reglas) REGLAS = PAGOS.reglas;
+      DASH = infoD ? infoD.d : null;
+      pintar();
+      if (!infoP.fresca) PanelUI.avisoViejo(infoP.age);
+    }
     fetch(API + "/pagos?pass=" + encodeURIComponent(pass()), { cache: "no-store" })
       .then(function (r) { return r.json().then(function (d) { return { ok: r.ok, status: r.status, d: d }; }); })
       .then(function (res) {
         if (res.status === 401) {
+          if (window.PanelUI) PanelUI.cargando(false);
           localStorage.removeItem("panel_pass");
           if (window.PanelUI) PanelUI.cacheClear();
           document.documentElement.classList.remove("logged");
@@ -144,14 +162,15 @@
           if (esLogin) document.getElementById("loginMsg").textContent = "Clave incorrecta";
           return;
         }
-        if (!res.ok) return;
+        if (!res.ok) { sinFrescos(); return; }
         PAGOS = res.d;
         if (PAGOS.reglas) REGLAS = PAGOS.reglas;
-        if (window.PanelUI) PanelUI.cacheSet("pagos", PAGOS);
+        if (window.PanelUI) { PanelUI.cacheSet("pagos", PAGOS); PanelUI.cargando(false); }
         document.getElementById("loginCard").classList.add("hide");
         document.getElementById("panel").classList.remove("hide");
         pintar();
-      }).catch(function () {});
+        if (window.PanelUI) PanelUI.precargar();
+      }).catch(function () { sinFrescos(); });
     // el saldo vivo viene del dashboard
     fetch(API + "/dashboard?pass=" + encodeURIComponent(pass()), { cache: "no-store" })
       .then(function (r) { return r.ok ? r.json() : null; })

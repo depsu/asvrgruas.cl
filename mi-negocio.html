@@ -85,7 +85,7 @@
 </style>
 </head>
 <body>
-<script src="/panel-ui.js?v=60d297e7"></script>
+<script src="/panel-ui.js?v=ecd653c4"></script>
 <div class="wrap">
   <h1 style="margin-top:10px">⚙️ Mi negocio</h1>
   <p class="sub">ASRV Grúas — tu publicidad se adapta a ti</p>
@@ -218,21 +218,31 @@
 
   var yaPintado = false;
   function cargar(esLogin, esRefresco) {
-    // 1) caché local: la página aparece cargada AL INSTANTE
-    if (!yaPintado && pass() && window.PanelUI) {
-      var cached = PanelUI.cacheGet("config");
-      if (cached) {
-        yaPintado = true;
-        document.getElementById("loginCard").classList.add("hide");
-        document.getElementById("panel").classList.remove("hide");
-        adoptar(cached, false);
-      }
+    // 1) caché fresca (<2 min) → al instante; vieja → "Actualizando tus datos…" (nada atrasado)
+    var entrada = window.PanelUI && PanelUI.esEntrada();
+    var info = pass() && window.PanelUI ? PanelUI.cacheInfo("config") : null;
+    if (!yaPintado && info && info.fresca) {
+      yaPintado = true;
+      document.getElementById("loginCard").classList.add("hide");
+      document.getElementById("panel").classList.remove("hide");
+      adoptar(info.d, false);
+    } else if (entrada && !yaPintado && pass() && window.PanelUI && !(info && info.fresca)) PanelUI.cargando(true);
+    // no llegó data fresca → mostrar lo guardado con aviso claro de que es viejo
+    function sinFrescos() {
+      if (window.PanelUI) PanelUI.cargando(false);
+      if (yaPintado || !info) return;
+      yaPintado = true;
+      document.getElementById("loginCard").classList.add("hide");
+      document.getElementById("panel").classList.remove("hide");
+      adoptar(info.d, false);
+      if (!info.fresca) PanelUI.avisoViejo(info.age);
     }
     // 2) datos frescos por detrás
     fetch(API + "/config?pass=" + encodeURIComponent(pass()), { cache: "no-store" })
       .then(function (r) { return r.json().then(function (d) { return { ok: r.ok, status: r.status, d: d }; }); })
       .then(function (res) {
         if (res.status === 401) {
+          if (window.PanelUI) PanelUI.cargando(false);
           localStorage.removeItem("panel_pass");
           if (window.PanelUI) PanelUI.cacheClear();
           document.documentElement.classList.remove("logged");
@@ -241,13 +251,14 @@
           if (esLogin) document.getElementById("loginMsg").textContent = "Clave incorrecta";
           return;
         }
-        if (!res.ok) return;
+        if (!res.ok) { sinFrescos(); return; }
         document.getElementById("loginCard").classList.add("hide");
         document.getElementById("panel").classList.remove("hide");
-        if (window.PanelUI) PanelUI.cacheSet("config", res.d);
+        if (window.PanelUI) { PanelUI.cacheSet("config", res.d); PanelUI.cargando(false); }
         adoptar(res.d, esRefresco || yaPintado);
         yaPintado = true;
-      }).catch(function () {});
+        if (window.PanelUI) PanelUI.precargar();
+      }).catch(function () { sinFrescos(); });
   }
 
   function pintarTodo() {

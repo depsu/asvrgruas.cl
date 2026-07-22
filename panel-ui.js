@@ -1,6 +1,9 @@
-/* Panel del cliente ASRV Grúas — instanciado de panel-cliente/ (maestro DIXDY) 2026-07-16.
+/* Panel del cliente ASRV Grúas — instanciado de panel-cliente/ (maestro DIXDY) 2026-07-22.
    - Barra superior + menú hamburguesa en todas las vistas del panel
    - Caché local (localStorage) para pintar al instante y refrescar por detrás
+   - Carga fresca: si el caché tiene >2 min se muestra "Actualizando tus datos…"
+     (estilo Google Ads) en vez de números atrasados; al llegar la primera
+     respuesta se precargan las demás vistas para navegar al tiro
    Se incluye con: <script src="/panel-ui.js"></script> (al inicio del <body>) */
 (function () {
   var VIEWS = [
@@ -20,6 +23,10 @@
     ".pu-brand{display:flex;align-items:center;gap:9px;font-weight:800;font-size:15.5px;color:#0f2742;text-decoration:none}" +
     ".pu-brand .pu-dot{width:30px;height:30px;border-radius:9px;background:linear-gradient(135deg,#1f6feb,#5aa0ff);display:flex;align-items:center;justify-content:center;font-size:15px}" +
     ".pu-brand small{font-weight:600;color:#7d8da0;font-size:11px;display:block;line-height:1}" +
+    /* frescura en la barra: "datos de Google Ads · hace X" con puntito verde vivo */
+    ".pu-brand small.on{display:flex;align-items:center;gap:4px;margin-top:2px}" +
+    ".pu-brand small.on::before{content:\"\";display:inline-block;width:6px;height:6px;min-width:6px;border-radius:50%;background:#0c8a4a;animation:puLat 2s ease-in-out infinite}" +
+    "@keyframes puLat{0%,100%{opacity:1}50%{opacity:.25}}" +
     /* margin/font/padding explícitos: los estilos globales button{} de cada página no deben pisarlos */
     ".pu-burger{width:42px;min-width:42px;height:42px;min-height:42px;margin:0;border:1px solid #e3eaf2;background:#fff;color:#0f2742;border-radius:11px;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4.5px;padding:0;font-size:0;line-height:0;box-shadow:none;flex:none}" +
     ".pu-burger:active{transform:none}" +
@@ -60,6 +67,15 @@
     ".pu-dots i.on{background:#1f6feb}" +
     ".pu-tnext{margin:0;border:0;background:#1f6feb;color:#fff;font-weight:800;font-size:14px;border-radius:10px;padding:11px 20px;cursor:pointer;box-shadow:none;width:auto;min-height:0}" +
     ".pu-tskip{margin:0;border:0;background:none;color:#7d8da0;font-weight:700;font-size:13px;cursor:pointer;box-shadow:none;width:auto;padding:8px 6px;min-height:0}" +
+        /* pantalla "Actualizando tus datos…" (nada atrasado a la vista) */
+    ".pu-carga{position:fixed;inset:0;background:#f4f8fc;z-index:120;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;opacity:1;transition:opacity .25s}" +
+    ".pu-carga.off{opacity:0;pointer-events:none}" +
+    ".pu-carga img{height:46px;width:auto}" +
+    ".pu-spin{width:34px;height:34px;border:3px solid #dbe4ee;border-top-color:#1f6feb;border-radius:50%;animation:puSpin .8s linear infinite}" +
+    "@keyframes puSpin{to{transform:rotate(360deg)}}" +
+    ".pu-carga p{margin:0;font-weight:700;color:#3d4f63;font-size:14.5px}" +
+    /* aviso de datos viejos (solo cuando no se pudo actualizar) */
+    ".pu-aviso{position:fixed;top:56px;left:0;right:0;z-index:49;background:#fdf3e0;color:#8a6d1a;border-bottom:1px solid #f0e2bd;font-size:12.5px;font-weight:700;padding:8px 14px;text-align:center}" +
     "body{padding-top:56px!important}";
   document.head.appendChild(css);
 
@@ -67,7 +83,7 @@
   top.className = "pu-top";
   top.innerHTML =
     '<a class="pu-brand" href="/panel.html"><img src="/imagenes/logo.webp?v=e323dac5" alt="" style="height:32px;width:auto;display:block;flex:none">' +
-    '<span>ASRV Grúas<small>panel del negocio</small></span></a>' +
+    '<span>ASRV Grúas<small id="puSync">panel del negocio</small></span></a>' +
     '<button class="pu-burger" id="puBurger" aria-label="Menú"><span></span><span></span><span></span></button>';
   var ovl = document.createElement("div"); ovl.className = "pu-ovl";
   var menu = document.createElement("div"); menu.className = "pu-menu";
@@ -109,7 +125,109 @@
     },
     cacheSet: function (key, data) {
       try { localStorage.setItem("pu_" + key, JSON.stringify({ t: Date.now(), d: data })); } catch (e) {}
+      window.PanelUI.avisoQuitar();   // llegó data fresca → ya no hay nada "viejo" que avisar
+      window.PanelUI.sync();          // y la barra pasa a "al día" al tiro
     },
+    // --- frescura: datos con menos de FRESH_MS se consideran "al día" ---
+    //     (fresca → pintar al tiro; vieja → pantalla de carga, nunca números atrasados)
+    FRESH_MS: 2 * 60 * 1000,
+    cacheInfo: function (key) {
+      try {
+        var raw = localStorage.getItem("pu_" + key);
+        if (!raw) return null;
+        var o = JSON.parse(raw);
+        if (!o || o.d == null) return null;
+        var age = Date.now() - (o.t || 0);
+        return { d: o.d, age: age, fresca: age < window.PanelUI.FRESH_MS };
+      } catch (e) { return null; }
+    },
+    // --- pantalla "Actualizando tus datos…" (estilo Google Ads) ---
+    _cargaT0: 0,
+    cargando: function (on) {
+      var el = document.querySelector(".pu-carga");
+      if (on) {
+        if (!el) {
+          el = document.createElement("div");
+          el.className = "pu-carga";
+          el.innerHTML = '<img src="/imagenes/logo.webp?v=e323dac5" alt=""><div class="pu-spin"></div><p>Actualizando tus datos…</p>';
+          (document.body || document.documentElement).appendChild(el);
+        }
+        el.classList.remove("off");
+        window.PanelUI._cargaT0 = Date.now();
+      } else if (el && !el.classList.contains("off")) {
+        // mínimo ~450ms en pantalla para que no sea un pestañeo raro
+        var resto = Math.max(0, 450 - (Date.now() - window.PanelUI._cargaT0));
+        setTimeout(function () { el.classList.add("off"); }, resto);
+      }
+    },
+    // --- aviso "datos viejos": solo cuando NO se pudo traer data fresca ---
+    avisoViejo: function (ageMs) {
+      var min = Math.round(ageMs / 60000), txt;
+      if (min < 2) txt = "1 minuto";
+      else if (min < 60) txt = min + " minutos";
+      else if (min < 1440) txt = Math.round(min / 60) + " hora(s)";
+      else txt = Math.round(min / 1440) + " día(s)";
+      var el = document.querySelector(".pu-aviso");
+      if (!el) { el = document.createElement("div"); el.className = "pu-aviso"; document.body.appendChild(el); }
+      el.textContent = "⚠️ Sin conexión — mostrando datos de hace " + txt;
+    },
+    avisoQuitar: function () {
+      var el = document.querySelector(".pu-aviso");
+      if (el) el.remove();
+    },
+    // --- "datos de Google Ads · hace X" en la barra superior (mobile-friendly) ---
+    _syncTxt: function () {
+      var t = 0;
+      try {
+        Object.keys(localStorage).forEach(function (k) {
+          if (k.indexOf("pu_") !== 0 || k.indexOf("pu_tour") === 0 || k.indexOf("pu_nov") === 0) return;
+          try { var o = JSON.parse(localStorage.getItem(k)); if (o && o.t > t) t = o.t; } catch (e) {}
+        });
+      } catch (e) {}
+      if (!t) return null;
+      var s = Math.round((Date.now() - t) / 1000);
+      if (s < 90) return "al día";
+      var m = Math.round(s / 60);
+      if (m < 60) return "hace " + m + " min";
+      var h = Math.round(m / 60);
+      if (h < 24) return "hace " + h + " h";
+      return "hace " + Math.round(h / 24) + " día(s)";
+    },
+    sync: function () {
+      var el = document.getElementById("puSync");
+      if (!el) return;
+      var txt = window.PanelUI._syncTxt();
+      if (!txt) { el.textContent = "panel del negocio"; el.classList.remove("on"); return; }
+      el.textContent = "datos de Google Ads · " + txt;
+      el.classList.add("on");
+    },
+    // --- precarga: tras la primera respuesta, traer las demás vistas por detrás
+    //     para que navegar por el panel sea instantáneo Y con data fresca ---
+    _precargado: false,
+    precargar: function () {
+      var PU = window.PanelUI;
+      if (PU._precargado) return;
+      PU._precargado = true;
+      var pass = "";
+      try { pass = localStorage.getItem("panel_pass") || ""; } catch (e) {}
+      if (!pass) return;
+      var API = "https://asvrgruas-ref-api.rivera-ale98.workers.dev";
+      [
+        { key: "dash",    ruta: "/dashboard",     map: function (d) { return d; } },
+        { key: "cierres", ruta: "/cierres",       map: function (d) { return d.items || []; } },
+        { key: "config",  ruta: "/config",        map: function (d) { return d; } },
+        { key: "pagos",   ruta: "/pagos",         map: function (d) { return d; } },
+        { key: "ia",      ruta: "/comentario-ia", map: function (d) { return d && d.texto ? d : null; } }
+      ].forEach(function (e) {
+        var info = PU.cacheInfo(e.key);
+        if (info && info.fresca) return;   // ya está al día
+        fetch(API + e.ruta + "?pass=" + encodeURIComponent(pass), { cache: "no-store" })
+          .then(function (r) { return r.ok ? r.json() : null; })
+          .then(function (d) { var v = d != null ? e.map(d) : null; if (v != null) PU.cacheSet(e.key, v); })
+          .catch(function () {});
+      });
+    },
+
     cacheClear: function () {
       try {
         Object.keys(localStorage).forEach(function (k) { if (k.indexOf("pu_") === 0 && k.indexOf("pu_tour") !== 0) localStorage.removeItem(k); });
@@ -120,8 +238,17 @@
     //     memoria: sin esto queda congelada y hay que refrescar a mano) ---
     autoRefresh: function (fn, ms) {
       if (ms) setInterval(function () { if (!document.hidden) fn(); }, ms);
-      document.addEventListener("visibilitychange", function () { if (!document.hidden) fn(); });
-      window.addEventListener("pageshow", function (e) { if (e.persisted) fn(); });
+      // volver a la pestaña cuenta como ENTRADA (puede tocar pantalla de carga si la data es vieja)
+      document.addEventListener("visibilitychange", function () { if (!document.hidden) { window.PanelUI._entrada = true; fn(); } });
+      window.addEventListener("pageshow", function (e) { if (e.persisted) { window.PanelUI._entrada = true; fn(); } });
+    },
+    // --- "entrada" = abrir la página o volver a ella (no un refresco de fondo).
+    //     Solo en una entrada se muestra la pantalla de carga si la data está vieja. ---
+    _entrada: true,
+    esEntrada: function () {
+      var e = window.PanelUI._entrada;
+      window.PanelUI._entrada = false;
+      return e;
     },
 
     // ============ GUÍA + NOVEDADES (el panel se explica solo) ============
@@ -133,6 +260,9 @@
     // el (selector a destacar o null) y el texto en simple.
     _tourLanzado: false,
     NOVEDADES: [
+      { id: "2026-07-datos-frescos", vista: "panel", el: null,
+        titulo: "Números siempre al día ✅",
+        texto: "Cuando entres al panel puede aparecer «Actualizando tus datos…» por un segundo: está trayendo tus números en vivo. Arriba en la barra siempre verás hace cuánto se sacaron los datos de Google Ads. Así lo que ves nunca está atrasado." },
       // { id: "2026-07-ejemplo", vista: "cierres", el: "#formCierre",
       //   titulo: "Botón sin código", texto: "Ahora puedes registrar clientes aunque no tengan código." },
       { id: "2026-07-proyeccion", vista: "panel", el: "#cardProy",
@@ -259,4 +389,8 @@
       pintar();
     }
   };
+
+  // frescura en la barra: pintarla al cargar y mantenerla viva cada 30 s
+  function arrancarSync() { window.PanelUI.sync(); setInterval(function () { window.PanelUI.sync(); }, 30000); }
+  if (document.body) arrancarSync(); else document.addEventListener("DOMContentLoaded", arrancarSync);
 })();
