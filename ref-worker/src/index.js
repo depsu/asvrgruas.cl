@@ -505,14 +505,82 @@ export default {
       const gclid = String(b.gclid || b.wbraid || b.gbraid || "").slice(0, 300);
       if (!gclid) return jsonCors({ error: "no id" }, 400);
       const code = genCode();
-      await env.REF.put(code, JSON.stringify({ gclid, ts: Date.now() }), { expirationTtl: TTL });
+      // Anti-competencia: la IP/red/país del clic (Cloudflare las ve; Clarity no las da).
+      const ip = request.headers.get("CF-Connecting-IP") || "";
+      const pais = (request.cf && request.cf.country) || "";
+      const red = (request.cf && request.cf.asOrganization) || "";
+      await env.REF.put(code, JSON.stringify({ gclid, ts: Date.now(), ip, pais, red }), { expirationTtl: TTL });
+      // Tally por IP: guarda cada clic DISTINTO (por gclid) con su tiempo y si contactó.
+      // Un cliente real hace 1 clic; un competidor, muchos. El tiempo/contacto los suma /beacon.
+      if (ip) {
+        try {
+          const k = "ipseen:" + ip;
+          const prev = JSON.parse((await env.REF.get(k)) || '{"c":{}}');
+          if (!prev.c) prev.c = {};
+          if (!prev.c[gclid]) prev.c[gclid] = { t: 0, c: 0 };
+          const ks = Object.keys(prev.c);
+          if (ks.length > 50) delete prev.c[ks[0]];   // techo defensivo
+          prev.red = red; prev.pais = pais; prev.ts = Date.now();
+          await env.REF.put(k, JSON.stringify(prev), { expirationTtl: 1209600 });  // 14 días
+        } catch (_e) {}
+      }
       return jsonCors({ code });
+    }
+    // Beacon de la landing: reporta tiempo en página (seg) + si tocó Llamar/WhatsApp (cta), por gclid.
+    if (request.method === "POST" && url.pathname === "/beacon") {
+      const ip = request.headers.get("CF-Connecting-IP") || "";
+      let b = {}; try { b = JSON.parse(await request.text()); } catch (_e) {}
+      const gclid = String(b.gclid || "").slice(0, 300);
+      if (!ip || !gclid) return jsonCors({ ok: false });
+      const seg = Math.max(0, Math.min(86400, parseInt(b.seg, 10) || 0));
+      const cta = b.cta ? 1 : 0;
+      try {
+        const k = "ipseen:" + ip;
+        const prev = JSON.parse((await env.REF.get(k)) || '{"c":{}}');
+        if (!prev.c) prev.c = {};
+        const e = prev.c[gclid] || { t: 0, c: 0 };
+        e.t = Math.max(e.t || 0, seg);
+        e.c = (e.c ? 1 : 0) || cta;
+        prev.c[gclid] = e;
+        await env.REF.put(k, JSON.stringify(prev), { expirationTtl: 1209600 });
+      } catch (_e) {}
+      return jsonCors({ ok: true });
     }
     if (request.method === "GET" && url.pathname === "/lookup") {
       if (url.searchParams.get("key") !== env.LOOKUP_SECRET) return jsonCors({ error: "unauthorized" }, 401);
       const code = normCode(url.searchParams.get("code"));
       const v = code && await env.REF.get(code);
       return v ? new Response(v, { headers: { "Content-Type": "application/json" } }) : jsonCors({ error: "not found" }, 404);
+    }
+    // Anti-competencia (v2): decide por CLICS CONSTANTES. El botón (llamar/WhatsApp) YA NO exime,
+    // porque un competidor podría apretarlo para escapar — y un toque no es una llamada real (esas
+    // Alejandro las valida por la hora en su teléfono). Reglas:
+    //   min (3): clics distintos mínimos · hard (6): desde aquí bloquea SÍ o SÍ ·
+    //   seg (8): entre min y hard, además debe irse siempre en <seg segundos.
+    if (request.method === "GET" && url.pathname === "/suspects") {
+      if (url.searchParams.get("key") !== env.LOOKUP_SECRET) return jsonCors({ error: "unauthorized" }, 401);
+      const min = Math.max(2, parseInt(url.searchParams.get("min") || "3", 10));
+      const hard = Math.max(min, parseInt(url.searchParams.get("hard") || "6", 10));
+      const shortSec = Math.max(1, parseInt(url.searchParams.get("seg") || "8", 10));
+      const out = [];
+      let cursor;
+      do {
+        const list = await env.REF.list({ prefix: "ipseen:", cursor });
+        cursor = list.list_complete ? null : list.cursor;
+        for (const k of list.keys) {
+          const v = JSON.parse((await env.REF.get(k.name)) || "{}");
+          const arr = Object.values(v.c || {});
+          const n = arr.length;
+          if (n < min) continue;                                    // pocos clics → no es competencia
+          const maxT = arr.reduce((m, e) => Math.max(m, (e && e.t) || 0), 0);
+          const bloquea = (n >= hard) || (maxT < shortSec);         // demasiados clics, o repetido y siempre corto
+          if (!bloquea) continue;
+          // "contacto" se informa (para que Alejandro cruce con su teléfono) pero NO exime.
+          out.push({ ip: k.name.slice(7), clics: n, maxseg: maxT, contacto: arr.some((e) => e && e.c) ? 1 : 0, red: v.red || "", pais: v.pais || "" });
+        }
+      } while (cursor);
+      out.sort((a, b) => b.clics - a.clics);
+      return jsonCors({ min, hard, seg: shortSec, total: out.length, suspects: out });
     }
 
     if (url.pathname === "/cierre" && request.method === "POST") {
@@ -606,6 +674,10 @@ export default {
       if (foto.length > PAGOS_REGLAS.fotoMaxChars) return jsonCors({ error: "La foto pesa demasiado — inténtalo de nuevo" }, 400);
       const pagos = JSON.parse(await env.REF.get("pagos") || '{"publicista":[],"ads":[]}');
       const item = { id: genCode(5), ts: Date.now(), fecha: hoySantiago(), fotoKey: "" };
+      // Comentario libre del dueño al subir el comprobante (ej: "una transferencia de
+      // $250.000: $100.000 de saldo y el resto adelanto del mes"). Se muestra en el historial.
+      const comentario = String(b.comentario || "").trim().slice(0, 140);
+      if (comentario) item.nota = comentario;
 
       if (tipo === "publicista") {
         const mes = /^\d{4}-\d{2}$/.test(String(b.mes || "")) ? String(b.mes) : hoySantiago().slice(0, 7);

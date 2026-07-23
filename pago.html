@@ -85,6 +85,8 @@
       <label for="adsMonto">¿Cuánto transferiste?</label>
       <input id="adsMonto" inputmode="numeric" value="100.000" oninput="fmtMonto()">
       <div class="hint" style="margin:5px 0 0">Se sugiere <b>$100.000</b> (el bloque normal). Si pagaste otra cantidad, cámbiala aquí.</div>
+      <label for="adsComenta">💬 Comentario (opcional)</label>
+      <input id="adsComenta" maxlength="140" placeholder="Ej: $100.000 de saldo y el resto adelanto del mes">
       <button class="btn" id="btnPagoAds" onclick="subirFoto('ads')">📷 Subir comprobante con foto</button>
       <div class="msg" id="adsMsg"></div>
       <table><thead><tr><th>Bloque</th><th>Fecha</th><th>Comprobante</th></tr></thead><tbody id="histAds"><tr><td colspan="3" class="hint">Cargando…</td></tr></tbody></table>
@@ -100,6 +102,8 @@
       <div class="datos" id="datosPago">Cargando…</div>
       <button class="copiar" id="btnCopiar" onclick="copiarDatos()">📋 Copiar datos</button>
 
+      <label for="mesComenta">💬 Comentario (opcional)</label>
+      <input id="mesComenta" maxlength="140" placeholder="Ej: pagué una parte, el resto la otra semana">
       <button class="btn" id="btnPagoMes" onclick="subirFoto('publicista')">📷 Subir comprobante del mes</button>
       <div class="msg" id="mesMsg"></div>
       <table><thead><tr><th>Mes</th><th>Fecha de pago</th><th>Comprobante</th></tr></thead><tbody id="histMes"><tr><td colspan="3" class="hint">Cargando…</td></tr></tbody></table>
@@ -252,13 +256,19 @@
         ? '<a class="verfoto" target="_blank" href="' + API + "/pago-foto?id=" + p.id + "&pass=" + encodeURIComponent(pass()) + '">📷 ver</a>'
         : '<span class="sinfoto">registro histórico</span>';
     };
+    var esc = function (s) {
+      return String(s).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; });
+    };
+    var nota = function (p) {
+      return p.nota ? '<div style="font-weight:400;font-size:12px;color:#5b6b7c;margin-top:2px">💬 ' + esc(p.nota) + "</div>" : "";
+    };
     var ha = document.getElementById("histAds");
     ha.innerHTML = (PAGOS.ads || []).length
-      ? PAGOS.ads.map(function (p) { return "<tr><td><b>N° " + p.bloque + "</b> · " + clp(p.monto) + "</td><td>" + fechaCL(p.fecha) + "</td><td>" + foto(p) + "</td></tr>"; }).join("")
+      ? PAGOS.ads.map(function (p) { return "<tr><td><b>N° " + p.bloque + "</b> · " + clp(p.monto) + nota(p) + "</td><td>" + fechaCL(p.fecha) + "</td><td>" + foto(p) + "</td></tr>"; }).join("")
       : '<tr><td colspan="3" class="hint">Aún no hay pagos registrados.</td></tr>';
     var hm = document.getElementById("histMes");
     hm.innerHTML = (PAGOS.publicista || []).length
-      ? PAGOS.publicista.map(function (p) { return "<tr><td><b>" + mesNombre(p.mes) + "</b> · " + clp(p.monto) + "</td><td>" + fechaCL(p.fecha) + "</td><td>" + foto(p) + "</td></tr>"; }).join("")
+      ? PAGOS.publicista.map(function (p) { return "<tr><td><b>" + mesNombre(p.mes) + "</b> · " + clp(p.monto) + nota(p) + "</td><td>" + fechaCL(p.fecha) + "</td><td>" + foto(p) + "</td></tr>"; }).join("")
       : '<tr><td colspan="3" class="hint">Aún no hay meses registrados.</td></tr>';
   }
 
@@ -305,6 +315,8 @@
       var body = { pass: pass(), tipo: tipoSubiendo, foto: dataUrl };
       if (tipoSubiendo === "publicista") body.mes = mesAPagar();
       if (tipoSubiendo === "ads") body.monto = montoBloque;
+      var comentaEl = document.getElementById(tipoSubiendo === "ads" ? "adsComenta" : "mesComenta");
+      if (comentaEl && comentaEl.value.trim()) body.comentario = comentaEl.value.trim().slice(0, 140);
       fetch(API + "/pago", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) })
         .then(function (r) { return r.json().then(function (d) { return { ok: r.ok, d: d }; }); })
         .then(function (res) {
@@ -313,6 +325,7 @@
           msg.textContent = tipoSubiendo === "ads"
             ? "✓ Bloque N° " + res.d.item.bloque + " registrado — +" + clp(res.d.item.monto) + " de saldo 🎉"
             : "✓ " + mesNombre(res.d.item.mes) + " registrado como pagado 🎉";
+          if (comentaEl) comentaEl.value = "";
           cargar(false);
           setTimeout(function () { msg.textContent = ""; }, 5000);
         }).catch(function () { msg.className = "msg bad"; msg.textContent = "Sin conexión"; });

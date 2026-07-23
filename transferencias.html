@@ -107,6 +107,9 @@
       }).catch(function () {});
   }
 
+  function esc(s) {
+    return String(s).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; });
+  }
   function pintar(d) {
     var items = [];
     (d.ads || []).forEach(function (p) { items.push({ tipo: "ads", label: "💵 Bloque de publicidad N° " + p.bloque, p: p }); });
@@ -126,7 +129,7 @@
       return '<div class="tr-card">' +
         '<div class="tr-head"><span class="tr-monto">' + clp(p.monto) + '</span><span class="tr-fecha">' + fechaCL(p.fecha) + '</span></div>' +
         '<div class="tr-tipo ' + it.tipo + '">' + it.label + '</div>' +
-        (p.nota ? '<div class="tr-nota">' + p.nota + '</div>' : '') +
+        (p.nota ? '<div class="tr-nota">💬 ' + esc(p.nota) + '</div>' : '') +
         foto + '</div>';
     }).join("") || '<div class="hint">Aún no hay pagos registrados.</div>';
 
